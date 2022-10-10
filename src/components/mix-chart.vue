@@ -1,7 +1,9 @@
 <template>
+ <el-container>
   <div class="chart-container">
     <chart height="100%" width="100%" />
   </div>
+ </el-container>
 </template>
 
 <script>
@@ -15,6 +17,7 @@ export default {
 
 <style scoped>
 .chart-container{
+  margin-top: 20px;
   position: relative;
   width: 100%;
   height: calc(100vh - 184px);

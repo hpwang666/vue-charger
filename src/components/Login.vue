@@ -26,7 +26,7 @@
         },
         checked: true,
         loginForm: {
-          username: 'wwp',
+          username: 'admin',
           password: '123'
         },
         loading: false
@@ -36,7 +36,7 @@
       submitClick: function () {
         var _this = this;
         this.loading = true;
-        postRequest('/login', {
+        postRequest('/vue-element-admin/user/login', {
           username: this.loginForm.username,
           password: this.loginForm.password
         }).then(resp=> {
@@ -44,15 +44,14 @@
           if (resp.status == 200) {
             //成功
             var json = resp.data;
-
-            if (json.status == 'success') {
+            if (json.code == 20000) {
               _this.$router.replace({path: '/home'});
             } else {
-              _this.$alert('登录失败', '失败!');
+              _this.$alert('登录失败', '失败');
             }
           } else {
             //失败
-            _this.$alert('登录失败', '失败!');
+            _this.$alert('登录失败', '失败~');
           }
         }, resp=> {
           _this.loading = false;

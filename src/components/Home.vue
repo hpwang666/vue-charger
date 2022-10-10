@@ -1,20 +1,38 @@
 <template>
   <el-container class="home_container">
-    <el-header height=80px>
+    <el-header height=90px>
       <div class="home_title" color = "#000">大连杂货码头公司能耗管理系统</div>
+    
+      <div class="user_depart" >
+        <i class="el-icon-map-location" ></i>
+        宜昌市  
+          <i class="el-icon-office-building" ></i>
+        西陵区  
+          <i class="el-icon-office-building" ></i>
+        东山大道  
+          <i class="el-icon-s-home" ></i>
+        泛海巨涛
+        
+      </div>
       <div class="home_userinfoContainer">
+      
         <el-dropdown @command="handleCommand">
-  <span class="el-dropdown-link home_userinfo">
-    {{currentUserName}}<i class="el-icon-arrow-down el-icon--right home_userinfo"></i>
-  </span>
+            
+
+        <span class="el-dropdown-link home_userinfo">
+          {{currentUserName}}<i class="el-icon-arrow-down el-icon--right home_userinfo"></i>
+        </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="sysMsg">系统消息</el-dropdown-item>
             <el-dropdown-item command="MyHome">个人主页</el-dropdown-item>
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
+        <el-button class="home_exchange_button" icon="el-icon-sort" type="primary" size="mini">切换</el-button>
       </div>
     </el-header>
+
+
     <el-container>
       <el-aside width="210px">
         <el-menu
@@ -112,6 +130,11 @@
     justify-content: space-between;
   }
 
+  .home_exchange_button{
+  margin-top:10px;
+   margin-right: 20px;
+  }
+
   .el-aside {
     background-color: #304156 !important;
   }
@@ -148,10 +171,26 @@
   .home_userinfo {
     color: #fff;
     cursor: pointer;
+   
+  }
+  .user_depart{
+    
+    position:absolute;
+    right:160px;
+    padding-top:45px;
+    padding-bottom: 6px;
+    color: #fff;
+    background-color: aqua;
   }
 
+
+
   .home_userinfoContainer {
-    display: inline;
-    margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+    
+    
+    position:absolute;
+    right:0;
   }
 </style>

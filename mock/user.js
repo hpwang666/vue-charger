@@ -79,7 +79,8 @@ const tokens = {
         const info = users[token]
   
         return {
-          status: 'success',
+          status: 'success'
+         
         }
       }
     },
