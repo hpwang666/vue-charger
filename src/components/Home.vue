@@ -4,16 +4,37 @@
       <div class="home_title" color = "#000">大连杂货码头公司能耗管理系统</div>
     
       <div class="user_depart" >
-        <i class="el-icon-map-location" ></i>
-        宜昌市  
-          <i class="el-icon-office-building" ></i>
-        西陵区  
-          <i class="el-icon-office-building" ></i>
-        东山大道  
-          <i class="el-icon-s-home" ></i>
-        泛海巨涛
+        <i v-if="value[0]" class="el-icon-map-location" ></i>
+        {{ value[0]}}  
+        <i v-if="value[1]" class="el-icon-office-building" ></i>
+        {{ value[1]}}  
+          <i v-if="value[2]" class="el-icon-office-building" ></i>
+        {{ value[2]}}  
+          <i v-if="value[3]" class="el-icon-s-home" ></i>
+        {{ value[3]}}
         
       </div>
+      <el-dialog
+        title="车场选择"
+        :visible.sync="dialogVisible"
+        width="40%"
+        :before-close="handleClose">
+        
+       <div class="depark—block">
+        <span>车场 </span>
+        <el-cascader
+          v-model="value"
+          :options="options"
+          :props="{ expandTrigger: 'hover' }"
+          @change="handleChange"></el-cascader>
+      </div>
+      
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
+
       <div class="home_userinfoContainer">
       
         <el-dropdown @command="handleCommand">
@@ -28,8 +49,9 @@
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button class="home_exchange_button" icon="el-icon-sort" type="primary" size="mini">切换</el-button>
+        <el-button class="home_exchange_button" icon="el-icon-sort" type="primary" size="mini"  @click="dialogVisible = true">切换</el-button>
       </div>
+      
     </el-header>
 
 
@@ -78,7 +100,12 @@
 </template>
 <script>
   import {getRequest} from '../utils/api'
+   import { mapGetters } from 'vuex'
+
   export default{
+    computed: {
+      ...mapGetters(['name','depart'])
+    },
     methods: {
       handleCommand(command){
         var _this = this;
@@ -95,19 +122,40 @@
             //取消
           })
         }
+      },
+      handleChange(value){
+        console.log(value.length)
       }
     },
     mounted: function () {
       var _this = this;
-      getRequest("/currentUserName").then(function (msg) {
-        _this.currentUserName = msg.data;
-      }, function (msg) {
-        _this.currentUserName = '游客';
+     
+      this.$store.dispatch('user/getInfo').then((resp)=> {
+          _this.currentUserName = this.name;
+          this.options = this.depart;
+
+          var _depart = this.depart[0];
+          var i=0;
+          while(true)
+          {
+              this.value[i]=_depart.value;
+              i++;
+              if(_depart.hasOwnProperty('children'))
+              _depart=_depart.children[0];
+              else break;
+          }
+                
+
+        }).catch(() => {
+             _this.$alert('获取用户信息失败');
       });
     },
     data(){
       return {
-        currentUserName: ''
+        currentUserName: '',
+        dialogVisible: false,
+        value:[],
+        options:[]
       }
     }
   }
@@ -176,13 +224,15 @@
   .user_depart{
     
     position:absolute;
-    right:160px;
+    right:200px;
     padding-top:45px;
     padding-bottom: 6px;
     color: #fff;
-    background-color: aqua;
+    
   }
-
+  .el-cascader-menu{
+    height: 200px;
+  }
 
 
   .home_userinfoContainer {

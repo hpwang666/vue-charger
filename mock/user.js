@@ -8,6 +8,38 @@ const tokens = {
       token: 'editor-token'
     }
   }
+  const depart={
+    options: [{
+      value: '湖北',
+      label: '指南',
+      children: [{
+        value: '宜昌市',
+        label: '设计原则',
+        children: [{
+          value: '西陵区',
+          label: '侧向导航',
+          children: [{
+            value: '泛海巨涛',
+            label: '公司'
+          }]
+        }]
+      },
+      {
+        value: 'dingbudaohang',
+        label: '顶部导航',
+          children: [{
+          value: 'yizhi',
+          label: '一致'
+        }]
+      }]
+    },
+    {
+      value: 'diyilan',
+      label: '第一栏'
+    }
+  ]
+}
+ 
   
   const users = {
     'admin-token': {
@@ -32,7 +64,6 @@ const tokens = {
       response: config => {
         const { username } = config.body
         const token = tokens[username]
-  
         // mock error
         if (!token) {
           return {
@@ -43,19 +74,19 @@ const tokens = {
   
         return {
           code: 20000,
-          data: token
+          data: token.token
         }
       }
     },
    
     // get user info
     {
-      url: '/vue-element-admin/user/info\.*',
+      url: '/vue-element-admin/user/info',
       type: 'get',
       response: config => {
         const { token } = config.query
         const info = users[token]
-  
+        console.log(token,config.query);
         // mock error
         if (!info) {
           return {
@@ -66,7 +97,7 @@ const tokens = {
   
         return {
           code: 20000,
-          data: info
+          data: [info,depart]
         }
       }
     },

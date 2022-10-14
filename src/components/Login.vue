@@ -12,12 +12,15 @@
     <el-form-item style="width: 100%">
       <el-button type="primary" @click.native.prevent="submitClick" style="width: 100%">登录</el-button>
     </el-form-item>
+    <el-form-item>{{ token }}</el-form-item>
   </el-form>
 </template>
 <script>
-  import {postRequest} from '../utils/api'
-  import {putRequest} from '../utils/api'
+  import { mapGetters } from 'vuex'
   export default{
+     computed: {
+      ...mapGetters(['token'])
+    },
     data(){
       return {
         rules: {
@@ -32,31 +35,19 @@
         loading: false
       }
     },
+    
     methods: {
       submitClick: function () {
         var _this = this;
         this.loading = true;
-        postRequest('/vue-element-admin/user/login', {
-          username: this.loginForm.username,
-          password: this.loginForm.password
-        }).then(resp=> {
+         this.$store.dispatch('user/login', this.loginForm).then((resp)=> {
           _this.loading = false;
-          if (resp.status == 200) {
-            //成功
-            var json = resp.data;
-            if (json.code == 20000) {
-              _this.$router.replace({path: '/home'});
-            } else {
-              _this.$alert('登录失败', '失败');
-            }
-          } else {
-            //失败
-            _this.$alert('登录失败', '失败~');
-          }
-        }, resp=> {
-          _this.loading = false;
-          _this.$alert('找不到服务器⊙﹏⊙∥!', '失败!');
-        });
+         console.log(this.token,resp);
+          _this.$router.replace({path: '/home'});
+        }).catch(() => {
+            this.loading = false
+             _this.$alert('登录失败', '失败~');
+          });
       }
     }
   }

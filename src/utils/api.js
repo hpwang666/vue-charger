@@ -59,6 +59,7 @@ export const getRequest = (url,params) => {
     transformRequest: [function (data) {
       let ret = ''
       for (let it in data) {
+        console(it,data)
         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
       }
       return ret
