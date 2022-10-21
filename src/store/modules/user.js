@@ -1,6 +1,5 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import {postRequest} from '../../utils/api'
-import {getRequest} from '../../utils/api'
+import { resetRouter } from '@/router'
 import request from '@/utils/request'
 
 const getDefaultState = () => {
@@ -103,9 +102,33 @@ const actions = {
         reject(error)
       })
     })
-  }
+  },
   // remove token
-
+    // user logout
+    logout({ commit }) {
+      return new Promise((resolve, reject) => {
+        request({
+          url: '/vue-element-admin/user/logout',
+          method: 'get'}).then(() => {
+            console.log('logout');
+          removeToken() // must remove  token  first
+          resetRouter()
+          commit('RESET_STATE')
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+  
+    // remove token
+    resetToken({ commit }) {
+      return new Promise(resolve => {
+        removeToken() // must remove  token  first
+        commit('RESET_STATE')
+        resolve()
+      })
+    }
 }
 
 export default {

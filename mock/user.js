@@ -101,27 +101,15 @@ const tokens = {
         }
       }
     },
-    
-    {
-      url: '/login',
-      type: 'post',
-      response: config => {
-        const { token } = config.query
-        const info = users[token]
-  
-        return {
-          status: 'success'
-         
-        }
-      }
-    },
+   
     // user logout
     {
       url: '/vue-element-admin/user/logout',
-      type: 'post',
+      type: 'get',
       response: _ => {
+        console.log('logout');
         return {
-          code: 20002,
+          code: 20000,
           data: '更新成功'
         }
       }

@@ -60,7 +60,7 @@
         <el-menu
           default-active="0"
           class="el-menu-vertical-demo" style="background-color: #304156" text-color="#ECECEC" active-text-color="#ffd04b" router>
-          <template v-for="(item,index) in this.$router.options.routes">
+          <template v-for="(item,index) in permission_routes">
             <template v-if="!item.hidden">
             <el-submenu :index="index+''" v-if="item.children.length>1" :key="index" class="ddd">
               <template slot="title" >
@@ -89,22 +89,20 @@
             <el-breadcrumb-item :to="{ path: '/dataView' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item v-text="this.$router.currentRoute.name"></el-breadcrumb-item>
           </el-breadcrumb>
-          <keep-alive>
-            <router-view v-if="this.$route.meta.keepAlive"></router-view>
-          </keep-alive>
-          <router-view v-if="!this.$route.meta.keepAlive"></router-view>
+         
+            <router-view></router-view>
+         
         </el-main>
       </el-container>
     </el-container>
   </el-container>
 </template>
 <script>
-  import {getRequest} from '../utils/api'
    import { mapGetters } from 'vuex'
 
   export default{
     computed: {
-      ...mapGetters(['name','depart'])
+      ...mapGetters(['name','depart','permission_routes'])
     },
     methods: {
       handleCommand(command){
@@ -115,9 +113,13 @@
             cancelButtonText: '取消',
             type: 'warning'
           }).then(function () {
-            getRequest("/logout")
-            _this.currentUserName = '游客';
-            _this.$router.replace({path: '/'});
+           _this.$store.dispatch('user/logout').then(()=>{
+               _this.currentUserName = '游客';
+              _this.$router.replace({path: '/login'});
+           }).catch(() => {
+             _this.$alert('注销失败');
+            });
+      
           }, function () {
             //取消
           })

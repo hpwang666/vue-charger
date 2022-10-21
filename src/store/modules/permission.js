@@ -4,12 +4,17 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * Use meta.role to determine if the current user has permission
  * @param roles
  * @param route
+ * TODO: 这里还是有点小问题，有子菜单是根据children的长度判断的  大于1 就有子菜单
+ * 但下面的权限都只判断了[0]的权限，也就是说无法对子菜单进行权限加载  要么子菜单都有   要么全无
  */
 function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
+  if(route.name === '404') return true;//404 没有children  直接添加
+
+
+  if (route.children[0].meta && route.children[0].meta.roles) {
+    return roles.some(role => route.children[0].meta.roles.includes(role))
   } else {
-    return true
+    return false
   }
 }
 
@@ -24,9 +29,6 @@ export function filterAsyncRoutes(routes, roles) {
   routes.forEach(route => {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
-      if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
-      }
       res.push(tmp)
     }
   })
