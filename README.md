@@ -8,3 +8,10 @@
 npm install
 npm run dev
 ```
+
+
+打包,这里使用env-cross 来设置环境变量 分别为 process.env.NODE_ENV = testing/production
+```
+npm run build--test 
+npm run build--prod
+```

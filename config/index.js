@@ -50,6 +50,10 @@ module.exports = {
   },
 
   build: {
+    //添加下面两行代码
+    prodEnv: require('./prod.env'),
+    testEnv: require('./test.env'),
+    
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
 
