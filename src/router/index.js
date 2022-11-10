@@ -2,9 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
-import ArticleList from '@/components/ArticleList'
 import device from '@/components/device'
-import PostArticle from '@/components/PostArticle'
 import UserMana from '@/components/UserMana'
 
 Vue.use(Router)
@@ -22,7 +20,7 @@ export const constantRoutes = [
     name: '实时数据0',
     children: [
       {
-        path: '/dataView',
+        path: 'dataView',
         iconCls: 'fa fa-television',
         name: '实时数据',
         component: () => import('@/components/datav/dataView'),
@@ -43,7 +41,7 @@ export const asyncRoutes = [
     name: '设备管理0',
     children: [
       {
-        path: '/device',
+        path: 'device',
         iconCls: 'fa fa-reorder',
         name: '设备管理',
         component: device,
@@ -59,7 +57,7 @@ export const asyncRoutes = [
     iconCls: 'fa fa-bar-chart',
     children: [
       {
-        path: '/charts',
+        path: 'charts',
         iconCls: 'fa fa-bar-chart',
         name: '数据统计',
         component: () => import('@/components/mix-chart'),
@@ -71,20 +69,41 @@ export const asyncRoutes = [
   }, {
     path: '/home',
     component: Home,
-    name: '数据管理',
+    name: '组织机构',
     iconCls: 'fa fa-file-text-o',
     children: [
       {
-        path: '/articleList',
-        name: '导出数据',
-        component: ArticleList,
+        path: 'city',
+        name: '城市管理',
+        component: () => import('@/components/org/city'),
+        meta: {
+          roles: ['admin','editor'] 
+        }
+      }, 
+       {
+        path: 'cityAccount',
+        name: '城市账户管理',
+        hidden: true,
+        component: () => import('@/components/org/account'),
+      }, 
+      {
+        path: 'group',
+        name: '集团管理',
+        component: () => import('@/components/org/account'),
         meta: {
           roles: ['admin','editor'] 
         }
       }, {
-        path: '/postArticle',
-        name: '录入数据',
-        component: PostArticle,
+        path: 'company',
+        name: '公司管理',
+        component: () => import('@/components/org/city'),
+        meta: {
+          roles: ['admin','editor'] 
+        }
+      }, {
+        path: 'prj',
+        name: '项目管理',
+        component: () => import('@/components/org/city'),
         meta: {
           roles: ['admin','editor'] 
         }
@@ -96,7 +115,7 @@ export const asyncRoutes = [
     name: '用户管理0',
     children: [
       {
-        path: '/user',
+        path: 'user',
         iconCls: 'fa fa-user-o',
         name: '用户管理',
         component: UserMana,
@@ -105,14 +124,15 @@ export const asyncRoutes = [
         }
       }
     ]
-  }, {
+  },
+  {
     path: '/home',
     component: Home,
     name: '操作日志0',
     iconCls: 'fa fa-bar-chart',
     children: [
       {
-        path: '/log',
+        path: 'log',
         iconCls: 'fa fa-hand-pointer-o',
         name: '操作日志',
         component: () => import('@/components/log'),

@@ -67,14 +67,12 @@
                 <i :class="item.iconCls"></i>
                 <span >{{item.name}}</span>
               </template>
-              <el-menu-item v-for="child in item.children"  :index="child.path" :key="child.path">
-                 <template v-if="!child.hidden">
+              <el-menu-item v-for="child in showItems(item.children)"  :index="item.path+'/'+child.path" :key="child.path">
                   {{child.name}}
-                 </template>
               </el-menu-item>
             </el-submenu>
             <template v-else>
-              <el-menu-item :index="item.children[0].path" :key=index>
+              <el-menu-item :index="item.path+'/'+item.children[0].path" :key=index>
                 <i :class="item.children[0].iconCls"></i>
                 <span slot="title">{{item.children[0].name}}</span>
               </el-menu-item>
@@ -103,6 +101,7 @@
   export default{
     computed: {
       ...mapGetters(['name','depart','permission_routes'])
+   
     },
     methods: {
       handleCommand(command){
@@ -127,7 +126,12 @@
       },
       handleChange(value){
         console.log(value.length)
-      }
+      },
+      showItems(value) {
+            return value.filter(function(item){
+              return !item.hidden;
+            });
+    }
     },
     mounted: function () {
       var _this = this;
