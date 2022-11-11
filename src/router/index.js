@@ -14,7 +14,8 @@ export const constantRoutes = [
     name: '登录',
     hidden: true,
     component: Login
-  }, {
+  }, 
+  {
     path: '/home',
     component: Home,
     name: '实时数据0',
@@ -71,43 +72,78 @@ export const asyncRoutes = [
     component: Home,
     name: '组织机构',
     iconCls: 'fa fa-file-text-o',
+    meta: {
+      roles: ['admin','city','group','com','prj'] 
+    },
     children: [
       {
         path: 'city',
         name: '城市管理',
         component: () => import('@/components/org/city'),
         meta: {
-          roles: ['admin','editor'] 
+          roles: ['admin','city'] 
         }
       }, 
-       {
+      {
         path: 'cityAccount',
         name: '城市账户管理',
         hidden: true,
         component: () => import('@/components/org/account'),
+        meta: {
+          roles: ['admin','city'] 
+        }
       }, 
       {
         path: 'group',
         name: '集团管理',
+        component: () => import('@/components/org/city'),
+        meta: {
+          roles: ['admin','city','group'] 
+        }
+      }, 
+      {
+        path: 'groupAccount',
+        name: '集团账户管理',
+        hidden: true,
         component: () => import('@/components/org/account'),
         meta: {
-          roles: ['admin','editor'] 
+          roles: ['admin','city','group'] 
         }
-      }, {
+      }, 
+      {
         path: 'company',
         name: '公司管理',
         component: () => import('@/components/org/city'),
         meta: {
-          roles: ['admin','editor'] 
+          roles: ['admin','city','group','com'] 
         }
-      }, {
+      },
+      {
+        path: 'comAccount',
+        name: '公司账户管理',
+        hidden: true,
+        component: () => import('@/components/org/account'),
+        meta: {
+          roles: ['admin','city','group','com'] 
+        }
+      }, 
+      {
         path: 'prj',
         name: '项目管理',
         component: () => import('@/components/org/city'),
         meta: {
-          roles: ['admin','editor'] 
+          roles: ['admin','city','group','com','prj'] 
         }
-      }
+      },
+      {
+        path: 'prjAccount',
+        name: '项目账户管理',
+        hidden: true,
+        component: () => import('@/components/org/account'),
+        meta: {
+          roles: ['admin','city','group','com','prj'] 
+        }
+      }, 
     ]
   },  {
     path: '/home',
@@ -129,7 +165,9 @@ export const asyncRoutes = [
     path: '/home',
     component: Home,
     name: '操作日志0',
-    iconCls: 'fa fa-bar-chart',
+    meta : {
+      roles: ['admin'] 
+    },
     children: [
       {
         path: 'log',

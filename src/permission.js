@@ -40,7 +40,15 @@ router.beforeEach(async(to, from, next) => {
           // dynamically add accessible routes
           if(accessRoutes.length>0){
             router.addRoutes(accessRoutes)
-            console.log('accessRoutes: '+accessRoutes.length)  
+            accessRoutes.forEach(element => {
+              console.log('element: '+element.name) ;
+              if(element.children) {
+                element.children.forEach(clild=>{
+                  console.log('clild: '+clild.name) 
+                });
+              }
+            });
+             
           }
           
 
