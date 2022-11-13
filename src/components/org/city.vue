@@ -3,10 +3,10 @@
     <el-header class="cate_mana_header">
       <el-input
         placeholder="请输入城市名称"
-        v-model="cateName" style="width: 230px;">
+        v-model="cityName" style="width: 230px;">
       </el-input>
      
-      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="addNewCate">搜索城市</el-button>
+      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索城市</el-button>
       <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加城市</el-button>
     </el-header>
     <el-main class="cate_mana_main">
@@ -22,8 +22,8 @@
           width="130" align="left">
         </el-table-column>
         <el-table-column
-          label="集团名称"
-          prop="cateName"
+          label="城市名称"
+          prop="cityName"
           width="360" align="left">
         </el-table-column>
         <el-table-column
@@ -58,8 +58,8 @@
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" size="mini" label-width="100px" style="width: 100%">
        
        
-        <el-form-item label="城市名称" prop="cateName">
-          <el-input v-model="temp.cateName" />
+        <el-form-item label="城市名称" prop="cityName">
+          <el-input v-model="temp.cityName" />
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
@@ -94,7 +94,7 @@
   
 </template>
 <script>
-  import {postRequest} from '../../utils/api'
+  import request from '@/utils/request'
   export default{
     methods: {
       handleCreate() {
@@ -110,14 +110,17 @@
           if (valid) {
             const tempData = Object.assign({}, this.temp)
             tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-    
-           postRequest("/admin/city/create", tempData).then(resp => {
+            request({
+              url: '/admin/city/create',
+              method: 'post',
+              data:  tempData 
+            }).then(resp => {
               
               this.temp.date=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
               this.citys.unshift(this.temp)//新的object添加到数组头部
               this.dialogFormVisible = false
               this.$message({
-                message: resp.data.data,
+                message: resp.data,
                 type: 'success',
                 duration: 2000
               })
@@ -146,13 +149,17 @@
           if (valid) {
             const tempData = Object.assign({}, this.temp)
             tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            postRequest("/admin/city/update", tempData).then(resp => {
+            request({
+              url: '/admin/city/update',
+              method: 'post',
+              data:  tempData 
+            }).then(resp => {
               const index = this.temp.index
               this.temp.date=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
               this.citys.splice(index, 1, this.temp) //添加新元素
               this.dialogFormVisible = false
               this.$message({
-                message: resp.data.data,
+                message: resp.data,
                 type: 'success',
                 duration: 2000
               })
@@ -169,7 +176,7 @@
       },    
       handleDelete(row,index){
         let _this = this;
-        this.$confirm('确认删除 ' + row.cateName + ' ?', '提示', {
+        this.$confirm('确认删除 ' + row.cityName + ' ?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -179,11 +186,14 @@
       },
       deleteCate(index,ids){
         var _this = this;
-        postRequest("/admin/city/delete" ,{id: ids}).then(resp=> {
-          var json = resp.data;
+        request({
+          url: '/admin/city/delete',
+          method: 'post',
+          data:{id: ids}
+        }).then(resp=> {
           _this.$message({
             type: 'success',
-            message: json.data
+            message: resp.data
           });
           this.citys.splice(index, 1)
         })
@@ -200,8 +210,11 @@
       },
       refresh(){
         let _this = this;
-        postRequest("/admin/city/all").then(resp=> {
-          _this.citys = resp.data.data.array;
+        request({
+          url: '/admin/city/all',
+          method: 'post'
+        }).then(resp=> {
+          _this.citys = resp.data.citys;
         }).catch(()=>{
           _this.$message({
             type: 'error',
@@ -212,7 +225,7 @@
       resetTemp() {
         this.temp = {
           index:-1,
-          cateName: undefined,
+          cityName: undefined,
           date: new Date(),
           remark: ''
         }
@@ -229,7 +242,7 @@
     },
     data(){
       return {
-        cateName: '',
+        cityName: '',
         onOffLine: '',
         citys: [],
         temp: "",
@@ -245,7 +258,7 @@
         },
         rules: {
           date: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-          cateName: [{ required: true, message: 'name is required', trigger: 'blur' }]
+          cityName: [{ required: true, message: 'name is required', trigger: 'blur' }]
         }
       }
     },

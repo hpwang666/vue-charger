@@ -127,6 +127,8 @@
       handleChange(value){
         console.log(value.length)
       },
+      handleClose()
+      {},
       showItems(value) {
             return value.filter(function(item){
               return !item.hidden;

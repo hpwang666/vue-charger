@@ -9,11 +9,11 @@
       type: 'post',
       response: _ => {
         return {
-          code: 20004,
+          code: 20000,
           data: {
-            "array|20": [{ 
+            "citys|20": [{ 
               "id":"@id",
-            "cateName": "@cname()",
+            "cityName": "@cname()",
             "date": "@date('yyyy-MM-dd HH:mm:ss')"}],
           }
         }
@@ -24,7 +24,7 @@
       type: 'post',
       response: _ => {
         return {
-          status: 20000,
+          code: 20000,
           data: '更新成功'
         }
       }
@@ -32,9 +32,10 @@
     {
       url: '/admin/city/create',
       type: 'post',
-      response: _ => {
+      response: config => {
+        console.log(config.body)
         return {
-          status: 20000,
+          code: 20000,
           data: '添加成功'
         }
       }
@@ -44,15 +45,16 @@
       type: 'post',
       response: _ => {
         return {
-          status: 20000,
-          data: '删除成功'
+          code: 20000,
+          data: '删除成功!'
         }
       }
     },
     {
       url: '/vue-element-admin/org/userList',
       type: 'post',
-      response: _ => {
+      response: config => {
+        console.log(config.body)
         return {
           code: 20000,
           data: {

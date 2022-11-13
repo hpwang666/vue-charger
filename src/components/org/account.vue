@@ -7,7 +7,7 @@
         v-model="userName" style="width: 230px;margin-left: 160px">
       </el-input>
      
-      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="addNewCate">搜索用户</el-button>
+      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索用户</el-button>
       <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加用户</el-button>
     </el-header>
     <el-main class="cate_mana_main">
@@ -191,7 +191,7 @@
       },
       refresh(){
         let _this = this;
-        let departId={departId:"1q1q1q"}
+        let departId={departId0:"1q1q1q"}
         request({
           url: '/vue-element-admin/org/userList',
           method: 'post',
