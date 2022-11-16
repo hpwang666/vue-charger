@@ -115,20 +115,27 @@ const tokens = {
       }
     },
     {
-        url: '/vue-element-admin/user/fuck',
+        url: '/vue-element-admin/user/add',
         type: 'post',
-        response: _ => {
+        response: config => {
+          console.log(config.body)
           return {
-            code: 20004,
+            code: 20000,
             data: {
-              "userid": "@id()",
-              "username": "@cname()",
-              "date": "@date()",
-              "avatar": "@image('200x200','red','#fff','avatar')",
-              "description": "@paragraph()",
-              "ip": "@ip()",
-              "email": "@email()",
-              "array|10": ["@integer(100,103)"],
+              userId:'11223344',
+            }
+          }
+        }
+      } ,
+      {
+        url: '/vue-element-admin/user/edit',
+        type: 'post',
+        response: config => {
+          console.log(config.body)
+          return {
+            code: 20000,
+            data: {
+             
             }
           }
         }

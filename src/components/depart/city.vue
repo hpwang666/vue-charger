@@ -1,19 +1,18 @@
 <template>
   <el-container>
     <el-header class="cate_mana_header">
-      <el-button type="primary" icon="el-icon-back" size="medium" style="margin-left: 10px" @click="handleBack">返回</el-button>
       <el-input
-        placeholder="请输入用户名称"
-        v-model="userName" style="width: 230px;margin-left: 160px">
+        placeholder="请输入城市名称"
+        v-model="cityName" style="width: 230px;">
       </el-input>
      
-      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索用户</el-button>
-      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加用户</el-button>
+      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索城市</el-button>
+      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加城市</el-button>
     </el-header>
     <el-main class="cate_mana_main">
       <el-table
         ref="multipleTable"
-        :data="users"
+        :data="citys"
         style="width: 100%"
         max-height="600"
         border>
@@ -23,34 +22,25 @@
           width="130" align="left">
         </el-table-column>
         <el-table-column
-          label="账号"
-          prop="userAccount"
-          width="260" align="left">
+          label="城市名称"
+          prop="cityName"
+          width="360" align="left">
         </el-table-column>
         <el-table-column
-          label="姓名"
-          prop="userName"
-          width="160" align="left">
+          prop="date"
+          label="启用时间" align="left">
         </el-table-column>
-        <el-table-column
-          label="电话"
-          prop="phone"
-          width="160" align="left">
+        <el-table-column label="分配账号">
+           <template v-slot="scope">
+            <el-button
+              size="mini"
+              type="success"
+              @click="handleAccount(scope.row)">账户
+            </el-button>
+          </template>
         </el-table-column>
-       
-        <el-table-column
-          label="最后登录时间"
-          prop="lastLogin"
-          width="260" align="left">
-        </el-table-column>
-        <el-table-column
-          prop="createTime"
-          label="创建时间" align="left">
-        </el-table-column>
-       
         <el-table-column label="操作" align="left">
           <template v-slot="scope">
-       
             <el-button
               size="mini"
               @click="handleUpdate(scope.row,scope.$index)">修改
@@ -58,7 +48,7 @@
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="handleDelete(scope.row,scope.$index)">删除
             </el-button>
           </template>
         </el-table-column>
@@ -68,8 +58,8 @@
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" size="mini" label-width="100px" style="width: 100%">
        
        
-        <el-form-item label="用户名称" prop="userName">
-          <el-input v-model="temp.userName" />
+        <el-form-item label="城市名称" prop="cityName">
+          <el-input v-model="temp.cityName" />
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
@@ -87,7 +77,17 @@
     </el-main>
     <div style="height: 20px"></div>
    
-
+    <el-pagination
+      background
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="1"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="20"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="400"
+      align="left">
+    </el-pagination>
    
     
   </el-container>
@@ -95,7 +95,6 @@
 </template>
 <script>
   import request from '@/utils/request'
-
   export default{
     methods: {
       handleCreate() {
@@ -111,14 +110,18 @@
           if (valid) {
             const tempData = Object.assign({}, this.temp)
             tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-    
-           postRequest("/admin/user/list", tempData).then(resp => {
+            request({
+              url: '/admin/city/create',
+              method: 'post',
+              data:  tempData 
+            }).then(resp => {
               
               this.temp.date=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
-              this.users.unshift(this.temp)//新的object添加到数组头部
+              this.temp.id=resp.data.id;//返回的新的ID
+              this.citys.unshift(this.temp)//新的object添加到数组头部
               this.dialogFormVisible = false
               this.$message({
-                message: resp.data.data,
+                message: resp.data.msg,
                 type: 'success',
                 duration: 2000
               })
@@ -147,13 +150,17 @@
           if (valid) {
             const tempData = Object.assign({}, this.temp)
             tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            postRequest("/admin/city/update", tempData).then(resp => {
+            request({
+              url: '/admin/city/update',
+              method: 'post',
+              data:  tempData 
+            }).then(resp => {
               const index = this.temp.index
               this.temp.date=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
-              this.users.splice(index, 1, this.temp) //添加新元素
+              this.citys.splice(index, 1, this.temp) //添加新元素
               this.dialogFormVisible = false
               this.$message({
-                message: resp.data.data,
+                message: resp.data,
                 type: 'success',
                 duration: 2000
               })
@@ -168,9 +175,9 @@
           }
         })
       },    
-      handleDelete(index, row){
+      handleDelete(row,index){
         let _this = this;
-        this.$confirm('确认删除 ' + row.userName + ' ?', '提示', {
+        this.$confirm('确认删除 ' + row.cityName + ' ?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -180,24 +187,36 @@
       },
       deleteCate(index,ids){
         var _this = this;
-        postRequest("/admin/city/delete" ,{id: ids}).then(resp=> {
-          var json = resp.data;
+        request({
+          url: '/admin/city/delete',
+          method: 'post',
+          data:{id: ids}
+        }).then(resp=> {
           _this.$message({
             type: 'success',
-            message: json.data
+            message: resp.data
           });
-          this.users.splice(index, 1)
+          this.citys.splice(index, 1)
+        })
+      },
+      handleAccount(row){
+        var _this = this;
+        this.$router.push({
+          path: 'cityAccount',
+          query: {
+            id: row.id,
+            depart:"city",
+            departName:row.cityName
+          }
         })
       },
       refresh(){
         let _this = this;
-        let departId={departId0:"1q1q1q"}
         request({
-          url: '/vue-element-admin/org/userList',
-          method: 'post',
-          data:  departId 
+          url: '/admin/city/all',
+          method: 'post'
         }).then(resp=> {
-          _this.users = resp.data.array;
+          _this.citys = resp.data.citys;
         }).catch(()=>{
           _this.$message({
             type: 'error',
@@ -208,25 +227,27 @@
       resetTemp() {
         this.temp = {
           index:-1,
-          userName: undefined,
+          id:'0',
+          cityName: undefined,
           date: new Date(),
           remark: ''
         }
       },
-      handleBack(){
-        var _this = this;
-        this.$router.push({
-          path: _this.$route.query.name
-        })
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
       },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+      }
     },
     mounted: function () {
       this.refresh();
     },
     data(){
       return {
-        userName: '',
-        users: [],
+        cityName: '',
+        onOffLine: '',
+        citys: [],
         temp: "",
         dialogFormVisible: false,
         dialogStatus: '',
@@ -240,19 +261,10 @@
         },
         rules: {
           date: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-          userName: [{ required: true, message: 'name is required', trigger: 'blur' }]
+          cityName: [{ required: true, message: 'name is required', trigger: 'blur' }]
         }
       }
-    },
-    filters: {
-    statusFilter(status) {
-      const statusMap = {
-        在线: 'success',
-        离线: 'danger'
-      }
-      return statusMap[status]
     }
-  }
   }
 
   Date.prototype.format = function(fmt) { 

@@ -33,10 +33,9 @@
       url: '/admin/city/create',
       type: 'post',
       response: config => {
-        console.log(config.body)
         return {
           code: 20000,
-          data: '添加成功'
+          data: {id:'aa123ddd',msg:'添加成功'}
         }
       }
     },
@@ -51,7 +50,7 @@
       }
     },
     {
-      url: '/vue-element-admin/org/userList',
+      url: '/vue-element-admin/depart/userList',
       type: 'post',
       response: config => {
         console.log(config.body)
@@ -59,6 +58,7 @@
           code: 20000,
           data: {
             "array|8": [{ 
+              "userId":"@id",
              "userAccount":"@name",
              "userName": "@cname()",
              "phone":/^1[385][1-9]\d{8}/,

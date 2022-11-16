@@ -79,7 +79,7 @@ export const asyncRoutes = [
       {
         path: 'city',
         name: '城市管理',
-        component: () => import('@/components/org/city'),
+        component: () => import('@/components/depart/city'),
         meta: {
           roles: ['admin','city'] 
         }
@@ -88,7 +88,7 @@ export const asyncRoutes = [
         path: 'cityAccount',
         name: '城市账户管理',
         hidden: true,
-        component: () => import('@/components/org/account'),
+        component: () => import('@/components/depart/account'),
         meta: {
           roles: ['admin','city'] 
         }
@@ -96,7 +96,7 @@ export const asyncRoutes = [
       {
         path: 'group',
         name: '集团管理',
-        component: () => import('@/components/org/city'),
+        component: () => import('@/components/depart/city'),
         meta: {
           roles: ['admin','city','group'] 
         }
@@ -105,7 +105,7 @@ export const asyncRoutes = [
         path: 'groupAccount',
         name: '集团账户管理',
         hidden: true,
-        component: () => import('@/components/org/account'),
+        component: () => import('@/components/depart/account'),
         meta: {
           roles: ['admin','city','group'] 
         }
@@ -113,7 +113,7 @@ export const asyncRoutes = [
       {
         path: 'company',
         name: '公司管理',
-        component: () => import('@/components/org/city'),
+        component: () => import('@/components/depart/city'),
         meta: {
           roles: ['admin','city','group','com'] 
         }
@@ -122,7 +122,7 @@ export const asyncRoutes = [
         path: 'comAccount',
         name: '公司账户管理',
         hidden: true,
-        component: () => import('@/components/org/account'),
+        component: () => import('@/components/depart/account'),
         meta: {
           roles: ['admin','city','group','com'] 
         }
@@ -130,7 +130,7 @@ export const asyncRoutes = [
       {
         path: 'prj',
         name: '项目管理',
-        component: () => import('@/components/org/city'),
+        component: () => import('@/components/depart/city'),
         meta: {
           roles: ['admin','city','group','com','prj'] 
         }
@@ -139,7 +139,7 @@ export const asyncRoutes = [
         path: 'prjAccount',
         name: '项目账户管理',
         hidden: true,
-        component: () => import('@/components/org/account'),
+        component: () => import('@/components/depart/account'),
         meta: {
           roles: ['admin','city','group','com','prj'] 
         }
