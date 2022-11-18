@@ -200,19 +200,23 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          _this.deleteCate(index,row.id);
+          _this.deleteCate(index,row.userId);
         });
       },
       deleteCate(index,ids){
-        var _this = this;
-        postRequest("/admin/city/delete" ,{id: ids}).then(resp=> {
-          var json = resp.data;
-          _this.$message({
-            type: 'success',
-            message: json.data
-          });
-          this.users.splice(index, 1)
-        })
+      var _this = this;
+      request({
+        url: '/vue-element-admin/user/delete',
+        method: 'post',
+        data:  {id:ids} 
+      }).then(resp=> {
+        var json = resp.data;
+        _this.$message({
+          type: 'success',
+          message: '删除成功'
+        });
+        this.users.splice(index, 1)
+      })
       },
       refresh(){
         let _this = this;

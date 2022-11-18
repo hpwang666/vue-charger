@@ -141,6 +141,18 @@ const tokens = {
         }
       } ,
       {
+        url: '/vue-element-admin/user/delete',
+        type: 'post',
+        response: _ => {
+          return {
+            code: 20000,
+            data: {
+             
+            }
+          }
+        }
+      } ,
+      {
         url: '/chart',
         type: 'post',
         response: _ => {

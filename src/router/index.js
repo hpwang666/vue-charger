@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import device from '@/components/device'
-import UserMana from '@/components/UserMana'
+import Charger from '@/components/charger'
 
 Vue.use(Router)
 
@@ -152,9 +152,9 @@ export const asyncRoutes = [
     children: [
       {
         path: 'user',
-        iconCls: 'fa fa-user-o',
-        name: '用户管理',
-        component: UserMana,
+        iconCls: 'fa fa-cab',
+        name: '电站电桩',
+        component: Charger,
         meta : {
           roles: ['admin','editor'] 
         }
