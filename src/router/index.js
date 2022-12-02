@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import device from '@/components/device'
-import Charger from '@/components/charger'
+import Charger from '@/components/charger/charger'
 
 Vue.use(Router)
 
