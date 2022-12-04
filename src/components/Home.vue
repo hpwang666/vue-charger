@@ -62,25 +62,28 @@
           class="el-menu-vertical-demo" style="background-color: #304156" text-color="#ECECEC" active-text-color="#ffd04b" router>
           <template v-for="(item,index) in permission_routes">
             <template v-if="!item.hidden">
-            <el-submenu :index="index+''" v-if="item.children.length>1" :key="index" class="ddd">
-              <template slot="title" >
-                <i :class="item.iconCls"></i>
-                <span >{{item.name}}</span>
-              </template>
-              <el-menu-item v-for="child in showItems(item.children)"  :index="item.path+'/'+child.path" :key="child.path">
-                  {{child.name}}
-              </el-menu-item>
-            </el-submenu>
-            <template v-else>
-              <el-menu-item :index="item.path+'/'+item.children[0].path" :key=index>
+              <el-menu-item v-if="hasOneShowingChild(item.children,item)" :index="item.path+'/'+item.children[0].path" :key=index>
                 <i :class="item.children[0].iconCls"></i>
                 <span slot="title">{{item.children[0].name}}</span>
-              </el-menu-item>
-            </template>
+              </el-menu-item>   
+              <template v-else>
+
+                <el-submenu :index="index+''"  :key="index" class="ddd">
+                  <template slot="title" >
+                  <i :class="item.iconCls"></i>
+                  <span >{{item.name}}</span>
+                  </template>
+                <el-menu-item v-for="child in showItems(item.children)"  :index="item.path+'/'+child.path" :key="child.path">
+                  {{child.name}}
+                </el-menu-item>
+                </el-submenu>
+              </template>
             </template>
           </template>
         </el-menu>
       </el-aside>
+
+
       <el-container>
         <el-main>
           <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -124,6 +127,33 @@
           })
         }
       },
+      hasOneShowingChild(children = [], parent) {
+        var _this=this
+      const showingChildren = children.filter(item => {
+        if (item.hidden) {
+          return false
+        } else {
+          // Temp set(will be used if only has one showing child)
+          _this.onlyOneChild = item
+
+          return true
+        }
+      })
+
+      // When there is only one child router, the child router is displayed by default
+      if (showingChildren.length === 1) {
+       
+        return true
+      }
+
+      // Show parent if there are no child router to display
+      if (showingChildren.length === 0) {
+        this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
+        return true
+      }
+
+      return false
+    },
       handleChange(value){
         console.log(value.length)
       },
@@ -163,7 +193,8 @@
         currentUserName: '',
         dialogVisible: false,
         value:[],
-        options:[]
+        options:[],
+        onlyOneChild:null
       }
     }
   }

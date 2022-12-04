@@ -66,42 +66,11 @@
       </el-table>
 
 
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="500px">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" size="mini" label-width="100px" style="width: 100%">
-        <el-form-item label="设备ID" prop="id">
-          <el-input :disabled="writableMap[dialogStatus]" v-model="temp.id" />
-        </el-form-item>
-        <el-form-item label="时间" prop="date">
-          <el-date-picker v-model="temp.date" type="datetime" />
-        </el-form-item>
-       
-        <el-form-item label="备注">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          取消
-        </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          确认
-        </el-button>
-      </div>
-    </el-dialog>
+     
     </el-main>
     <div style="height: 20px"></div>
    
-    <el-pagination
-      background
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="1"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="20"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
-      align="left">
-    </el-pagination>
+
    
     
   </el-container>
@@ -122,73 +91,19 @@
     },
     methods: {
       handleCreate() {
-        this.resetTemp()
-        this.dialogStatus = 'create'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
+        
       },
-      createData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            const tempData = Object.assign({}, this.temp)
-            tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            postRequest("/admin/category/create", tempData).then(resp => {
-              const index = this.chargers.findIndex(v => v.id === this.temp.id)
-              //this.chargers.splice(index, 1, this.temp)
-              this.chargers.unshift(this.temp)
-              this.dialogFormVisible = false
-              this.$message({
-                message: resp.data.data,
-                type: 'success',
-                duration: 2000
-              })
-            }).catch(()=>{
-               this.dialogFormVisible = false
-               this.$message({
-                  message: "提交失败",
-                  type: 'error',
-                  duration: 2000
-                })
-            })
-          }
-        })
-      },
+     
       handleUpdate(row) {
-        this.temp = Object.assign({}, row) // copy obj
-        this.temp.date = new Date(this.temp.date)
-        this.dialogStatus = 'update'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      },
-      updateData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            const tempData = Object.assign({}, this.temp)
-            tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            postRequest("/admin/category/update", tempData).then(resp => {
-              const index = this.chargers.findIndex(v => v.id === this.temp.id)
-              this.chargers.splice(index, 1, this.temp)
-              this.dialogFormVisible = false
-              this.$message({
-                message: resp.data.data,
-                type: 'success',
-                duration: 2000
-              })
-            }).catch(()=>{
-               this.dialogFormVisible = false
-               this.$message({
-                  message: "提交失败",
-                  type: 'error',
-                  duration: 2000
-                })
-            })
+       var _this = this;
+        this.$router.push({
+          path: 'chargerEdit',
+          query: {
+            id: row.id
           }
         })
-      },    
+      },
+     
       handleDelete(index, row){
         let _this = this;
         this.$confirm('确认删除 ' + row.id + ' ?', '提示', {
@@ -196,10 +111,10 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          _this.deleteCate(index,row.id);
+          _this.deleteCharger(index,row.id);
         });
       },
-      deleteCate(index,ids){
+      deleteCharger(index,ids){
         var _this = this;
         postRequest("/admin/category/delete" ,{id: ids}).then(resp=> {
           var json = resp.data;
@@ -236,14 +151,6 @@
             message: '加载失败'
           });
         });
-      },
-      resetTemp() {
-        this.temp = {
-          id: undefined,
-          date: new Date(),
-          onLine: '离线',
-          remark: ''
-        }
       }
     },
     mounted: function () {
@@ -254,21 +161,7 @@
         onOffLine: '',
         chargers: [],
         onLineStatus: ['在线','离线'],
-        temp: "",
-        dialogFormVisible: false,
-        dialogStatus: '',
-        textMap: {
-          update: '修改',
-          create: '新建'
-        },
-        writableMap: {
-          update: true,
-          create: false
-        },
-        rules: {
-          id: [{ required: true, message: 'id is required', trigger: 'change' }],
-          date: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }]        
-        }
+        dialogStatus: ''
       }
     },
     filters: {

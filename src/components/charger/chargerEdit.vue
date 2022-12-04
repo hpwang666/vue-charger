@@ -1,66 +1,80 @@
 <template>
   <el-container>
-    <el-header class="cate_mana_header">
-      <el-input
-        placeholder="请输入城市名称"
-        v-model="cityName" style="width: 230px;">
-      </el-input>
-     
-      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索城市</el-button>
-      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加城市</el-button>
+    <el-header class="charger_header">
+      
+      <el-select v-model="onOffLine" placeholder='在线状态' clearable style="margin-left: 10px" >
+        <el-option v-for="item in onLineStatus" :key="item" :label="item" :value="item" />
+      </el-select>
+      
+      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加设备</el-button>
     </el-header>
-    <el-main class="cate_mana_main">
+    <el-main class="charger_main">
       <el-table
         ref="multipleTable"
-        :data="citys"
+        :data="chargers"
         style="width: 100%"
         max-height="600"
+        max-width="600"
         border>
+        <el-table-column
+          label="设备ID"
+          prop="id"
+          width="180" align="left">
+        </el-table-column>
          <el-table-column
-          label="序号"
-          type = "index"
-          width="130" align="left">
+          label="当前费率"
+          prop="rate"
+          width="160" align="left">
         </el-table-column>
         <el-table-column
-          label="城市名称"
-          prop="cityName"
-          width="360" align="left">
+          label="地址"
+          prop="address"
+          width="320" align="left">
         </el-table-column>
         <el-table-column
-          prop="date"
-          label="启用时间" align="left">
+          label="电话"
+          prop="phone"
+          width="160" align="left">
         </el-table-column>
-        <el-table-column label="分配账号">
-           <template v-slot="scope">
-            <el-button
-              size="mini"
-              type="success"
-              @click="handleAccount(scope.row)">账户
-            </el-button>
+        <el-table-column
+          prop="slots"
+          label="充电枪数量" align="left">
+        </el-table-column>
+        <el-table-column
+          label="在线状态"
+          prop="onLine"
+          width="140" >
+          <template slot-scope="{row}">
+            <el-tag :type="row.onLine | statusFilter" effect="dark" size="small">
+              {{ row.onLine }}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="left">
-          <template v-slot="scope">
+        <el-table-column label="操作" align="left" width="180">
+          <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleUpdate(scope.row,scope.$index)">修改
+              @click="handleUpdate(scope.row)">修改
             </el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.row,scope.$index)">删除
+              @click="handleDelete(scope.$index, scope.row)">删除
             </el-button>
           </template>
         </el-table-column>
       </el-table>
 
+
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="500px">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" size="mini" label-width="100px" style="width: 100%">
-       
-       
-        <el-form-item label="城市名称" prop="cityName">
-          <el-input v-model="temp.cityName" />
+        <el-form-item label="设备ID" prop="id">
+          <el-input :disabled="writableMap[dialogStatus]" v-model="temp.id" />
         </el-form-item>
+        <el-form-item label="时间" prop="date">
+          <el-date-picker v-model="temp.date" type="datetime" />
+        </el-form-item>
+       
         <el-form-item label="备注">
           <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
@@ -94,8 +108,18 @@
   
 </template>
 <script>
+  import {postRequest} from '../../utils/api'
   import request from '@/utils/request'
   export default{
+    watch: {
+      onOffLine: function () {
+       
+        //console.log(this.chargers.length+" fuck "+this.onOffLine);
+        //return this.onOffLine
+        this.refresh();
+        
+          }
+    },
     methods: {
       handleCreate() {
         this.resetTemp()
@@ -110,18 +134,13 @@
           if (valid) {
             const tempData = Object.assign({}, this.temp)
             tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            request({
-              url: '/admin/city/create',
-              method: 'post',
-              data:  tempData 
-            }).then(resp => {
-              
-              this.temp.date=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
-              this.temp.id=resp.data.id;//返回的新的ID
-              this.citys.unshift(this.temp)//新的object添加到数组头部
+            postRequest("/admin/category/create", tempData).then(resp => {
+              const index = this.chargers.findIndex(v => v.id === this.temp.id)
+              //this.chargers.splice(index, 1, this.temp)
+              this.chargers.unshift(this.temp)
               this.dialogFormVisible = false
               this.$message({
-                message: resp.data.msg,
+                message: resp.data.data,
                 type: 'success',
                 duration: 2000
               })
@@ -136,9 +155,9 @@
           }
         })
       },
-      handleUpdate(row,index) {
+      handleUpdate(row) {
         this.temp = Object.assign({}, row) // copy obj
-        this.temp.index = index
+        this.temp.date = new Date(this.temp.date)
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
         this.$nextTick(() => {
@@ -150,17 +169,12 @@
           if (valid) {
             const tempData = Object.assign({}, this.temp)
             tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            request({
-              url: '/admin/city/update',
-              method: 'post',
-              data:  tempData 
-            }).then(resp => {
-              const index = this.temp.index
-              this.temp.date=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
-              this.citys.splice(index, 1, this.temp) //添加新元素
+            postRequest("/admin/category/update", tempData).then(resp => {
+              const index = this.chargers.findIndex(v => v.id === this.temp.id)
+              this.chargers.splice(index, 1, this.temp)
               this.dialogFormVisible = false
               this.$message({
-                message: resp.data,
+                message: resp.data.data,
                 type: 'success',
                 duration: 2000
               })
@@ -175,48 +189,47 @@
           }
         })
       },    
-      handleDelete(row,index){
+      handleDelete(index, row){
         let _this = this;
-        this.$confirm('确认删除 ' + row.cityName + ' ?', '提示', {
+        this.$confirm('确认删除 ' + row.id + ' ?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          _this.deleteDepart(index,row.id);
+          _this.deleteCate(index,row.id);
         });
       },
-      deleteDepart(index,ids){
+      deleteCate(index,ids){
         var _this = this;
-        request({
-          url: '/admin/city/delete',
-          method: 'post',
-          data:{id: ids}
-        }).then(resp=> {
+        postRequest("/admin/category/delete" ,{id: ids}).then(resp=> {
+          var json = resp.data;
           _this.$message({
             type: 'success',
-            message: resp.data
+            message: json.data
           });
-          this.citys.splice(index, 1)
-        })
-      },
-      handleAccount(row){
-        var _this = this;
-        this.$router.push({
-          path: 'cityAccount',
-          query: {
-            id: row.id,
-            depart:"city",
-            departName:row.cityName
-          }
+          this.chargers.splice(index, 1)
         })
       },
       refresh(){
         let _this = this;
         request({
-          url: '/admin/city/all',
+          url: '/vue-element-admin/dev/chargerList',
           method: 'post'
         }).then(resp=> {
-          _this.citys = resp.data.citys;
+          var i = 0;
+          var tempList = resp.data.array;
+          if(_this.onOffLine!=''){
+            while (i < tempList.length) {
+              if (tempList[i].onLine != _this.onOffLine) {
+                console.log(tempList[i].onLine);
+                tempList.splice(i, 1);
+              } else {
+                ++i;
+              }
+            }
+          }
+          
+          _this.chargers = tempList;
         }).catch(()=>{
           _this.$message({
             type: 'error',
@@ -226,18 +239,11 @@
       },
       resetTemp() {
         this.temp = {
-          index:-1,
-          id:'0',
-          cityName: undefined,
+          id: undefined,
           date: new Date(),
+          onLine: '离线',
           remark: ''
         }
-      },
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
       }
     },
     mounted: function () {
@@ -245,9 +251,9 @@
     },
     data(){
       return {
-        cityName: '',
         onOffLine: '',
-        citys: [],
+        chargers: [],
+        onLineStatus: ['在线','离线'],
         temp: "",
         dialogFormVisible: false,
         dialogStatus: '',
@@ -260,36 +266,24 @@
           create: false
         },
         rules: {
-          date: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-          cityName: [{ required: true, message: 'name is required', trigger: 'blur' }]
+          id: [{ required: true, message: 'id is required', trigger: 'change' }],
+          date: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }]        
         }
       }
+    },
+    filters: {
+    statusFilter(status) {
+      const statusMap = {
+        在线: 'success',
+        离线: 'danger'
+      }
+      return statusMap[status]
     }
   }
-
-  Date.prototype.format = function(fmt) { 
-     var o = { 
-        "M+" : this.getMonth()+1,                 //月份 
-        "d+" : this.getDate(),                    //日 
-        "h+" : this.getHours(),                   //小时 
-        "m+" : this.getMinutes(),                 //分 
-        "s+" : this.getSeconds(),                 //秒 
-        "q+" : Math.floor((this.getMonth()+3)/3), //季度 
-        "S"  : this.getMilliseconds()             //毫秒 
-    }; 
-    if(/(y+)/.test(fmt)) {
-            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
-    }
-     for(var k in o) {
-        if(new RegExp("("+ k +")").test(fmt)){
-             fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-         }
-     }
-    return fmt; 
-}        
+  }
 </script>
 <style>
-  .cate_mana_header {
+  .charger_header {
     background-color: #ececec;
     margin-top: 20px;
     padding-left: 5px;
@@ -297,7 +291,7 @@
     justify-content: flex-start;
   }
 
-  .cate_mana_main {
+  .charger_main {
     /*justify-content: flex-start;*/
     display: flex;
     flex-direction: column;

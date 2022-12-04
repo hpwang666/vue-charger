@@ -148,13 +148,22 @@ export const asyncRoutes = [
   },  {
     path: '/home',
     component: Home,
-    name: '用户管理0',
+    name: '电桩管理0',
     children: [
       {
-        path: 'user',
+        path: 'chargers',
         iconCls: 'fa fa-cab',
         name: '电站电桩',
         component: Charger,
+        meta : {
+          roles: ['admin','editor'] 
+        }
+      },
+      {
+        path: 'chargerEdit',
+        hidden: true,
+        name: '电桩编辑',
+        component: () => import('@/components/charger/chargerEdit'),
         meta : {
           roles: ['admin','editor'] 
         }

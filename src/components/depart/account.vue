@@ -4,7 +4,7 @@
       <el-button type="primary" icon="el-icon-back" size="medium" style="margin-left: 10px" @click="handleBack">返回</el-button>
       <el-input
         placeholder="请输入用户名称"
-        v-model="userName" style="width: 230px;margin-left: 160px">
+        v-model="inputUsername" style="width: 230px;margin-left: 160px">
       </el-input>
      
       <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索用户</el-button>
@@ -285,6 +285,7 @@
       };
       return {
         users: [],
+        inputUsername:"",
         temp: "",
         dialogFormVisible: false,
         dialogStatus: '',
