@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header class="cate_mana_header">
+    <el-header class="account_header">
       <el-button type="primary" icon="el-icon-back" size="medium" style="margin-left: 10px" @click="handleBack">返回</el-button>
       <el-input
         placeholder="请输入用户名称"
@@ -10,7 +10,7 @@
       <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索用户</el-button>
       <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加用户</el-button>
     </el-header>
-    <el-main class="cate_mana_main">
+    <el-main class="account_main">
       <el-table
         ref="multipleTable"
         :data="users"
@@ -343,7 +343,7 @@
 }        
 </script>
 <style>
-  .cate_mana_header {
+  .account_header {
     background-color: #ececec;
     margin-top: 20px;
     padding-left: 5px;
@@ -351,7 +351,7 @@
     justify-content: flex-start;
   }
 
-  .cate_mana_main {
+  .account_main {
     /*justify-content: flex-start;*/
     display: flex;
     flex-direction: column;

@@ -1,303 +1,226 @@
 <template>
-  <el-container>
-    <el-header class="charger_header">
-      
-      <el-select v-model="onOffLine" placeholder='在线状态' clearable style="margin-left: 10px" >
-        <el-option v-for="item in onLineStatus" :key="item" :label="item" :value="item" />
-      </el-select>
-      
-      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加设备</el-button>
-    </el-header>
-    <el-main class="charger_main">
-      <el-table
-        ref="multipleTable"
-        :data="chargers"
-        style="width: 100%"
-        max-height="600"
-        max-width="600"
-        border>
-        <el-table-column
-          label="设备ID"
-          prop="id"
-          width="180" align="left">
-        </el-table-column>
-         <el-table-column
-          label="当前费率"
-          prop="rate"
-          width="160" align="left">
-        </el-table-column>
-        <el-table-column
-          label="地址"
-          prop="address"
-          width="320" align="left">
-        </el-table-column>
-        <el-table-column
-          label="电话"
-          prop="phone"
-          width="160" align="left">
-        </el-table-column>
-        <el-table-column
-          prop="slots"
-          label="充电枪数量" align="left">
-        </el-table-column>
-        <el-table-column
-          label="在线状态"
-          prop="onLine"
-          width="140" >
-          <template slot-scope="{row}">
-            <el-tag :type="row.onLine | statusFilter" effect="dark" size="small">
-              {{ row.onLine }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="left" width="180">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="handleUpdate(scope.row)">修改
-            </el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
 
-
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="500px">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" size="mini" label-width="100px" style="width: 100%">
-        <el-form-item label="设备ID" prop="id">
-          <el-input :disabled="writableMap[dialogStatus]" v-model="temp.id" />
-        </el-form-item>
-        <el-form-item label="时间" prop="date">
-          <el-date-picker v-model="temp.date" type="datetime" />
-        </el-form-item>
-       
-        <el-form-item label="备注">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          取消
-        </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          确认
-        </el-button>
-      </div>
-    </el-dialog>
-    </el-main>
-    <div style="height: 20px"></div>
-   
-    <el-pagination
-      background
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="1"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="20"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
-      align="left">
-    </el-pagination>
-   
-    
-  </el-container>
+<div style="max-height:600px">
   
+ <el-main class="charger_edit_main">
+  <el-form ref="form" :model="form" label-width="120px" >
+  <el-form-item label="电桩ID"  >
+    <div style="width:120px">
+    <el-input v-model="form.id" maxlength="7"  show-word-limit ></el-input>
+    </div>
+  </el-form-item>
+  <el-form-item label="电站地址">
+    <div style="width:60%">
+    <el-input v-model="form.address"></el-input>
+    </div>
+  </el-form-item>
+
+  <el-form-item label="联系电话">
+    <div style="width:30%">
+    <el-input v-model="form.phone"></el-input>
+    </div>
+  </el-form-item>
+
+  <el-form-item  v-for="(domain) in rate" :key="domain" :label="'设置'+domain+'费率： '" >
+    
+    <el-col :span="7">
+      <el-input v-model="form.data1"  size="small" ><template slot="prepend">电费</template> <template slot="append">元/度</template></el-input>
+    </el-col>
+    <el-col  :span="2"> -</el-col>
+      <el-col :span="7">
+      <el-input v-model="form.data2"  size="small" ><template slot="prepend">服务费</template><template slot="append">元/度</template></el-input>
+    </el-col>
+  </el-form-item>  
+   
+
+  <el-form-item v-for="(item,index) in rateInTime.timeQuantum"   :key=item.startTime :label="'配置时间段'+index">
+    <el-col :span="7">
+      <el-time-select  size="small"  v-model="item.startTime"  style="width: 60%;" 
+        :picker-options="{
+        start: item.startTime,
+        step: '01:00',
+        end: item.endTime
+      }"> 
+      </el-time-select>
+    </el-col>
+  
+    <el-col :span="7">
+      <el-time-select placeholder="选择时间"  size="small" v-model="item.endTime" style="width: 60%;" 
+      :picker-options="{
+        start:item.startTime,
+        step: '01:00',
+        end: '24:00'
+      }"> 
+      </el-time-select>
+    </el-col>
+
+    <el-col :span="4">
+      <el-select v-model="form.resource" placeholder="请选择费率" size="small">
+        <el-option label="尖费率" value="shanghai"></el-option>
+        <el-option label="平费率" value="beijing"></el-option>
+      </el-select>
+    </el-col>
+
+    <el-col :span="4" v-if="ifNeddRestRow && index==0">
+      <el-button  size="small" type="success" icon="el-icon-plus" circle @click="addNewRate"></el-button>
+       <el-button  size="small" type="danger" icon="el-icon-minus" circle @click="delNewRate"></el-button>
+    </el-col>
+
+  </el-form-item>
+
+ <el-form-item v-if="ifNeddRestRow" label="配置剩余时间段" >
+    <el-col :span="7"  >
+      <el-time-select id="defaultStartTime"  placeholder="选择时间"  size="small" :clearable=false v-model="form.row_last_startTime"  style="width: 60%;" 
+      :picker-options="{
+        start: form.row_last_startTime,
+        step: '01:00',
+        end: form.row_last_startTime
+      }"> 
+      </el-time-select>
+    </el-col>
+  
+    <el-col :span="7">
+      <el-time-select id="defaultEndTime" placeholder="选择时间"   size="small" :clearable=false v-model="form.row_last_endTime" style="width: 60%; "
+      :picker-options="{
+        start: form.row_last_endTime,
+        step: '01:00',
+        end: form.row_last_startTime
+      }"> 
+      </el-time-select>
+    </el-col>
+
+    <el-col :span="4">
+      <el-select v-model="form.row_last_rate" placeholder="请选择费率" size="small">
+        <el-option label="尖费率" value="shanghai"></el-option>
+        <el-option label="平费率" value="beijing"></el-option>
+      </el-select>
+    </el-col>
+
+  </el-form-item>
+
+  <el-form-item label="即时配送">
+    <el-switch v-model="form.delivery"></el-switch>
+  </el-form-item>
+  <el-form-item label="活动性质">
+    <el-checkbox-group v-model="form.type">
+      <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
+      <el-checkbox label="地推活动" name="type"></el-checkbox>
+      <el-checkbox label="线下主题活动" name="type"></el-checkbox>
+      <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
+    </el-checkbox-group>
+  </el-form-item>
+  <el-form-item label="特殊资源">
+    <el-radio-group v-model="form.resource">
+      <el-radio label="线上品牌商赞助"></el-radio>
+      <el-radio label="线下场地免费"></el-radio>
+    </el-radio-group>
+  </el-form-item>
+  <el-form-item label="备注">
+    <el-input type="textarea" v-model="form.desc"></el-input>
+  </el-form-item>
+  <el-form-item>
+    <el-button type="primary" @click="onSubmit">创建</el-button>
+    <el-button>取消</el-button>
+  </el-form-item>
+</el-form>
+</el-main>
+</div>
 </template>
 <script>
-  import {postRequest} from '../../utils/api'
-  import request from '@/utils/request'
-  export default{
-    watch: {
-      onOffLine: function () {
-       
-        //console.log(this.chargers.length+" fuck "+this.onOffLine);
-        //return this.onOffLine
-        this.refresh();
-        
-          }
+    export default {
+    data() {
+      return {
+        row1_endTime:'',
+        form: {
+          id:'',
+          phone: '',
+          address: '',
+          data1: '',
+          data2: '',
+          data3:'',
+          data4:'',
+          row1_startTime:"0:00",
+          row1_endTime:'',
+          row1_rate:'',
+          row_last_startTime:"0:00",
+          row_last_endTime:'',
+          row_last_rate:'',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        formInline: {
+          user: '',
+          region: ''
+        },
+        rate:['尖','峰','平','谷'],
+        rateInTime:{
+          timeQuantum:[
+          {
+            startTime:'0:00',
+            endTime:'',
+            rate:'',
+            restRow:false}//这里用来表示默认的行，用于显示余下的时间
+          ],
+          row_last_endTime:''//这个决定着是否添加静态行来显示剩下的时间
+        }
+
+      }
     },
     methods: {
-      handleCreate() {
-        this.resetTemp()
-        this.dialogStatus = 'create'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
+      onSubmit() {
+        console.log('submit!');
       },
-      createData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            const tempData = Object.assign({}, this.temp)
-            tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            postRequest("/admin/category/create", tempData).then(resp => {
-              const index = this.chargers.findIndex(v => v.id === this.temp.id)
-              //this.chargers.splice(index, 1, this.temp)
-              this.chargers.unshift(this.temp)
-              this.dialogFormVisible = false
-              this.$message({
-                message: resp.data.data,
-                type: 'success',
-                duration: 2000
-              })
-            }).catch(()=>{
-               this.dialogFormVisible = false
-               this.$message({
-                  message: "提交失败",
-                  type: 'error',
-                  duration: 2000
-                })
-            })
+      addNewRate(){
+        const tempNewRate =   {
+            startTime:this.rateInTime.timeQuantum[this.rateInTime.timeQuantum.length-1].endTime,
+            endTime:'',
+            rate:'',
+            restRow:false}//这里用来表示默认的行，用于显示余下的时间
+        this.rateInTime.timeQuantum.splice(this.rateInTime.timeQuantum.length, 1, tempNewRate)
+      },
+      delNewRate(){
+          if(this.rateInTime.timeQuantum.length>1){
+            this.rateInTime.timeQuantum.splice(this.rateInTime.timeQuantum.length-1, 1);
           }
-        })
       },
-      handleUpdate(row) {
-        this.temp = Object.assign({}, row) // copy obj
-        this.temp.date = new Date(this.temp.date)
-        this.dialogStatus = 'update'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      },
-      updateData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            const tempData = Object.assign({}, this.temp)
-            tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            postRequest("/admin/category/update", tempData).then(resp => {
-              const index = this.chargers.findIndex(v => v.id === this.temp.id)
-              this.chargers.splice(index, 1, this.temp)
-              this.dialogFormVisible = false
-              this.$message({
-                message: resp.data.data,
-                type: 'success',
-                duration: 2000
-              })
-            }).catch(()=>{
-               this.dialogFormVisible = false
-               this.$message({
-                  message: "提交失败",
-                  type: 'error',
-                  duration: 2000
-                })
-            })
-          }
-        })
-      },    
-      handleDelete(index, row){
-        let _this = this;
-        this.$confirm('确认删除 ' + row.id + ' ?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          _this.deleteCate(index,row.id);
-        });
-      },
-      deleteCate(index,ids){
-        var _this = this;
-        postRequest("/admin/category/delete" ,{id: ids}).then(resp=> {
-          var json = resp.data;
-          _this.$message({
-            type: 'success',
-            message: json.data
-          });
-          this.chargers.splice(index, 1)
-        })
-      },
-      refresh(){
-        let _this = this;
-        request({
-          url: '/vue-element-admin/dev/chargerList',
-          method: 'post'
-        }).then(resp=> {
-          var i = 0;
-          var tempList = resp.data.array;
-          if(_this.onOffLine!=''){
-            while (i < tempList.length) {
-              if (tempList[i].onLine != _this.onOffLine) {
-                console.log(tempList[i].onLine);
-                tempList.splice(i, 1);
-              } else {
-                ++i;
-              }
-            }
-          }
-          
-          _this.chargers = tempList;
-        }).catch(()=>{
-          _this.$message({
-            type: 'error',
-            message: '加载失败'
-          });
-        });
-      },
-      resetTemp() {
-        this.temp = {
-          id: undefined,
-          date: new Date(),
-          onLine: '离线',
-          remark: ''
+    },
+    computed:{
+      ifNeddRestRow(){
+         console.log('rateInTime!'+this.rateInTime.timeQuantum.length);
+        if(this.rateInTime.timeQuantum[this.rateInTime.timeQuantum.length-1].endTime ==='24:00'||this.rateInTime.timeQuantum[this.rateInTime.timeQuantum.length-1].endTime ==='')
+          return false;
+        else {
+          this.form.row_last_startTime = this.rateInTime.timeQuantum[this.rateInTime.timeQuantum.length-1].endTime;
+          this.form.row_last_endTime = '24:00';
+
+          return true;
         }
-      }
-    },
-    mounted: function () {
-      this.refresh();
-    },
-    data(){
-      return {
-        onOffLine: '',
-        chargers: [],
-        onLineStatus: ['在线','离线'],
-        temp: "",
-        dialogFormVisible: false,
-        dialogStatus: '',
-        textMap: {
-          update: '修改',
-          create: '新建'
-        },
-        writableMap: {
-          update: true,
-          create: false
-        },
-        rules: {
-          id: [{ required: true, message: 'id is required', trigger: 'change' }],
-          date: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }]        
-        }
-      }
-    },
-    filters: {
-    statusFilter(status) {
-      const statusMap = {
-        在线: 'success',
-        离线: 'danger'
-      }
-      return statusMap[status]
-    }
-  }
+    }}
   }
 </script>
-<style>
-  .charger_header {
-    background-color: #ececec;
-    margin-top: 20px;
-    padding-left: 5px;
-    display: flex;
-    justify-content: flex-start;
-  }
 
-  .charger_main {
+
+<style>
+
+
+  .charger_edit_main {
     /*justify-content: flex-start;*/
     display: flex;
     flex-direction: column;
     padding-left: 5px;
-    background-color: #ececec;
+    background-color: #ffffff;
     margin-top: 20px;
     padding-top: 10px;
+    width: 70%;
   }
+
+  #defaultStartTime{
+    background-color: #d0d0d0;
+  }
+   #defaultEndTime{
+    background-color: #d0d0d0;
+  }
+ 
 </style>
