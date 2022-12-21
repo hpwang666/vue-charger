@@ -91,7 +91,13 @@
     },
     methods: {
       handleCreate() {
-        
+         this.$router.push({
+          path: 'chargerEdit',
+          query: {
+            id: '000',
+            action:'add'
+          }
+        })
       },
      
       handleUpdate(row) {
@@ -99,7 +105,8 @@
         this.$router.push({
           path: 'chargerEdit',
           query: {
-            id: row.id
+            id: row.id,
+            action:'update'
           }
         })
       },

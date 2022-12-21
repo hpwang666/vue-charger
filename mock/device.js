@@ -1,6 +1,34 @@
 //util.js
 
+const rates={
+  id:'1212234',
+  phone: '13545842564',
+  address: '湖北宜昌市西陵区南湖大道23号',
+  data1:'',
+  rates:[
+    {name:'尖',data0:'0.8',data1:'0.4'},
+    {name:'峰',data0:'1.1',data1:'0.4'},
+    {name:'平',data0:'1.0',data1:'0.4'},
+    {name:'谷',data0:'0.3',data1:'0.4'}
+  ],
+  timeQuantum:[
+    {
+      startTime:'0:00',
+      endTime:'22:00',
+      rate:'1'          
+    },
+    {
+      startTime:'22:00',
+      endTime:'23:00',
+      rate:'0'          
+    }
 
+  ],
+  row_last_startTime:"23:00",
+  row_last_endTime:'24:00',
+  row_last_rate:'2',
+  desc: '第一个充电桩'
+}
   
   module.exports = [
     // user login
@@ -88,4 +116,37 @@
         }
       }
     },
+    {
+      url: '/vue-element-admin/dev/genId',
+      type: 'get',
+      response: _ => {
+        return {
+          code: 20000,
+          data: {id:'1234567'}
+          }
+        }
+    },
+    {
+      url: '/vue-element-admin/dev/getRateById',
+      type: 'get',
+      response: _ => {
+        return {
+          code: 20000,
+          data: rates
+          }
+        }
+    },
+    {
+      url: '/vue-element-admin/dev/chargerAdd',
+      type: 'post',
+      response: config => {
+        console.log(config.body)
+        return {
+          code: 20000,
+          data: '好了',
+          }
+        }
+    }
+    
+
   ]
