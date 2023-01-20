@@ -6,9 +6,9 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: '',
     roles: [],
-    depart: []
+    depart: '',
+    departTree:[]
   }
 }
 
@@ -24,8 +24,8 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  SET_DEPART_TREE: (state, departTree) => {
+    state.departTree = departTree
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
@@ -45,14 +45,14 @@ const actions = {
       //  password: password
       //})
       request({
-        url: '/vue-element-admin/user/login',
+        url: '/login',
         method: 'post',
         data:  userInfo 
       }).then(response => {
-        const { data,code } = response
-        if(code == 20000){
-          commit('SET_TOKEN', data)
-          setToken(data)
+        const { result,code } = response
+        if(code == 200){
+          commit('SET_TOKEN', result.token)
+          setToken(result.token)
           resolve('111111')
         }
         else reject()
@@ -64,38 +64,48 @@ const actions = {
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getInfo({ commit }) {
     return new Promise((resolve, reject) => {
-      var bb={token:state.token}
-     
-      //getRequest('/vue-element-admin/user/info?token='+state.token).then(response => {
         request({
-          url: '/vue-element-admin/user/info',
-          method: 'get',
-          params:  bb 
+          url: '/sys/user/info',
+          method: 'get'
         }).then(response => {
-        const { data,code } = response
+        const { code,result } = response
         //console.log(state.token)
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
+        
        
 
-        const { roles, name, avatar } = data[0]
-        const { options } = data[1]
-        //console.log(data[1])
+        const { roles, depart ,name} =result
+        //const { options } = data[1]
+        //console.log(roles)
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
-        if(code == 20000){
+        if(code == 200){
           commit('SET_ROLES', roles)
           commit('SET_NAME', name)
-          commit('SET_AVATAR', avatar)
-          commit('SET_DEPART',options)
-          resolve(data)
+          commit('SET_DEPART',depart)
+          resolve(result)
         }
         else reject();
+        
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // get user info
+  getDepartTree({ commit }) {
+    return new Promise((resolve, reject) => {
+        request({
+          url: '/sys/depart/queryTreeList',
+          method: 'get'
+        }).then(response => {
+        const { result } = response
+        
+        commit('SET_DEPART_TREE',result.departTree);
+        resolve()
         
       }).catch(error => {
         reject(error)
@@ -107,7 +117,7 @@ const actions = {
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         request({
-          url: '/vue-element-admin/user/logout',
+          url: '/logout',
           method: 'get'}).then(() => {
             console.log('logout');
           removeToken() // must remove  token  first

@@ -25,7 +25,7 @@
         <el-cascader
           v-model="value"
           :options="options"
-          :props="{ expandTrigger: 'hover' }"
+          :props="{ expandTrigger: 'click' }"
           @change="handleChange"></el-cascader>
       </div>
       
@@ -103,7 +103,7 @@
 
   export default{
     computed: {
-      ...mapGetters(['name','depart','permission_routes'])
+      ...mapGetters(['name','depart','departTree','permission_routes'])
    
     },
     methods: {
@@ -168,24 +168,28 @@
     mounted: function () {
       var _this = this;
      
-      this.$store.dispatch('user/getInfo').then((resp)=> {
-          _this.currentUserName = this.name;
-          this.options = this.depart;
-
-          var _depart = this.depart[0];
-          var i=0;
-          while(true)
-          {
-              this.value[i]=_depart.value;
-              i++;
-              if(_depart.hasOwnProperty('children'))
-              _depart=_depart.children[0];
-              else break;
-          }
-                
-
+      this.$store.dispatch('user/getInfo').then(()=> {
+          _this.currentUserName = _this.name;
         }).catch(() => {
              _this.$alert('获取用户信息失败');
+      });
+
+      this.$store.dispatch('user/getDepartTree').then(()=> {
+        
+        _this.options = _this.departTree;
+        var _depart = _this.departTree[0];
+        var i=0;
+        while(true)
+        {
+            _this.value[i]=_depart.value;
+            i++;
+            if(_depart.hasOwnProperty('children')&&_depart.children!=null )
+            _depart=_depart.children[0];
+            else break;
+        }
+            
+      }).catch((e) => {
+            _this.$alert('获取用户部门树失败'+e);
       });
     },
     data(){

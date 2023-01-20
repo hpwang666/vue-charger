@@ -40,6 +40,9 @@ export const asyncRoutes = [
     path: '/home',
     component: Home,
     name: '设备管理0',
+    meta : {
+      roles: ['admin','prj'] 
+    },
     children: [
       {
         path: 'device',
@@ -47,7 +50,7 @@ export const asyncRoutes = [
         name: '设备管理',
         component: device,
         meta : {
-          roles: ['admin','editor'] 
+          roles: ['admin','prj'] 
         }
       }
     ]
@@ -56,6 +59,9 @@ export const asyncRoutes = [
     component: Home,
     name: '数据统计0',
     iconCls: 'fa fa-bar-chart',
+    meta : {
+      roles: ['admin'] 
+    },
     children: [
       {
         path: 'charts',
@@ -63,7 +69,7 @@ export const asyncRoutes = [
         name: '数据统计',
         component: () => import('@/components/mix-chart'),
         meta : {
-          roles: ['admin','editor'] 
+          roles: ['admin'] 
         }
       }
     ]
@@ -96,7 +102,7 @@ export const asyncRoutes = [
       {
         path: 'group',
         name: '集团管理',
-        component: () => import('@/components/depart/city'),
+        component: () => import('@/components/depart/group'),
         meta: {
           roles: ['admin','city','group'] 
         }
@@ -113,7 +119,7 @@ export const asyncRoutes = [
       {
         path: 'company',
         name: '公司管理',
-        component: () => import('@/components/depart/city'),
+        component: () => import('@/components/depart/company'),
         meta: {
           roles: ['admin','city','group','com'] 
         }
@@ -130,7 +136,7 @@ export const asyncRoutes = [
       {
         path: 'prj',
         name: '项目管理',
-        component: () => import('@/components/depart/city'),
+        component: () => import('@/components/depart/project'),
         meta: {
           roles: ['admin','city','group','com','prj'] 
         }
@@ -156,7 +162,7 @@ export const asyncRoutes = [
         name: '电站电桩',
         component: Charger,
         meta : {
-          roles: ['admin','editor'] 
+          roles: ['admin','city','group','com','prj'] 
         }
       },
       {
@@ -165,7 +171,7 @@ export const asyncRoutes = [
         name: '电桩编辑',
         component: () => import('@/components/charger/chargerEdit'),
         meta : {
-          roles: ['admin','editor'] 
+          roles: ['admin','city','group','com','prj'] 
         }
       }
     ]

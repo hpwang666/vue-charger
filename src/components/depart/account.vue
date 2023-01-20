@@ -24,12 +24,12 @@
         </el-table-column>
         <el-table-column
           label="账号"
-          prop="userAccount"
+          prop="account"
           width="260" align="left">
         </el-table-column>
         <el-table-column
           label="姓名"
-          prop="userName"
+          prop="name"
           width="160" align="left">
         </el-table-column>
         <el-table-column
@@ -40,13 +40,10 @@
        
         <el-table-column
           label="最后登录时间"
-          prop="lastLogin"
+          prop="loginTime"
           width="260" align="left">
         </el-table-column>
-        <el-table-column
-          prop="createTime"
-          label="创建时间" align="left">
-        </el-table-column>
+      
        
         <el-table-column label="操作" align="left">
           <template v-slot="scope">
@@ -70,11 +67,11 @@
         <el-form-item label="集团名称" >
           <el-input :disabled=true v-model="temp.departName" />
         </el-form-item>
-        <el-form-item label="账号" prop="userAccount">
-          <el-input v-model="temp.userAccount" />
+        <el-form-item label="账号" prop="account">
+          <el-input :disabled="dialogStatus==='update'" v-model="temp.account" />
         </el-form-item>
-        <el-form-item label="用户名称" prop="userName">
-          <el-input v-model="temp.userName" />
+        <el-form-item label="用户名称" prop="name">
+          <el-input v-model="temp.name" />
         </el-form-item>
          <el-form-item label="密码" prop="passwd">
           <el-input type="password" v-model="temp.passwd" />
@@ -121,20 +118,26 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             const tempData = Object.assign({}, this.temp)
-            tempData.createDate = +new Date() // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
 
             request({
-              url: '/vue-element-admin/user/add',
+              url: '/sys/user/add',
               method: 'post',
-              data:  tempData 
+               params:{
+                  departId:tempData.departId
+              },
+              data:{
+                account:tempData.account,
+                name:tempData.name,
+                password:tempData.repasswd,
+                phone:tempData.phone
+              }   
             }).then(resp => {
               
-              this.temp.createTime=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
-              this.temp.userId = resp.data.userId;
+              this.temp.id = resp.result.id;
               this.users.unshift(this.temp)//新的object添加到数组头部
               this.dialogFormVisible = false
               this.$message({
-                message: '添加用户： '+this.temp.userName+'成功',
+                message: '添加用户： '+this.temp.name+'成功',
                 type: 'success',
                 duration: 2000
               })
@@ -154,9 +157,8 @@
         this.temp = Object.assign({}, row) // copy obj
         this.temp.index = index;
         this.temp.departName = this.$route.query.departName
-        this.temp.departId=this.$route.query.id
-        this.temp.lastLogin=undefined;
-        this.temp.createTime=undefined;
+        this.temp.loginTime=undefined
+        this.temp.id =row.id 
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
         this.$nextTick(() => {
@@ -168,17 +170,20 @@
           if (valid) {
             const tempData = Object.assign({}, this.temp)
             request({
-              url: '/vue-element-admin/user/edit',
+              url: '/sys/user/edit',
               method: 'post',
-              data:  tempData 
+              data:{
+                id:tempData.id,
+                name:tempData.name,
+                password:tempData.repasswd,
+                phone:tempData.phone
+              }   
             }).then(resp => {
               const index = this.temp.index
-              this.temp.createTime=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
-              this.temp.lastLogin=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
               this.users.splice(index, 1, this.temp) //添加新元素
               this.dialogFormVisible = false
               this.$message({
-                message: '更新用户： '+this.temp.userName+'成功',
+                message: '更新用户： '+this.temp.name+'成功',
                 type: 'success',
                 duration: 2000
               })
@@ -195,22 +200,21 @@
       },    
       handleDelete(index, row){
         let _this = this;
-        this.$confirm('确认删除 ' + row.userName + ' ?', '提示', {
+        this.$confirm('确认删除 ' + row.name + ' ?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          _this.deleteCate(index,row.userId);
+          _this.deleteCate(index,row.id);
         });
       },
       deleteCate(index,ids){
       var _this = this;
       request({
-        url: '/vue-element-admin/user/delete',
-        method: 'post',
-        data:  {id:ids} 
-      }).then(resp=> {
-        var json = resp.data;
+        url: '/sys/user/delete',
+        method: 'get',
+        params:  {userId:ids} 
+      }).then(()=> {
         _this.$message({
           type: 'success',
           message: '删除成功'
@@ -220,13 +224,15 @@
       },
       refresh(){
         let _this = this;
-        let departId={departId0:_this.$route.query.id}
+        let departId=_this.$route.query.id
         request({
-          url: '/vue-element-admin/depart/userList',
-          method: 'post',
-          data:  departId 
+          url: '/sys/user/getUsersByDepId',
+          method: 'get',
+          params: {
+            departId:departId
+          }  
         }).then(resp=> {
-          _this.users = resp.data.array;
+          _this.users = resp.result;
         }).catch(()=>{
           _this.$message({
             type: 'error',
@@ -239,15 +245,14 @@
           departName:this.$route.query.departName,
           departId:this.$route.query.id,
           index:undefined,
-          userId:undefined,
-          userName: undefined,
-          userAccount:undefined,
+          id:undefined,
+          name: undefined,
+          account:undefined,
           passwd:undefined,
           repasswd:undefined,
           phone:undefined,
-          createTime: undefined,
-          lastLogin:undefined,
-          remark: undefined
+          loginTime:undefined,
+          memo: undefined
         }
       },
       handleBack(){
@@ -302,8 +307,8 @@
               {
                 phone: [{ required: true, message: '手机号码未填写', trigger: 'blur' },
                         {pattern:/^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/,message: '手机号码格式错误', trigger: 'blur'}],
-                userName: [{ required: true, message: 'name is required', trigger: 'blur' }],
-                userAccount: [{ required: true, message: '账号未填写', trigger: 'blur' }],
+                name: [{ required: true, message: 'name is required', trigger: 'blur' }],
+                account: [{ required: true, message: '账号未填写', trigger: 'blur' }],
                 passwd:[{ validator: validatePasswd, trigger: ["blur", "change"]}],
                 repasswd:[{ validator: validateRePassWd, trigger: ["blur", "change"]}]
               },
@@ -311,8 +316,8 @@
               {
                 phone: [{ required: true, message: '手机号码未填写', trigger: 'blur' },
                         {pattern:/^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/,message: '手机号码格式错误', trigger: 'blur'}],
-                userName: [{ required: true, message: 'name is required', trigger: 'blur' }],
-                userAccount: [{ required: true, message: '账号未填写', trigger: 'blur' }],
+                name: [{ required: true, message: 'name is required', trigger: 'blur' }],
+                account: [{ required: true, message: '账号未填写', trigger: 'blur' }],
                 passwd:[{ required: true, validator: validatePasswd, trigger: ["blur"]}],
                 repasswd:[{ required: true, validator: validateRePassWd, trigger: ["blur", "change"]}]
               }

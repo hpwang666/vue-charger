@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth' // get token from cookie
 
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login','/home/log'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -31,7 +31,7 @@ router.beforeEach(async(to, from, next) => {
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
          
           const  { roles } =await store.dispatch('user/getInfo').then((resp)=>{
-            return resp[0];
+            return resp;
           })
           console.log('get roles: '+roles);
           // generate accessible routes map based on roles
@@ -51,12 +51,9 @@ router.beforeEach(async(to, from, next) => {
              
           }
           
-
-         
-
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
-          next({ ...to, replace: true })
+           next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
@@ -74,6 +71,7 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // other pages that do not have permission to access are redirected to the login page.
       next(`/login?redirect=${to.path}`)
+      //next('/login')
     }
   }
 })
