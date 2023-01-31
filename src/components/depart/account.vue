@@ -64,7 +64,7 @@
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="500px">
       <el-form ref="dataForm" :rules="rulesMap[dialogStatus]" :model="temp" label-position="right" size="mini" label-width="100px" style="width: 100%">
        
-        <el-form-item label="集团名称" >
+        <el-form-item :label="departMap[$route.query.depart]" >
           <el-input :disabled=true v-model="temp.departName" />
         </el-form-item>
         <el-form-item label="账号" prop="account">
@@ -321,6 +321,12 @@
                 passwd:[{ required: true, validator: validatePasswd, trigger: ["blur"]}],
                 repasswd:[{ required: true, validator: validateRePassWd, trigger: ["blur", "change"]}]
               }
+        },
+        departMap:{
+          city:"城市名称",
+          group:"集团名称",
+          company:"公司名称",
+          project:"项目名称"
         }
       }
     }

@@ -2,12 +2,12 @@
   <el-container>
     <el-header class="cate_mana_header">
       <el-input
-        placeholder="请输入城市名称"
-        v-model="departName" style="width: 230px;">
+        placeholder="请输入公司名称"
+        v-model="inputDepartName" style="width: 230px;">
       </el-input>
      
-      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索城市</el-button>
-      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加城市</el-button>
+      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索公司</el-button>
+      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加公司</el-button>
     </el-header>
     <el-main class="cate_mana_main">
       <el-table
@@ -22,7 +22,7 @@
           width="130" align="left">
         </el-table-column>
         <el-table-column
-          label="城市名称"
+          label="公司名称"
           prop="departName"
           width="250" align="left">
         </el-table-column>
@@ -63,7 +63,7 @@
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" size="mini" label-width="100px" style="width: 100%">
        
        
-        <el-form-item label="集团" prop="parentId">
+        <el-form-item label="所属集团" prop="parentId">
           <el-select v-model="temp.parentId" placeholder="请选择集团">
             <el-option
               v-for="item in parentDeparts"
@@ -171,10 +171,10 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             const tempData = Object.assign({}, this.temp)
-            tempData.updateTime = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+            //tempData.updateTime = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
             request({
-              url: '/admin/city/update',
-              method: 'post',
+              url: '/sys/depart/edit',
+              method: 'put',
               data:  tempData 
             }).then(resp => {
               const index = this.temp.index
@@ -182,7 +182,7 @@
               this.departs.splice(index, 1, this.temp) //添加新元素
               this.dialogFormVisible = false
               this.$message({
-                message: resp.data,
+                message: resp.result,
                 type: 'success',
                 duration: 2000
               })
@@ -191,7 +191,7 @@
                this.$message({
                   message: "提交失败",
                   type: 'error',
-                  duration: 2000
+                  duration: 5000
                 })
             })
           }
@@ -210,13 +210,13 @@
       deleteDepart(index,ids){
         var _this = this;
         request({
-          url: '/admin/city/delete',
-          method: 'post',
-          data:{id: ids}
+          url: '/sys/depart/delete',
+          method: 'delete',
+          params:{id: ids}
         }).then(resp=> {
           _this.$message({
             type: 'success',
-            message: resp.data
+            message: resp.result
           });
           this.departs.splice(index, 1)
         })
@@ -286,6 +286,7 @@
     },
     data(){
       return {
+        inputDepartName:"",
         departs: [],
         parentDeparts: [],
         temp: "",

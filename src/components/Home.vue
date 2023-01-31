@@ -128,6 +128,8 @@
         }
       },
       hasOneShowingChild(children = [], parent) {
+        //当只有一个可显示的children时候，就不再显示父目录，而此时可以显示图标，
+        //但是当多个子目录时是不会显示图标的
         var _this=this
       const showingChildren = children.filter(item => {
         if (item.hidden) {

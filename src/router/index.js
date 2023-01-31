@@ -41,7 +41,7 @@ export const asyncRoutes = [
     component: Home,
     name: '设备管理0',
     meta : {
-      roles: ['admin','prj'] 
+      roles: ['admin'] 
     },
     children: [
       {
@@ -50,7 +50,7 @@ export const asyncRoutes = [
         name: '设备管理',
         component: device,
         meta : {
-          roles: ['admin','prj'] 
+          roles: ['admin'] 
         }
       }
     ]
@@ -79,7 +79,7 @@ export const asyncRoutes = [
     name: '组织机构',
     iconCls: 'fa fa-file-text-o',
     meta: {
-      roles: ['admin','city','group','com','prj'] 
+      roles: ['superAdmin','city','group','com','prj'] 
     },
     children: [
       {
@@ -87,7 +87,7 @@ export const asyncRoutes = [
         name: '城市管理',
         component: () => import('@/components/depart/city'),
         meta: {
-          roles: ['admin','city'] 
+          roles: ['superAdmin','city'] 
         }
       }, 
       {
@@ -96,7 +96,7 @@ export const asyncRoutes = [
         hidden: true,
         component: () => import('@/components/depart/account'),
         meta: {
-          roles: ['admin','city'] 
+          roles: ['superAdmin','city'] 
         }
       }, 
       {
@@ -104,7 +104,7 @@ export const asyncRoutes = [
         name: '集团管理',
         component: () => import('@/components/depart/group'),
         meta: {
-          roles: ['admin','city','group'] 
+          roles: ['superAdmin','city','group'] 
         }
       }, 
       {
@@ -113,7 +113,7 @@ export const asyncRoutes = [
         hidden: true,
         component: () => import('@/components/depart/account'),
         meta: {
-          roles: ['admin','city','group'] 
+          roles: ['superAdmin','city','group'] 
         }
       }, 
       {
@@ -121,7 +121,7 @@ export const asyncRoutes = [
         name: '公司管理',
         component: () => import('@/components/depart/company'),
         meta: {
-          roles: ['admin','city','group','com'] 
+          roles: ['superAdmin','city','group','com'] 
         }
       },
       {
@@ -130,15 +130,16 @@ export const asyncRoutes = [
         hidden: true,
         component: () => import('@/components/depart/account'),
         meta: {
-          roles: ['admin','city','group','com'] 
+          roles: ['superAdmin','city','group','com'] 
         }
       }, 
       {
-        path: 'prj',
+        path: 'project',
         name: '项目管理',
+        iconCls: 'fa fa-file-text-o',
         component: () => import('@/components/depart/project'),
         meta: {
-          roles: ['admin','city','group','com','prj'] 
+          roles: ['superAdmin','city','group','com','prj'] 
         }
       },
       {
@@ -147,7 +148,7 @@ export const asyncRoutes = [
         hidden: true,
         component: () => import('@/components/depart/account'),
         meta: {
-          roles: ['admin','city','group','com','prj'] 
+          roles: ['superAdmin','city','group','com','prj'] 
         }
       }, 
     ]
@@ -181,7 +182,7 @@ export const asyncRoutes = [
     component: Home,
     name: '操作日志0',
     meta : {
-      roles: ['admin'] 
+      roles: ['superAdmin'] 
     },
     children: [
       {
@@ -190,7 +191,7 @@ export const asyncRoutes = [
         name: '操作日志',
         component: () => import('@/components/log'),
         meta : {
-          roles: ['admin'] 
+          roles: ['superAdmin'] 
         }
       }
     ]

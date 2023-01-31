@@ -3,7 +3,7 @@
     <el-header class="cate_mana_header">
       <el-input
         placeholder="请输入城市名称"
-        v-model="cityName" style="width: 230px;">
+        v-model="inputDepartName" style="width: 230px;">
       </el-input>
      
       <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索城市</el-button>
@@ -12,7 +12,7 @@
     <el-main class="cate_mana_main">
       <el-table
         ref="multipleTable"
-        :data="citys"
+        :data="departs"
         style="width: 100%"
         max-height="600"
         border>
@@ -23,12 +23,17 @@
         </el-table-column>
         <el-table-column
           label="城市名称"
-          prop="cityName"
-          width="360" align="left">
+          prop="departName"
+          width="250" align="left">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="updateTime"
           label="启用时间" align="left">
+        </el-table-column>
+        <el-table-column
+          label="备注"
+          prop="memo"
+          width="300" align="left">
         </el-table-column>
         <el-table-column label="分配账号">
            <template v-slot="scope">
@@ -54,15 +59,16 @@
         </el-table-column>
       </el-table>
 
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="500px">
+      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="520px">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" size="mini" label-width="100px" style="width: 100%">
        
        
-        <el-form-item label="城市名称" prop="cityName">
-          <el-input v-model="temp.cityName" />
+       
+        <el-form-item label="城市名称" prop="departName">
+          <el-input v-model="temp.departName" />
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+          <el-input v-model="temp.memo" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -95,7 +101,11 @@
 </template>
 <script>
   import request from '@/utils/request'
+  import { mapGetters } from 'vuex'
   export default{
+    computed: {
+      ...mapGetters(['name','depart','departTree'])
+    },
     methods: {
       handleCreate() {
         this.resetTemp()
@@ -109,19 +119,22 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             const tempData = Object.assign({}, this.temp)
-            tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
             request({
-              url: '/admin/city/create',
+              url: '/sys/depart/add',
               method: 'post',
-              data:  tempData 
+              data:  {
+                parentId:tempData.parentId,
+                departName:tempData.departName,
+                memo:tempData.memo
+              } 
             }).then(resp => {
               
-              this.temp.date=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
-              this.temp.id=resp.data.id;//返回的新的ID
-              this.citys.unshift(this.temp)//新的object添加到数组头部
+              this.temp.updateTime=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
+              this.temp.id=resp.result.id;//返回的新的ID
+              this.departs.unshift(this.temp)//新的object添加到数组头部
               this.dialogFormVisible = false
               this.$message({
-                message: resp.data.msg,
+                message: resp.message,
                 type: 'success',
                 duration: 2000
               })
@@ -149,18 +162,18 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             const tempData = Object.assign({}, this.temp)
-            tempData.date = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+            //tempData.updateTime = +new Date(tempData.date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
             request({
-              url: '/admin/city/update',
-              method: 'post',
+              url: '/sys/depart/edit',
+              method: 'put',
               data:  tempData 
             }).then(resp => {
               const index = this.temp.index
-              this.temp.date=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
-              this.citys.splice(index, 1, this.temp) //添加新元素
+              this.temp.updateTime=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
+              this.departs.splice(index, 1, this.temp) //添加新元素
               this.dialogFormVisible = false
               this.$message({
-                message: resp.data,
+                message: resp.result,
                 type: 'success',
                 duration: 2000
               })
@@ -169,7 +182,7 @@
                this.$message({
                   message: "提交失败",
                   type: 'error',
-                  duration: 2000
+                  duration: 5000
                 })
             })
           }
@@ -177,7 +190,7 @@
       },    
       handleDelete(row,index){
         let _this = this;
-        this.$confirm('确认删除 ' + row.cityName + ' ?', '提示', {
+        this.$confirm('确认删除 ' + row.departName + ' ?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -188,15 +201,15 @@
       deleteDepart(index,ids){
         var _this = this;
         request({
-          url: '/admin/city/delete',
-          method: 'post',
-          data:{id: ids}
+          url: '/sys/depart/delete',
+          method: 'delete',
+          params:{id: ids}
         }).then(resp=> {
           _this.$message({
             type: 'success',
-            message: resp.data
+            message: resp.result
           });
-          this.citys.splice(index, 1)
+          this.departs.splice(index, 1)
         })
       },
       handleAccount(row){
@@ -206,31 +219,36 @@
           query: {
             id: row.id,
             depart:"city",
-            departName:row.cityName
+            departName:row.departName
           }
         })
       },
       refresh(){
         let _this = this;
         request({
-          url: '/admin/city/all',
-          method: 'post'
+          url: '/sys/depart/list',
+          method: 'get',
+          params: {
+            orgCategory:1
+          }
         }).then(resp=> {
-          _this.citys = resp.data.citys;
+          _this.departs = resp.result;
         }).catch(()=>{
           _this.$message({
             type: 'error',
             message: '加载失败'
           });
         });
+       
       },
       resetTemp() {
         this.temp = {
           index:-1,
           id:'0',
-          cityName: undefined,
-          date: new Date(),
-          remark: ''
+          departName: undefined,
+          parentId: undefined,
+          updateTime: new Date(),
+          memo: ''
         }
       },
       handleSizeChange(val) {
@@ -240,14 +258,14 @@
         console.log(`当前页: ${val}`);
       }
     },
+
     mounted: function () {
       this.refresh();
     },
     data(){
       return {
-        cityName: '',
-        onOffLine: '',
-        citys: [],
+        inputDepartName:"",
+        departs: [],
         temp: "",
         dialogFormVisible: false,
         dialogStatus: '',
@@ -260,8 +278,8 @@
           create: false
         },
         rules: {
-          date: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-          cityName: [{ required: true, message: 'name is required', trigger: 'blur' }]
+          parentId: [{ required: true, message: '选择城市', trigger: 'change ' }],
+          departName: [{ required: true, message: '输入名称', trigger: 'blur' }]
         }
       }
     }
