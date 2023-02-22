@@ -56,6 +56,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
 module.exports = new Promise((resolve, reject) => {
   portfinder.basePort = process.env.PORT || config.dev.port
+  console.log(">>>>>>>>>>>>>>>>>>>>"+process.env.NODE_ENV)
   portfinder.getPort((err, port) => {
     if (err) {
       reject(err)

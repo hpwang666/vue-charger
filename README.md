@@ -15,3 +15,10 @@ npm run dev
 npm run build--test 
 npm run build--prod
 ```
+
+支持压缩打包，需要安装
+```
+npm install compression-webpack-plugin@1.1.12 --save-dev
+
+
+```

@@ -4,34 +4,34 @@
       <div class="home_title" color = "#000">大连杂货码头公司能耗管理系统</div>
     
       <div class="user_depart" >
-        <i v-if="value[0]" class="el-icon-map-location" ></i>
-        {{ value[0]}}  
-        <i v-if="value[1]" class="el-icon-office-building" ></i>
-        {{ value[1]}}  
-          <i v-if="value[2]" class="el-icon-office-building" ></i>
-        {{ value[2]}}  
-          <i v-if="value[3]" class="el-icon-s-home" ></i>
-        {{ value[3]}}
+        <i v-if="selectedPark[0]" class="el-icon-map-location" ></i>
+        {{ selectedPark[0]}}  
+        <i v-if="selectedPark[1]" class="el-icon-office-building" ></i>
+        {{ selectedPark[1]}}  
+          <i v-if="selectedPark[2]" class="el-icon-office-building" ></i>
+        {{selectedPark[2]}}  
+          <i v-if="selectedPark[3]" class="el-icon-s-home" ></i>
+        {{ selectedPark[3]}}
         
       </div>
       <el-dialog
-        title="车场选择"
+        title="充电站选择"
         :visible.sync="dialogVisible"
         width="40%"
         :before-close="handleClose">
         
        <div class="depark—block">
-        <span>车场 </span>
+        <span>充电站 </span>
         <el-cascader
           v-model="value"
           :options="options"
-          :props="{ expandTrigger: 'click' }"
+          :props="{ expandTrigger: 'hover' }"
           @change="handleChange"></el-cascader>
       </div>
       
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="hangleSelectionConfirm">确 定</el-button>
         </span>
       </el-dialog>
 
@@ -103,8 +103,7 @@
 
   export default{
     computed: {
-      ...mapGetters(['name','depart','departTree','permission_routes'])
-   
+      ...mapGetters(['name','depart','departTree','permission_routes','stationId'])
     },
     methods: {
       handleCommand(command){
@@ -126,6 +125,32 @@
             //取消
           })
         }
+      },
+      hangleSelectionConfirm(){
+        
+        if(this.value.length == 4){
+          this.selectedPark = this.value;
+          this.dialogVisible = false;
+          //this.$store.commit('station/SET_STATION_ID', this.value[3]);   
+         
+          this.findIdByName(this.departTree,this.value[3]);
+         //console.log(this.stationId)
+        }
+        else{
+          this.$alert('请选择一个充电站');
+        }
+      },
+      findIdByName(departs,stationName){
+        departs.forEach(element => {
+          if(element.orgCategory===4&& element.value===stationName) {
+           this.$store.commit('station/SET_STATION_ID', element.key);  
+          }
+          if(element.hasOwnProperty('children')&&element.children!=null )
+          {
+              this.findIdByName(element.children,stationName);
+          }
+          return;
+        });
       },
       hasOneShowingChild(children = [], parent) {
         //当只有一个可显示的children时候，就不再显示父目录，而此时可以显示图标，
@@ -157,7 +182,7 @@
       return false
     },
       handleChange(value){
-        console.log(value.length)
+        //console.log(value.length)
       },
       handleClose()
       {},
@@ -183,7 +208,7 @@
         var i=0;
         while(true)
         {
-            _this.value[i]=_depart.value;
+            _this.selectedPark[i]=_depart.value;
             i++;
             if(_depart.hasOwnProperty('children')&&_depart.children!=null )
             _depart=_depart.children[0];
@@ -199,6 +224,7 @@
         currentUserName: '',
         dialogVisible: false,
         value:[],
+        selectedPark:[],
         options:[],
         onlyOneChild:null
       }
