@@ -131,7 +131,7 @@
         if(this.value.length == 4){
           this.selectedPark = this.value;
           this.dialogVisible = false;
-          //this.$store.commit('station/SET_STATION_ID', this.value[3]);   
+          this.$store.commit('station/SET_STATION_ID', this.value[3]);   
          
           this.findIdByName(this.departTree,this.value[3]);
          //console.log(this.stationId)
@@ -213,6 +213,13 @@
             if(_depart.hasOwnProperty('children')&&_depart.children!=null )
             _depart=_depart.children[0];
             else break;
+        }
+
+        //如果是完整的即包含了电站ID ，那么就进行存储更新
+        if(i==4){
+            _this.$store.commit('station/SET_STATION_ID', _depart.key);   
+            console.log("存储ID: "+_this.stationId)
+
         }
             
       }).catch((e) => {

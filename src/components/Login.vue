@@ -12,7 +12,7 @@
     <el-form-item style="width: 100%">
       <el-button type="primary" @click="submitClick()" style="width: 100%">登录</el-button>
     </el-form-item>
-    <el-form-item>{{ token }}</el-form-item>
+   
   </el-form>
 </template>
 <script>

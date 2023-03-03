@@ -18,11 +18,11 @@
         border>
         <el-table-column
           label="设备ID"
-          prop="id"
+          prop="serialNum"
           width="180" align="left">
         </el-table-column>
          <el-table-column
-          label="当前费率"
+          label="当前费率 (元/度)"
           prop="rate"
           width="160" align="left">
         </el-table-column>
@@ -37,7 +37,7 @@
           width="160" align="left">
         </el-table-column>
         <el-table-column
-          prop="slots"
+          prop="plugs"
           label="充电枪数量" align="left">
         </el-table-column>
         <el-table-column
@@ -79,6 +79,8 @@
 <script>
   import {postRequest} from '../../utils/api'
   import request from '@/utils/request'
+   import { mapGetters } from 'vuex'
+  
   export default{
     watch: {
       onOffLine: function () {
@@ -87,7 +89,13 @@
         //return this.onOffLine
         this.refresh();
         
-          }
+          },
+      stationId:function (){ //动态监听电站ID的变化，刷新界面
+         this.refresh();
+      }
+    },
+     computed: {
+      ...mapGetters(['stationId'])
     },
     methods: {
       handleCreate() {
@@ -95,7 +103,7 @@
           path: 'chargerEdit',
           query: {
             id: '000',
-            action:'add'
+            action:'create'
           }
         })
       },
@@ -105,7 +113,7 @@
         this.$router.push({
           path: 'chargerEdit',
           query: {
-            id: row.id,
+            serialNum: row.serialNum,
             action:'update'
           }
         })
@@ -113,21 +121,27 @@
      
       handleDelete(index, row){
         let _this = this;
-        this.$confirm('确认删除 ' + row.id + ' ?', '提示', {
+        this.$confirm('确认删除 ' + row.serialNum + ' ?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          _this.deleteCharger(index,row.id);
+          _this.deleteCharger(index,row.serialNum);
         });
       },
-      deleteCharger(index,ids){
+      deleteCharger(index,serialNum){
         var _this = this;
-        postRequest("/admin/category/delete" ,{id: ids}).then(resp=> {
-          var json = resp.data;
+         request({
+          url: '/charger/delete',
+          method: 'get',
+          params:{
+            serialNum:serialNum
+          }
+        }).then(resp=> {
+          
           _this.$message({
             type: 'success',
-            message: json.data
+            message: resp.result
           });
           this.chargers.splice(index, 1)
         })
@@ -135,11 +149,14 @@
       refresh(){
         let _this = this;
         request({
-          url: '/vue-element-admin/dev/chargerList',
-          method: 'post'
+          url: '/charger/list',
+          method: 'get',
+          params:{
+            departId:_this.stationId
+          }
         }).then(resp=> {
           var i = 0;
-          var tempList = resp.data.array;
+          var tempList = resp.result;
           if(_this.onOffLine!=''){
             while (i < tempList.length) {
               if (tempList[i].onLine != _this.onOffLine) {
@@ -152,6 +169,7 @@
           }
           
           _this.chargers = tempList;
+          console.log(_this.chargers);
         }).catch(()=>{
           _this.$message({
             type: 'error',
@@ -161,7 +179,10 @@
       }
     },
     mounted: function () {
-      this.refresh();
+      
+      setTimeout(() => {
+        this.refresh();
+      }, 80)
     },
     data(){
       return {
