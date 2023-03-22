@@ -4,6 +4,7 @@ import Login from '@/components/Login'
 import Home from '@/components/Home'
 import device from '@/components/device'
 import Charger from '@/components/charger/charger'
+import order from '@/components/order/order'
 
 Vue.use(Router)
 
@@ -173,6 +174,25 @@ export const asyncRoutes = [
         component: () => import('@/components/charger/chargerEdit'),
         meta : {
           roles: ['admin','city','group','com','prj'] 
+        }
+      }
+    ]
+  },
+  {
+    path: '/home',
+    component: Home,
+    name: '订单查询0',
+    meta : {
+      roles: ['superAdmin','admin'] 
+    },
+    children: [
+      {
+        path: 'order',
+        iconCls: 'fa fa-hand-pointer-o',
+        name: '订单查询',
+        component: order,
+        meta : {
+          roles: ['superAdmin','admin'] 
         }
       }
     ]

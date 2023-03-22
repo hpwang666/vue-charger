@@ -16,6 +16,13 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
 
+    for (let key in config.params) {
+      if (config.params[key] === '' || config.params[key] === null || config.params[key] === undefined) {
+          delete config.params[key]
+      }
+    }
+
+
     if (store.getters.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key

@@ -29,8 +29,8 @@
         },
         checked: true,
         loginForm: {
-          account: 'wwwe',
-          password: 'eeee'
+          account: 'whp001',
+          password: 'a'
         },
         loading: false
       }
