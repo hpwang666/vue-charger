@@ -182,7 +182,7 @@
       
       setTimeout(() => {
         this.refresh();
-      }, 80)
+      }, 120)
     },
     data(){
       return {

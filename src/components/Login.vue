@@ -1,4 +1,5 @@
 <template>
+ <el-container>
   <el-form :rules="rules" ref="dataForm" :model="loginForm" class="login-container" label-position="left"
            label-width="0px" v-loading="loading">
     <h3 class="login_title">系统登录</h3>
@@ -12,8 +13,11 @@
     <el-form-item style="width: 100%">
       <el-button type="primary" @click="submitClick()" style="width: 100%">登录</el-button>
     </el-form-item>
-   
   </el-form>
+  <div id="beian" >
+     <a href="https://beian.miit.gov.cn/" target="_blank">鄂ICP备2023002263号-1</a>
+  </div>
+  </el-container>
 </template>
 <script>
   import { mapGetters } from 'vuex'
@@ -80,5 +84,11 @@
   .login_remember {
     margin: 0px 0px 35px 0px;
     text-align: left;
+  }
+  #beian {
+    position: absolute;
+    left:50%;
+    bottom:0;
+    text-align: center;
   }
 </style>
