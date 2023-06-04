@@ -15,7 +15,7 @@
     "@jiaminghi/data-view": "^2.10.0",
     "axios": "^0.17.1",
     "echarts": "4.2.1",
-    "element-ui": "^2.15.5",
+    "element-ui": "^2.15.13",
     "font-awesome": "^4.7.0",
     "js-cookie": "^2.2.0",
     "less": "^3.0.4",

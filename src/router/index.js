@@ -55,7 +55,28 @@ export const asyncRoutes = [
         }
       }
     ]
-  }, {
+  },
+  {
+    path: '/home',
+    component: Home,
+    name: '数据统计0',
+    iconCls: 'fa fa-bar-chart',
+    meta : {
+      roles: ['admin'] 
+    },
+    children: [
+      {
+        path: 'station',
+        iconCls: 'fa fa-bar-chart',
+        name: '全局配置',
+        component: () => import('@/components/station/station'),
+        meta : {
+          roles: ['admin'] 
+        }
+      }
+    ]
+  },
+  {
     path: '/home',
     component: Home,
     name: '数据统计0',
