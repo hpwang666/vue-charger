@@ -45,7 +45,7 @@ const actions = {
       //  password: password
       //})
       request({
-        url: '/login',
+        url: '/sys/login',
         method: 'post',
         data:  userInfo 
       }).then(response => {
@@ -117,7 +117,7 @@ const actions = {
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         request({
-          url: '/logout',
+          url: '/sys/logout',
           method: 'get'}).then(() => {
             console.log('logout');
           removeToken() // must remove  token  first

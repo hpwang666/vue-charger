@@ -1,27 +1,6 @@
 <template>
   <el-container>
-    <el-header class="order_header">
-      
-      <el-select v-model="settlement" placeholder='结算状态' clearable style="margin-left: 10px" >
-        <el-option v-for="item in settleFlag" :key="item" :label="item" :value="item" />
-      </el-select>
-
-     <div class="block"  style="margin-left: 20px">
-      <span class="demonstration">日期:</span>
-      <el-date-picker
-        v-model="selectedDate"
-        type="daterange"
-        align="right"
-        unlink-panels
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        :picker-options="pickerOptions">
-      </el-date-picker>
-    </div>
-      
-      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleQuery">查询</el-button>
-    </el-header>
+   
     <el-main class="order_main">
       <el-table
         ref="multipleTable"
@@ -31,53 +10,32 @@
         max-width="600"
         border>
         <el-table-column
-          label="订单号"
+          label="商户名称"
           prop="orderNum"
           width="280" align="left">
         </el-table-column>
          <el-table-column
-          label="桩号"
+          label="电话号码"
           prop="serialNum"
           width="160" align="left">
         </el-table-column>
          <el-table-column
-          label="充电度数"
+          label="商户机构"
           prop="totalKwh"
           width="120" align="left">
         </el-table-column>
         <el-table-column
-          label="充电金额"
+          label="账户余额"
           prop="totalCost"
           width="120" align="left">
         </el-table-column>
-        <el-table-column
-          label="启动方式"
-          prop="startType"
-          width="120" align="left">
-        </el-table-column>
-        <el-table-column
-          prop="stopType"
-          label="停止原因" align="left">
-        </el-table-column>
-        <el-table-column
-          prop="orderTime"
-          label="结算时间" align="left">
-        </el-table-column>
-        <el-table-column
-          label="结算状态"
-          prop="settleFlag"
-          width="140" >
-          <template slot-scope="{row}">
-            <el-tag :type="row.settleFlag | statusFilter" effect="dark" size="small">
-              {{ row.settleFlag }}
-            </el-tag>
-          </template>
-        </el-table-column>
+       
+       
         <el-table-column label="操作" align="left" width="180">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleSettlement(scope.row)">结算
+              @click="handleSettlement(scope.row)">提现
             </el-button>
            
           </template>

@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
-import device from '@/components/device'
+import inCome  from '@/components/financial/inCome'
+import withdraw  from '@/components/financial/withdraw'
 import Charger from '@/components/charger/charger'
 import order from '@/components/order/order'
 
@@ -40,26 +41,47 @@ export const asyncRoutes = [
   {
     path: '/home',
     component: Home,
-    name: '设备管理0',
+    iconCls: 'fa fa-bar-chart',
+    name: '财务管理',
     meta : {
       roles: ['admin'] 
     },
     children: [
       {
-        path: 'device',
+        path: 'inCome',
         iconCls: 'fa fa-reorder',
-        name: '设备管理',
-        component: device,
+        name: '分润账单',
+        component: inCome ,
         meta : {
           roles: ['admin'] 
-        }
+        },
+      },
+      {
+        path: 'device',
+        iconCls: 'fa fa-reorder',
+        name: '提现账单',
+        component: inCome ,
+        meta : {
+          roles: ['admin'] 
+        },
+        
+      },
+      {
+        path: 'withdraw',
+        iconCls: 'fa fa-reorder',
+        name: '提现转账',
+        component: withdraw ,
+        meta : {
+          roles: ['admin'] 
+        },
+        
       }
     ]
   },
   {
     path: '/home',
     component: Home,
-    name: '数据统计0',
+    name: '全局配置0',
     iconCls: 'fa fa-bar-chart',
     meta : {
       roles: ['admin'] 
@@ -70,6 +92,15 @@ export const asyncRoutes = [
         iconCls: 'fa fa-bar-chart',
         name: '全局配置',
         component: () => import('@/components/station/station'),
+        meta : {
+          roles: ['admin'] 
+        }
+      },
+      {
+        path: 'map',
+        iconCls: 'fa fa-bar-chart',
+        name: '地图',
+        component: () => import('@/components/station/tencentMap'),
         meta : {
           roles: ['admin'] 
         }

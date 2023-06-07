@@ -132,7 +132,7 @@
       deleteCharger(index,serialNum){
         var _this = this;
          request({
-          url: '/charger/delete',
+          url: '/ylc/charger/delete',
           method: 'get',
           params:{
             serialNum:serialNum
@@ -149,7 +149,7 @@
       refresh(){
         let _this = this;
         request({
-          url: '/charger/list',
+          url: '/ylc/charger/list',
           method: 'get',
           params:{
             departId:_this.stationId

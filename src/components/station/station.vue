@@ -155,7 +155,7 @@ import { mapGetters } from 'vuex'
       refresh(){
         let _this = this;
         request({
-          url: '/station/shareHolding',
+          url: '/ylc/station/shareHolding',
           method: 'get',
           params:{
             departId:_this.stationId
@@ -222,7 +222,7 @@ import { mapGetters } from 'vuex'
       commitCharger(){
         var _this = this;
          request({
-           url: '/station/updateSharers',
+           url: '/ylc/station/updateSharers',
             method: 'post',
             data:  _this.shareRatios ,
             params:{

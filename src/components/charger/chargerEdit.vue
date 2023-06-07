@@ -174,7 +174,7 @@ import request from '@/utils/request'
 
           
           request({
-            url: '/charger/feeModel/edit',
+            url: '/ylc/charger/feeModel/edit',
             method: 'post',
             data:  _this.form ,
             params:{
@@ -204,7 +204,7 @@ import request from '@/utils/request'
             _this.form.timeQuantum.splice(_this.form.timeQuantum.length, 1, tempNewRate)
             }
           request({
-            url: '/charger/add',
+            url: '/ylc/charger/add',
             method: 'post',
             data:  _this.form ,
             params:{
@@ -226,7 +226,7 @@ import request from '@/utils/request'
       getId(){
         var _this= this;
          request({
-              url: '/charger/genSerialNum',
+              url: '/ylc/charger/genSerialNum',
               method: 'get'
             }).then(resp => {
               _this.serialNum = resp.result.serialNum;
@@ -235,7 +235,7 @@ import request from '@/utils/request'
       getRateById(){
           var _this= this;
           request({
-              url: '/charger/feeModel',
+              url: '/ylc/charger/feeModel',
               method: 'get',
               params:{
                 serialNum:_this.serialNum
