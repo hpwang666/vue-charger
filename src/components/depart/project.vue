@@ -2,12 +2,12 @@
   <el-container>
     <el-header class="cate_mana_header">
       <el-input
-        placeholder="请输入项目名称"
+        placeholder="请输入充电站名称"
         v-model="inputDepartName" style="width: 230px;">
       </el-input>
      
-      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索项目</el-button>
-      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加项目</el-button>
+      <el-button type="primary" icon="el-icon-search" size="medium" style="margin-left: 10px" @click="handleCreate">搜索充电站</el-button>
+      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加充电站</el-button>
     </el-header>
     <el-main class="cate_mana_main">
       <el-table
@@ -22,7 +22,7 @@
           width="130" align="left">
         </el-table-column>
         <el-table-column
-          label="项目名称"
+          label="充电站名称"
           prop="departName"
           width="250" align="left">
         </el-table-column>
@@ -64,7 +64,7 @@
        
        
         <el-form-item label="所属公司" prop="parentId">
-          <el-select v-model="temp.parentId" placeholder="请选择集团">
+          <el-select v-model="temp.parentId" placeholder="请选择公司">
             <el-option
               v-for="item in parentDeparts"
               :key="item.id"
@@ -73,7 +73,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="项目名称" prop="departName">
+        <el-form-item label="充电站名称" prop="departName">
           <el-input v-model="temp.departName" />
         </el-form-item>
         <el-form-item label="备注">

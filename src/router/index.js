@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import inCome  from '@/components/financial/inCome'
+import inComeCfg from '@/components/financial/inComeCfg'
 import withdraw  from '@/components/financial/withdraw'
 import Charger from '@/components/charger/charger'
 import order from '@/components/order/order'
@@ -48,6 +49,15 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'inComeCfg',
+        iconCls: 'fa fa-reorder',
+        name: '分润配置',
+        component: inComeCfg ,
+        meta : {
+          roles: ['admin'] 
+        },
+      },
+      {
         path: 'inCome',
         iconCls: 'fa fa-reorder',
         name: '分润账单',
@@ -81,7 +91,7 @@ export const asyncRoutes = [
   {
     path: '/home',
     component: Home,
-    name: '全局配置0',
+    name: '全局配置',
     iconCls: 'fa fa-bar-chart',
     meta : {
       roles: ['admin'] 
@@ -97,10 +107,20 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'map',
+        path: 'rates',
         iconCls: 'fa fa-bar-chart',
-        name: '地图',
-        component: () => import('@/components/station/tencentMap'),
+        name: '费率配置',
+        component: () => import('@/components/station/rates'),
+        meta : {
+          roles: ['admin'] 
+        }
+      },
+      {
+        path: 'ratesEdit',
+        iconCls: 'fa fa-bar-chart',
+        name: '费率编辑',
+        hidden: true,
+        component: () => import('@/components/station/ratesEdit'),
         meta : {
           roles: ['admin'] 
         }

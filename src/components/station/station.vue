@@ -2,78 +2,120 @@
 
 <div >
   
- <el-main class="charger_edit_main">
-  <el-form ref="dataForm" :model="form"   label-width="80px" >
-    <el-form-item label="电站名称"  >
-      <div style="width:240px">
-      <el-input  v-model="serialNum"   show-word-limit ></el-input>
-      </div>
-    </el-form-item>
-    
-    <el-form-item label="电话号码"  >
-      <div style="width:240px">
-      <el-input  v-model="serialNum"   show-word-limit ></el-input>
-      </div>
-    </el-form-item>
-    
+ <el-main class="station_edit_main">
+   <el-row :gutter="10" >
+     <el-col :span="8">
+      <el-form class= "station_form_main" ref="dataForm" :model="form"   label-width="80px" >
+        <el-form-item label="电站名称"  >
+      
+          <el-input  v-model="form.name"  :disabled="true" show-word-limit ></el-input>
+        
+        </el-form-item>
 
-    <el-form-item style="float:left">
-      <el-button type="success">设置经纬度</el-button>
-    </el-form-item>
-   
-    
- <el-form  :model="form"    label-width="80px" :inline="true" label-position="right">
-     <div style=" float:left">
-      <el-form-item label="经度" label-width="100px"  >
-        <el-input   size="small"  > <template slot="append">度</template></el-input>
-      </el-form-item>
-      <el-form-item label="纬度" label-width="100px" >
-        <el-input  size="small"  > <template slot="append">度</template></el-input>
-      </el-form-item>
-    </div>
-  </el-form>
-   
+        <el-form-item label="电站地址" >
+        
+          <el-input  v-model="form.address"    show-word-limit ></el-input>
+        
+        </el-form-item>
+        
+        <el-form-item label="电话号码"  >
+        
+          <el-input  v-model="form.phone"   show-word-limit ></el-input>
+        
+        </el-form-item>
+        
 
+        <el-form-item style="float: left">
+          <el-button style="float: left" type="success" @click="dialogVisible = true">设置经纬度</el-button>
+        </el-form-item>
+      
+        
     
-</el-form>
+          <el-form-item label="纬度" label-width="80px"  >
+            <el-input  :disabled="true" size="small"  v-model="form.latitude"> <template slot="append">度</template></el-input>
+          </el-form-item>
+          <el-form-item label="经度" label-width="80px" >
+            <el-input  :disabled="true" size="small"  v-model="form.longitude"> <template slot="append">度</template></el-input>
+          </el-form-item>
+        
+
+      
+        
+        <el-form-item label="电站位置" >
+          <el-radio v-model="form.location" class="input-reader-name" label="1">地上电站</el-radio>
+          <el-radio v-model="form.location" class="input-reader-name" label="2">地下电站</el-radio>
+        </el-form-item>
+
+        <el-form-item label="供电模式" style="padding-left">
+          
+          <el-radio v-model="form.supplyMode" label="1">独立增容</el-radio>
+          <el-radio v-model="form.supplyMode" label="2">扩展容量</el-radio>
+          
+        </el-form-item>
+
+
+        <el-form-item label="供电容量"  >
+          
+            <el-input  v-model="form.supplyCapacity"    ><template slot="append">K.VA</template></el-input>
+          
+        </el-form-item>
+        
+        <el-form-item label="电站类型"  >
+          
+            <el-select v-model="form.ownType" placeholder="请选择电站类型">
+              <el-option label="个人" value="1"></el-option>
+              <el-option label="公共" value="2"></el-option>
+              <el-option label="出租车(专用)" value="3"></el-option>
+            </el-select>
+          
+        </el-form-item>
+
+    </el-form>
+     </el-col>
+     <el-col :span="8">
+        <br />
+        <el-divider content-position="left">提供服务</el-divider>
+       <el-form class= "station_form_main" ref="serviceForm" :model="form"   label-width="80px" >
+        <el-form-item label="休息室"  >
+      
+          <el-input  v-model="form.name"  :disabled="true" show-word-limit ></el-input>
+        
+        </el-form-item>
+
+        <el-form-item label="停车收费" >
+        
+          <el-input  v-model="form.address"    show-word-limit ></el-input>
+        
+        </el-form-item>
+       </el-form>
+     </el-col>
+   </el-row>
 
 <br />
-<el-divider content-position="left">分润配置</el-divider>
+<el-divider content-position="left">其他配置</el-divider>
 
-  <el-row :gutter="20" >
-  <el-col :span="16"><div class="grid-content bg-purple"  style="text-align:left">
-    <el-transfer v-model="value" :data="selected" :titles="titles" label-position="left"></el-transfer>
-    </div>
-  </el-col>
-
-
-  <el-col :span="8"  style="padding-right:0"><div  v-for="(domain,index) in value" :key="index"  class="grid-content bg-purple">
-     <el-row >
-      <el-col :span="8">
-        <div  class="name-ylc">{{selected[domain].label+': '}}</div>
-      </el-col >
-
-      <el-col :span="12"><div>
-        <el-input v-model="ratio[domain]"  size="small"  > <template slot="append">百分比</template></el-input>
-      </div>
-  
-      </el-col>
-    </el-row>
-  </div>
-  <br />
-   <el-row>
-        合计: {{sum}}%
-      </el-row>
-  </el-col>
  
-</el-row>
-  
- <br />
- <br />
+
  <br />
  <el-row :gutter="10" >
-      <el-button type="success" @click="handleCommit()">保存</el-button>
+      <el-button type="success" @click="commitStation()">保存</el-button>
  </el-row>
+
+<el-dialog
+  title="提示"
+  :visible.sync="dialogVisible"
+  width="60%" height="80%"
+  :before-close="handleClose">
+
+ 
+<tencent-map  @childValueChange="fuck"></tencent-map>
+ 
+  <span>
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+</el-dialog>
+
 
 
 </el-main>
@@ -83,110 +125,73 @@
 </template>
 <script>
 import request from '@/utils/request'
+import TencentMap from './tencentMap'
 import { mapGetters } from 'vuex'
+
     export default {
+      components: {
+      TencentMap
+    },
       watch: {
       stationId:function (){ //动态监听电站ID的变化，刷新界面
          this.refresh();
-      },
-      value:function(val,old){
-        if(val===old){}
-        else{
-          if(old.length>val.length){
-            old.forEach(element => {
-               let ii =val.indexOf(element)
-              if(-1==ii)  {
-                console.log('del  found: '+ element)
-                this.ratio.splice(element,1);
-                this.ratio.splice(element,0,0);
-              }
-            });
-          }
-          else{
-             val.forEach(element => {
-               let jj =old.indexOf(element)
-              if(-1==jj)  {
-                console.log('add  found: '+ element)
-                this.ratio.splice(element,1);
-                this.ratio.splice(element,0,0);//保证数据结构 长度不变
-              }
-            });
-            
-          }
-          console.log('mod '+this.ratio)
-                  
-        }
-       
       }
     },
       computed: {
-        ...mapGetters(['stationId']),
-        sum:{
-          get:function(){
-            return this.ratio.reduce((sum, e) => sum + Number(e || 0), 0)
-          },
-          set:function(a){
-
-          }
-          
-        }
+        ...mapGetters(['stationId'])
       },
       mounted: function () {
         
-        setTimeout(() => {
-          this.refresh();
-        }, 120)
+         setTimeout(() => {
+           this.refresh();
+         }, 120)
       },
     
     data() {
       return {
-        form:{},
-        value:[],
-        ratio:[],
-        titles:['待选股东','已选股东'],
-        action:'',
-        serialNum:'',
-        selected:[] ,
-        shareRatios:[],
-        allUsers:''
+        dialogVisible:false,
+               
+        form:{
+          id:'',
+          name:'',
+          address:'',
+          phone:'',
+          latitude:'123',
+          longitude:'456',
+          location:'1',
+          supplyMode:'1',
+          supplyCapacity:'200',
+          ownType:'2'
+        }
       }
     },
     methods: {
+      fuck(val,val2){
+        this.form.latitude=val;
+        this.form.longitude = val2;
+        console.log("fuck"+val)
+      },
+       handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
       refresh(){
         let _this = this;
+        
+
         request({
-          url: '/ylc/station/shareHolding',
+          url: '/ylc/station/query',
           method: 'get',
           params:{
             departId:_this.stationId
           }
         }).then(resp=> {
           var i = 0;
-          _this.allUsers = resp.result.allUsers;
-          var sharers =  resp.result.sharers;
-          
-           _this.allUsers.map(((item, index)=> {
-              _this.selected.push({key:index,label:item.name,disabled:false})
-            }))
-         
-          for(i=0;i<_this.selected.length;i++){
-            this.ratio.push(0);
-          }
-
         
-        // this.ratio.splice(3,1);
-        // console.log('init '+this.ratio)
-        // this.ratio.splice(3,0,11);
-        console.log('init '+this.ratio)  
-          
-          sharers.map(((item, index)=> {
-            let ii =  _this.allUsers.indexOf(this.indexOfById( _this.allUsers,item.userId));
-            if(ii!=-1){
-              this.value.push(ii)
-              _this.ratio[ii]=item.ratio;
-            }
-             
-          }));
+          _this.form =  resp.result;
           
 
         }).catch(()=>{
@@ -195,39 +200,18 @@ import { mapGetters } from 'vuex'
             message: '加载失败'
           });
         });
+
       },
-      indexOfById(array, id) {
-        return array.find(function(element) {
-          return element.id === id;
-        });
-      },
+      
+
        
-      handleCommit(){
-        let _this = this;
-        this.$alert('百分比合计 ' + this.sum +'%'+ ' ?  请确保100%或则0%', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText:'取消',
-          showConfirmButton:this.sum==100||this.sum==0,
-          showCancelButton:true,
-          type: 'warning'
-        }).then(() => {
-           _this.value.map(((item, index)=> {
-               console.log(item)
-              _this.shareRatios.push({userId:_this.allUsers[item].id,departId: _this.$store.getters.stationId,ratio:_this.ratio[item]});
-            }));
-            console.log(_this.shareRatios)
-          _this.commitCharger();
-        });
-      },
-      commitCharger(){
+   
+    commitStation(){
         var _this = this;
          request({
-           url: '/ylc/station/updateSharers',
+           url: '/ylc/station/edit',
             method: 'post',
-            data:  _this.shareRatios ,
-            params:{
-              departId: _this.$store.getters.stationId
-            }
+            data:  _this.form 
         }).then(resp=> {
           
           _this.$message({
@@ -243,15 +227,21 @@ import { mapGetters } from 'vuex'
 
 <style>
 
-  .charger_edit_main {
-    justify-content: flex-start;
-    display: flex;
-    flex-direction: column;
-    padding-left: 5px;
+  .station_edit_main {
+    
+    max-height:750px;
+     padding-left: 5px;
     background-color: #ffffff;
     margin-top: 20px;
     padding-top: 10px;
-    width: 55%;
+   
+  }
+
+  .station_form_main{
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    width:400px;
   }
 
 .name-ylc{
@@ -265,5 +255,5 @@ import { mapGetters } from 'vuex'
     min-height: 36px;
   }
  
- 
+
 </style>
