@@ -2,7 +2,7 @@
 
 <div >
   
- <el-main class="station_edit_main">
+ <el-main class="income_cfg_edit">
   
 <br />
 <el-divider content-position="left">分润配置</el-divider>
@@ -246,7 +246,7 @@ import { mapGetters } from 'vuex'
 
 <style>
 
-  .station_edit_main {
+  .income_cfg_edit {
     justify-content: flex-start;
     display: flex;
     flex-direction: column;
@@ -257,7 +257,7 @@ import { mapGetters } from 'vuex'
     width: 1000px;
   }
 
-  .station_form_main{
+  .income_form_main{
     text-align: left;
     display: flex;
     flex-direction: column;

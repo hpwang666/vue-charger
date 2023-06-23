@@ -43,18 +43,27 @@
          <el-table-column
           label="充电度数"
           prop="totalKwh"
-          width="120" align="left">
+          width="110" align="left">
         </el-table-column>
         <el-table-column
           label="充电金额"
           prop="totalCost"
+          width="110" align="left">
+        </el-table-column>
+
+         <el-table-column
+          label="服务费"
+          prop="feeService"
+          width="110" align="left">
+        </el-table-column>
+
+      <el-table-column
+          label="车牌"
+          prop="carNum"
           width="120" align="left">
         </el-table-column>
-        <el-table-column
-          label="启动方式"
-          prop="startType"
-          width="120" align="left">
-        </el-table-column>
+
+       
         <el-table-column
           prop="stopType"
           label="停止原因" align="left">

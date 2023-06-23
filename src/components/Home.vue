@@ -257,8 +257,8 @@
   }
 
   .home_exchange_button{
-  margin-top:10px;
-   margin-right: 20px;
+      margin-top:18px;
+   margin-right: 25px;
   }
 
   .el-aside {
@@ -316,7 +316,7 @@
   .home_userinfoContainer {
     display: flex;
     flex-direction: column;
-    
+    margin-right: 18px;
     
     position:absolute;
     right:0;

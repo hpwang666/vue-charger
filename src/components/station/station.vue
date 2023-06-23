@@ -241,7 +241,7 @@ import { mapGetters } from 'vuex'
     text-align: left;
     display: flex;
     flex-direction: column;
-    width:400px;
+   
   }
 
 .name-ylc{
