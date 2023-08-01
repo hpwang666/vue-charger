@@ -33,8 +33,8 @@
         },
         checked: true,
         loginForm: {
-          account: 'whp001',
-          password: 'a'
+          account: '',
+          password: ''
         },
         loading: false
       }

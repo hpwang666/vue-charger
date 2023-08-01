@@ -1,6 +1,6 @@
 <template>
-  <el-container class="in_come_container">
-    <el-header class="in_come_header">
+  <el-container class="cash_out_trade_container">
+    <el-header class="cash_out_trade_header">
       <el-row :gutter="20" >
          <el-col :span="16">
           账户余额: {{amount}} 元   
@@ -17,7 +17,6 @@
           <el-descriptions-item label="账户名称"><el-tag size="small">{{sharerName}}</el-tag></el-descriptions-item>
           <el-descriptions-item label="账户级别"><el-tag size="small">{{type}}</el-tag></el-descriptions-item>
           <el-descriptions-item label="账户余额"><el-tag size="small">{{amount}}元</el-tag> </el-descriptions-item>
-          <el-descriptions-item label="当前操作员">{{name}} </el-descriptions-item>
       </el-descriptions>
       
       <br />
@@ -33,22 +32,18 @@
         max-height="600"
         max-width="600"
         border>
-        <el-table-column
-          label="订单号"
-          prop="orderNum"
-          width="280" align="left">
-        </el-table-column>
+       
         
          
           <el-table-column
-          label="分润来源"
+          label="操作员"
           prop="departName"
           width="280" align="left">
         </el-table-column>
 
        
         <el-table-column
-          label="分润金额"
+          label="提现金额"
           prop="tradeAmount"
           width="120" align="left">
         </el-table-column>
@@ -64,9 +59,11 @@
           prop="settleFlag"
           width="140" >
           
-            <el-tag type="success" effect="dark" size="small">
-              结算成功
+           <template slot-scope="scope">
+            <el-tag :type=textMap[scope.row.settleFlag] effect="dark" size="small">
+              {{ computedSiteType(scope.row.settleFlag) }}
             </el-tag>
+          </template>
          
         </el-table-column>
         
@@ -125,18 +122,24 @@
   
   export default{
      computed: {
-      ...mapGetters(['stationId','name'])
+      ...mapGetters(['stationId','name']),
+      isSettled : function(){
+        return this.trades['settleFlag']==0 ? "已受理":"未受理"
+      },
+      computedSiteType(){
+        return function(settleFlag){
+            return settleFlag==1?'已受理':'未受理'
+      }
+    },
     },
     methods: {
       refresh(){
         let _this = this;
         this.getAccount();
         request({
-          url: '/ylc/share/queryShareTrades',
+          url: '/ylc/share/queryCashOutTrade',
           method: 'get',
-          params:{
-            departId:_this.stationId
-          }
+         
         }).then(resp=> {
           var i = 0;
           var tempList = resp.result;
@@ -235,6 +238,10 @@
         type:'',
         temp: "",
         trades: [],
+        textMap: {
+          0: 'danger',
+          1: 'success'
+        },
         dialogFormVisible: false,
         rules:{
           cashOutAmt: [{ required: true, message: '金额未填写', trigger: 'change' },{pattern:/(^\d{1,4}.[0-9]{2}?$)/,message: '填2位小数并金额小于9999.99', trigger: 'blur'}]
@@ -247,7 +254,7 @@
 <style>
 
 
-  .in_come_header {
+  .cash_out_trade_header {
     background-color: #fcf8f8;
     font-size: 30px;
     margin-top: 20px;

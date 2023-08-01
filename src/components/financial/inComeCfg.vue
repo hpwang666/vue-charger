@@ -8,13 +8,13 @@
 <el-divider content-position="left">分润配置</el-divider>
 
   <el-row :gutter="20" >
-  <el-col :span="16"><div class="grid-content bg-purple"  style="text-align:left">
+  <el-col :span="14"><div class="grid-content bg-purple"  style="text-align:left">
     <el-transfer v-model="value" :data="toShareUsers" :titles="titles" label-position="left"></el-transfer>
     </div>
   </el-col>
 
 
-  <el-col :span="8"  style="padding-right:0"><div  v-for="(domain,index) in value" :key="index"  class="grid-content bg-purple">
+  <el-col :span="10"  style="padding-right:0"><div  v-for="(domain,index) in value" :key="index"  class="grid-content bg-purple">
      <el-row >
       <el-col :span="8">
         <div  class="name-ylc">{{toShareUsers[domain].label+': '}}</div>
@@ -121,7 +121,7 @@ import { mapGetters } from 'vuex'
         toShareUsers:[] ,
         shareRatios:[],
         sharers:[],
-        allUsers:'',
+        allSharers:'',
         
       }
     },
@@ -148,13 +148,14 @@ import { mapGetters } from 'vuex'
           }
         }).then(resp=> {
           var i = 0;
-          _this.allUsers = resp.result.allUsers;
+          _this.allSharers = resp.result.allSharers;
           _this.sharers =  resp.result.sharers;
           
           
-           _this.allUsers.map(((item, index)=> {
-              _this.toShareUsers.push({key:index,label:item.name,disabled:false})
-            }))
+
+            _this.allSharers.map(((item, index)=> {
+              _this.toShareUsers.push({key:index,label:item.name,disabled:false});
+             }))
          
        
           for(i=0;i<_this.toShareUsers.length;i++){
@@ -170,7 +171,7 @@ import { mapGetters } from 'vuex'
         //挑出已经有的股东，放在value里面，那么在待选项里面就不会出现
         //挑出股东比例放在对应的radio里面
         _this.sharers.map(((item, index)=> {
-          let ii =  _this.allUsers.indexOf(this.indexOfById( _this.allUsers,item.userId));
+          let ii =  _this.allSharers.indexOf(this.indexOfById( _this.allSharers,item.sharerId));
           if(ii!=-1){
             this.value.push(ii)
             _this.ratio[ii]=item.ratio;
@@ -195,7 +196,7 @@ import { mapGetters } from 'vuex'
       },
       findByUserId(array, userId) {
         return array.find(function(element) {
-          return element.userId === userId;
+          return element.sharerId === userId;
         });
       },
        
@@ -213,10 +214,10 @@ import { mapGetters } from 'vuex'
                console.log(item)
 
                 //把id重新写进去
-               var ii =  _this.findByUserId( _this.sharers,_this.allUsers[item].id);
-               var id=ii==undefined?null:ii.id
+               var ii =  _this.findByUserId( _this.sharers,_this.allSharers[item].id);
+               var id=ii==undefined?123:ii.id
              
-              _this.shareRatios.push({id:id,userId:_this.allUsers[item].id,departId: _this.$store.getters.stationId,ratio:_this.ratio[item]});
+              _this.shareRatios.push({id:id,sharerId:_this.allSharers[item].id,departId: _this.$store.getters.stationId,ratio:_this.ratio[item]});
             }));
             console.log(_this.shareRatios)
           _this.commitShare();
@@ -237,6 +238,7 @@ import { mapGetters } from 'vuex'
             type: 'success',
             message: resp.result
           });
+          _this.refresh();
         })
       },
     }
@@ -254,7 +256,7 @@ import { mapGetters } from 'vuex'
     background-color: #ffffff;
     margin-top: 20px;
     padding-top: 10px;
-    width: 1000px;
+    width: 1100px;
   }
 
   .income_form_main{

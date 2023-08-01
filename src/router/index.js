@@ -4,7 +4,8 @@ import Login from '@/components/Login'
 import Home from '@/components/Home'
 import inCome  from '@/components/financial/inCome'
 import inComeCfg from '@/components/financial/inComeCfg'
-import withdraw  from '@/components/financial/withdraw'
+import cashOut  from '@/components/financial/cashOut'
+import cashOutTrade  from '@/components/financial/cashOutTrade'
 import Charger from '@/components/charger/charger'
 import order from '@/components/order/order'
 
@@ -40,113 +41,6 @@ export const constantRoutes = [
 
 export const asyncRoutes = [
   {
-    path: '/home',
-    component: Home,
-    iconCls: 'fa fa-bar-chart',
-    name: '财务管理',
-    meta : {
-      roles: ['admin'] 
-    },
-    children: [
-      {
-        path: 'inComeCfg',
-        iconCls: 'fa fa-reorder',
-        name: '分润配置',
-        component: inComeCfg ,
-        meta : {
-          roles: ['admin'] 
-        },
-      },
-      {
-        path: 'inCome',
-        iconCls: 'fa fa-reorder',
-        name: '分润账单',
-        component: inCome ,
-        meta : {
-          roles: ['admin'] 
-        },
-      },
-      {
-        path: 'device',
-        iconCls: 'fa fa-reorder',
-        name: '提现账单',
-        component: inCome ,
-        meta : {
-          roles: ['admin'] 
-        },
-        
-      },
-      {
-        path: 'withdraw',
-        iconCls: 'fa fa-reorder',
-        name: '提现转账',
-        component: withdraw ,
-        meta : {
-          roles: ['admin'] 
-        },
-        
-      }
-    ]
-  },
-  {
-    path: '/home',
-    component: Home,
-    name: '全局配置',
-    iconCls: 'fa fa-bar-chart',
-    meta : {
-      roles: ['admin'] 
-    },
-    children: [
-      {
-        path: 'station',
-        iconCls: 'fa fa-bar-chart',
-        name: '全局配置',
-        component: () => import('@/components/station/station'),
-        meta : {
-          roles: ['admin'] 
-        }
-      },
-      {
-        path: 'rates',
-        iconCls: 'fa fa-bar-chart',
-        name: '费率配置',
-        component: () => import('@/components/station/rates'),
-        meta : {
-          roles: ['admin'] 
-        }
-      },
-      {
-        path: 'ratesEdit',
-        iconCls: 'fa fa-bar-chart',
-        name: '费率编辑',
-        hidden: true,
-        component: () => import('@/components/station/ratesEdit'),
-        meta : {
-          roles: ['admin'] 
-        }
-      }
-    ]
-  },
-  {
-    path: '/home',
-    component: Home,
-    name: '数据统计0',
-    iconCls: 'fa fa-bar-chart',
-    meta : {
-      roles: ['admin'] 
-    },
-    children: [
-      {
-        path: 'charts',
-        iconCls: 'fa fa-bar-chart',
-        name: '数据统计',
-        component: () => import('@/components/mix-chart'),
-        meta : {
-          roles: ['admin'] 
-        }
-      }
-    ]
-  }, {
     path: '/home',
     component: Home,
     name: '组织机构',
@@ -225,7 +119,116 @@ export const asyncRoutes = [
         }
       }, 
     ]
-  },  {
+  },
+  {
+    path: '/home',
+    component: Home,
+    name: '全局配置',
+    iconCls: 'fa fa-bar-chart',
+    meta : {
+      roles: ['admin'] 
+    },
+    children: [
+      {
+        path: 'station',
+        iconCls: 'fa fa-bar-chart',
+        name: '全局配置',
+        component: () => import('@/components/station/station'),
+        meta : {
+          roles: ['admin'] 
+        }
+      },
+      {
+        path: 'rates',
+        iconCls: 'fa fa-bar-chart',
+        name: '费率配置',
+        component: () => import('@/components/station/rates'),
+        meta : {
+          roles: ['admin'] 
+        }
+      },
+      {
+        path: 'ratesEdit',
+        iconCls: 'fa fa-bar-chart',
+        name: '费率编辑',
+        hidden: true,
+        component: () => import('@/components/station/ratesEdit'),
+        meta : {
+          roles: ['admin'] 
+        }
+      }
+    ]
+  },
+  {
+    path: '/home',
+    component: Home,
+    iconCls: 'fa fa-bar-chart',
+    name: '财务管理',
+    meta : {
+      roles: ['admin'] 
+    },
+    children: [
+      {
+        path: 'inComeCfg',
+        iconCls: 'fa fa-reorder',
+        name: '分润配置',
+        component: inComeCfg ,
+        meta : {
+          roles: ['admin'] 
+        },
+      },
+      {
+        path: 'inCome',
+        iconCls: 'fa fa-reorder',
+        name: '分润账单',
+        component: inCome ,
+        meta : {
+          roles: ['admin'] 
+        },
+      },
+      {
+        path: 'cashOutTrade',
+        iconCls: 'fa fa-reorder',
+        name: '提现账单',
+        component: cashOutTrade ,
+        meta : {
+          roles: ['admin'] 
+        },
+        
+      },
+      {
+        path: 'cashOut',
+        iconCls: 'fa fa-reorder',
+        name: '受理提现',
+        component: cashOut ,
+        meta : {
+          roles: ['admin'] 
+        },
+        
+      }
+    ]
+  },
+  
+  {
+    path: '/home',
+    component: Home,
+    name: '数据统计0',
+    iconCls: 'fa fa-bar-chart',
+    meta : {
+      roles: ['admin'] 
+    },
+    children: [
+      {
+        path: 'charts',
+        iconCls: 'fa fa-bar-chart',
+        name: '数据统计',
+        component: () => import('@/components/mix-chart'),
+        meta : {
+          roles: ['admin'] 
+        }
+      }
+    ]
+  },   {
     path: '/home',
     component: Home,
     name: '电桩管理0',

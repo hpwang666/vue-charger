@@ -1,7 +1,7 @@
 <template>
   <el-container class="home_container">
     <el-header height=90px>
-      <div class="home_title" color = "#000">大连杂货码头公司能耗管理系统</div>
+      <div class="home_title" color = "#000">易路充充电管理系统</div>
     
       <div class="user_depart" >
         <i v-if="selectedPark[0]" class="el-icon-map-location" ></i>
@@ -49,7 +49,9 @@
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button class="home_exchange_button" icon="el-icon-sort" type="primary" size="mini"  @click="dialogVisible = true">切换</el-button>
+        <div class="home_exchange_button">
+        <el-button  icon="el-icon-sort" type="primary" size="mini"  @click="dialogVisible = true">切换</el-button>
+        </div>
       </div>
       
     </el-header>
@@ -257,7 +259,7 @@
   }
 
   .home_exchange_button{
-      margin-top:18px;
+      margin-top:20px;
    margin-right: 25px;
   }
 
@@ -318,7 +320,6 @@
     flex-direction: column;
     margin-right: 18px;
     
-    position:absolute;
-    right:0;
+   
   }
 </style>
