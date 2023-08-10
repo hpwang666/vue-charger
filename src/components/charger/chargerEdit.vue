@@ -10,12 +10,17 @@
     <el-input :disabled=true v-model="form.serialNum"   show-word-limit ></el-input>
     </div>
   </el-form-item>
+   <el-form-item label="电桩名称"  >
+    <div style="width:240px">
+    <el-input  v-model="form.name"   show-word-limit ></el-input>
+    </div>
+  </el-form-item>
 
   <el-row :gutter="10" >
     <el-col :span="8">
     <el-form-item label="电桩厂家"  >
       <el-select value-key=value v-model="form.brand" placeholder="请选择电桩厂家">
-        <el-option label="易路充" :value=1></el-option>
+        <el-option label="易路充CHA-01" :value=1></el-option>
         <el-option label="瑞华" :value=2></el-option>
       </el-select>
     </el-form-item>
@@ -34,7 +39,7 @@
       <el-form-item label="充电功率"  >
       <el-select v-model="form.power" placeholder="请选择充电功率">
         <el-option label="7KW" :value=1></el-option>
-        <el-option label="36KW" :value=2></el-option>
+        <el-option label="34KW" :value=2></el-option>
       </el-select>
     </el-form-item>
     </el-col> 

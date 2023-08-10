@@ -28,6 +28,12 @@
           label="账户级别"
           prop="type"
           width="280" align="left">
+
+            <template slot-scope="scope">
+            <el-tag type="success"  size="small">
+              {{ computedOrgType(scope.row.type) }}
+            </el-tag>
+          </template>
         </el-table-column>
         
          
@@ -44,51 +50,22 @@
           width="120" align="left">
         </el-table-column>
 
-      
-
          <el-table-column label="操作" align="left">
           <template v-slot="scope">
             <el-button
               size="mini"
               type="primary"
-              @click="handleUpdate(scope.row,scope.$index)">受理提现
+              @click="handleCashOut(scope.row,scope.$index)">受理提现
             </el-button>
           </template>
         </el-table-column>
-
 
         
       </el-table>
 
        <el-dialog title="受理提现" :visible.sync="dialogFormVisible" width="520px">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" size="mini" label-width="100px" style="width: 100%">
-        
-        <el-row>
-          <el-form-item label="账户名称" prop="sharerName" >
-            <el-input v-model="temp.sharerName" disabled="true"/>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="操作员" prop="operator">
-            <el-input v-model="temp.operator" disabled="true"/>
-          </el-form-item>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span=16>
-            <el-form-item label="提现金额" prop="cashOutAmt">
-              <el-input v-model="temp.cashOutAmt" />
-            </el-form-item>
-          </el-col>
-          余额: {{amount}} 元
-          <el-col :span=8>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-form-item label="备注">
-            <el-input v-model="temp.memo" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
-          </el-form-item>
-        </el-row>
-      </el-form>
+    
+    账户 {{temp.sharerName}} 将提现 {{temp.tradeAmount}} 元
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
           取消
@@ -114,12 +91,9 @@
   export default{
      computed: {
       ...mapGetters(['stationId','name']),
-      isSettled : function(){
-        return this.trades['settleFlag']==0 ? "已受理":"未受理"
-      },
-      computedSiteType(){
-        return function(settleFlag){
-            return settleFlag==1?'已受理':'未受理'
+      computedOrgType(){
+        return function(type){
+            return this.typeMap[type];
       }
     },
     },
@@ -145,52 +119,35 @@
         });
       },
      
-       resetTemp() {
-       let _this = this;
-        this.temp = {
-          sharerId:_this.sharerId,
-          sharerName: _this.sharerName,
-          cashOutAmt:'',
-          controller:  _this.name,
-          memo: ''
-        }
-      },
-       handleCashOut() {
-        this.resetTemp()
+       handleCashOut(row,index) {
+        this.temp = Object.assign({}, row) // copy obj
         this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
+       
       },
       cashOut() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            const tempData = Object.assign({}, this.temp)
-            request({
-              url: '/ylc/share/cashOut',
-              method: 'post',
-              data:  {
-                sharerId:tempData.sharerId,
-                departName:tempData.controller,
-                tradeAmount:tempData.cashOutAmt,
-              } 
-            }).then(resp => {
-              
-              this.dialogFormVisible = false
-              this.$message({
-                message: resp.message,
-                type: 'success',
-                duration: 2000
-              })
-            }).catch(()=>{
-               this.dialogFormVisible = true
-               this.$message({
-                  message: resp.message,
-                  type: 'error',
-                  duration: 2000
-                })
+        const tempData = Object.assign({}, this.temp)
+        request({
+          url: '/ylc/share/processCashOut',
+          method: 'get',
+          params:  {
+            id:tempData.id
+          } 
+        }).then(resp => {
+          
+          this.dialogFormVisible = false
+          this.refresh();
+          this.$message({
+            message: resp.message,
+            type: 'success',
+            duration: 2000
+          })
+        }).catch(()=>{
+            this.dialogFormVisible = true
+            this.$message({
+              message: resp.message,
+              type: 'error',
+              duration: 2000
             })
-          }
         })
       }
     },
@@ -208,15 +165,13 @@
         type:'',
         temp: "",
         trades: [],
-        textMap: {
-          0: 'danger',
-          1: 'success'
+        typeMap: {
+          0: '个人',
+          1: '城市',
+          2: '集团',
+          3: '公司'
         },
-        dialogFormVisible: false,
-        rules:{
-          cashOutAmt: [{ required: true, message: '金额未填写', trigger: 'change' },{pattern:/(^\d{1,4}.[0-9]{2}?$)/,message: '填2位小数并金额小于9999.99', trigger: 'blur'}]
-      }
-        
+        dialogFormVisible: false
       }
     }
   }

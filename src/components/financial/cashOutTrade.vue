@@ -74,12 +74,12 @@
         
         <el-row>
           <el-form-item label="账户名称" prop="sharerName" >
-            <el-input v-model="temp.sharerName" disabled="true"/>
+            <el-input v-model="temp.sharerName" :disabled="true"/>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="操作员" prop="controller">
-            <el-input v-model="temp.controller" disabled="true"/>
+            <el-input v-model="temp.controller" :disabled="true"/>
           </el-form-item>
         </el-row>
         <el-row :gutter="10">

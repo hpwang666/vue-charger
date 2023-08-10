@@ -21,12 +21,19 @@
           prop="serialNum"
           width="180" align="left">
         </el-table-column>
-        
-        <el-table-column
+
+         <el-table-column
           label="电桩名称"
+          prop="name"
+          width="320" align="left">
+        </el-table-column>
+
+        <el-table-column
+          label="电桩型号"
           prop="terminalName"
           width="320" align="left">
         </el-table-column>
+
         <el-table-column
           label="功率"
           prop="power"

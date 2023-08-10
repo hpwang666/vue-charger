@@ -229,7 +229,7 @@
     },
     data(){
       return {
-        amount:100,
+        amount:'',
         sharerId:'',
         sharerName:'',
         type:'',
