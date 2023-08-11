@@ -97,7 +97,17 @@
     <div style="height: 20px"></div>
    
 
-   
+    <el-pagination
+      background
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page=1
+      :page-sizes="[10, 20, 30, 50]"
+      :page-size="20"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total=total
+      align="left">
+    </el-pagination>
     
   </el-container>
   
@@ -114,7 +124,7 @@
         //return this.settlement
         this.refresh();
         
-          },
+      },
       stationId:function (){ //动态监听电站ID的变化，刷新界面
          this.refresh();
       }
@@ -129,32 +139,27 @@
        var _this = this;
         
       },
-     handleQuery()
-     {
+      handleSizeChange(val){
+        this.pageSize=val;
+        //以下是为了当pageNo变化时候会触发两次请求
+        if (this.pageNo * (val-1) > this.total) return
         
-        let _this = this;
-        request({
-          url: '/ylc/order/list',
-          method: 'get',
-          params:{
-            departId:_this.stationId,
-            begin:isNaN(+new Date(this.selectedDate[0]))?null:+new Date(this.selectedDate[0]),
-            end:isNaN(+new Date(this.selectedDate[0]))?null:+new Date(this.selectedDate[1]),
-          }
-        }).then(resp=> {
-         
-          _this.orders = resp.result;
-          _this.$message({
-              type: 'success',
-              message:resp.message
-            });
-          
-        }).catch(()=>{
-          _this.$message({
-            type: 'error',
-            message: '查询失败: '+resp.message
-          });
-        });
+        this.refresh();
+      },
+      handleCurrentChange(val){
+        this.pageNo=val;
+        this.refresh();
+      },
+     handleQuery()
+     { 
+      this.pageNo=1;
+      this.refresh();
+      this.$message({
+            message: '查询成功',
+            type: 'success',
+            duration: 2000
+          })
+      
      },
       refresh(){
         let _this = this;
@@ -163,12 +168,16 @@
           method: 'get',
           params:{
             departId:_this.stationId,
-            begin:isNaN(+new Date(this.selectedDate[0]))?null:+new Date(this.selectedDate[0]),
-            end:isNaN(+new Date(this.selectedDate[0]))?null:+new Date(this.selectedDate[1]),
+            begin:(_this.selectedDate==null)?null:( isNaN(+new Date(_this.selectedDate[0]))?null:+new Date(_this.selectedDate[0]) )   ,
+            end:  (_this.selectedDate==null)?null:( isNaN(+new Date(_this.selectedDate[0]))?null:+new Date(_this.selectedDate[1]) )  ,
+            
+            pageNo:_this.pageNo,
+            pageSize:_this.pageSize
           }
         }).then(resp=> {
           var i = 0;
-          var tempList = resp.result;
+          var tempList = resp.result.records;
+          _this.total=  resp.result.total;
           if(_this.settlement!=''){
             while (i < tempList.length) {
               if (tempList[i].settleFlag != _this.settlement) {
@@ -180,7 +189,7 @@
           }
           
           _this.orders = tempList;
-          
+      
         }).catch(()=>{
           _this.$message({
             type: 'error',
@@ -193,7 +202,7 @@
       
       setTimeout(() => {
         this.refresh();
-      }, 120)
+      }, 400)
     },
     data(){
       return {
@@ -219,7 +228,10 @@
             }
           }]
         },
-        selectedDate: []
+        selectedDate: [],
+        total:1,
+        pageSize:20,
+        pageNo:1,
       }
     },
     filters: {
