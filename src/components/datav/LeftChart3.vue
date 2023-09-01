@@ -1,7 +1,7 @@
 <template>
   <div class="left-chart-3">
-    <div class="lc3-header">王五收费站</div>
-    <div class="lc3-details">设备运行总数<span>245</span></div>
+    <div class="lc3-header">{{content}}</div>
+    <div class="lc3-details">设备运行总数<span>{{count}}</span></div>
     <dv-capsule-chart class="lc3-chart" :config="config" />
   </div>
 </template>
@@ -14,29 +14,43 @@ export default {
       config: {
         data: [
           {
-            name: '收费系统',
+            name: '快充电中',
             value: 78
           },
           {
-            name: '通信系统',
+            name: '慢充电中',
             value: 54
           },
           {
-            name: '监控系统',
-            value: 123
+            name: '检修',
+            value: 8
           },
           {
-            name: '供配电系统',
-            value: 167
+            name: '离线',
+            value: 3
           },
           {
-            name: '其他',
+            name: '空闲',
             value: 77
           }
         ],
         colors: ['#00baff', '#3de7c9', '#fff', '#ffc530', '#469f4b'],
         unit: '件'
       }
+    }
+  },
+   props: {
+    content: {
+      type: String,
+      default: '200px'
+    },
+    amount: {
+      type: String,
+      default: '100'
+    },
+    count: {
+      type: Number,
+      default: 0
     }
   }
 }

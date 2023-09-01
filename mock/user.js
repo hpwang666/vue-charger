@@ -157,7 +157,7 @@ const tokens = {
         type: 'post',
         response: _ => {
           return {
-            code: 20004,
+            code: 20000,
             data: {
               "array|12": ["@integer(2000,3000)"
             ],

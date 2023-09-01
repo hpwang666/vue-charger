@@ -1,8 +1,8 @@
 <template>
   <div class="left-chart-1">
-    <div class="lc1-header">001号龙门</div>
-    <div class="lc1-details">在线时长<span>430</span> 小时</div>
-     <div class="lc1-details">今日用电<span>430</span>度</div>
+    <div class="lc1-header">{{content}}</div>
+    <div class="lc1-details">在线电桩<span>{{count}}</span> 台</div>
+     <div class="lc1-details">今日充电<span>4300</span>度</div>
     <dv-capsule-chart class="lc1-chart" :config="config" />
     <dv-decoration-2 style="height:10px;" />
   </div>
@@ -16,21 +16,35 @@ export default {
       config: {
         data: [
           {
-            name: '有功功率',
+            name: '充电金额',
             value: 100
           },
           {
-            name: '无功功率',
+            name: '充值金额',
             value: 90
           },
           {
-            name: '视功率',
+            name: '占位金额',
             value: 22
           }
         ],
         colors: ['#00baff', '#ffc530', '#469f4b'],
         unit: 'KW'
       }
+    }
+  },
+   props: {
+    content: {
+      type: String,
+      default: '200px'
+    },
+    amount: {
+      type: String,
+      default: '100'
+    },
+    count: {
+      type: Number,
+      default: 0
     }
   }
 }

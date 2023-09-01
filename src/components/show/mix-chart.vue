@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .chart-container{
   margin-top: 20px;
   position: relative;

@@ -4,19 +4,20 @@
 
 <script>
 import echarts from 'echarts'
-import resize from './mixins/resize'
-import {postRequest} from '../utils/api'
+import resize from '../mixins/resize'
+import request from '@/utils/request'
+
 
 export default {
   mixins: [resize],
   props: {
     className: {
       type: String,
-      default: 'chart'
+      default: 'mix-chart'
     },
     id: {
       type: String,
-      default: 'chart'
+      default: 'mix-chart'
     },
     width: {
       type: String,
@@ -33,6 +34,7 @@ export default {
     }
   },
   mounted() {
+
     this.initChart()
   },
   beforeDestroy() {
@@ -49,17 +51,25 @@ export default {
       const xData = (function() {
         const data = []
         for (let i = 1; i < 13; i++) {
-          data.push(i + 'month')
+          data.push(i + '天')
         }
         return data
       }());
-       postRequest("/chart/").then(resp=> {
-        if (resp.status == 200) {
-         // const yData = [2000,2000,2005,2003,2005,2009,2012,1245,2365,2451,2355,2211]; 
+     
+        request({
+          url: '/ylc/order/chart',
+          method: 'get',
+          params:{
+            departId:'2d4686028e614b48ae0da6262d455c93',
+            days:'7天'
+          }
+        }).then(resp=> {
+      
+          const yData = [2000,2000,2005,2003,2005,2009,2012,1245,2365,2451,2355,2211]; 
         this.chart.setOption({
         backgroundColor: '#344b58',
         title: {
-          text: 'statistics',
+          text: '近15天收入统计',
           x: '20',
           top: '20',
           textStyle: {
@@ -95,7 +105,7 @@ export default {
           textStyle: {
             color: '#90979c'
           },
-          data: ['1号龙门', '2号龙门', 'average']
+          data: ['充电金额', '占位收费', '总收入']
         },
         calculable: true,
         xAxis: [{
@@ -167,7 +177,7 @@ export default {
           end: 35
         }],
         series: [{
-          name: '1号龙门',
+          name: '充电金额',
           type: 'bar',
           stack: 'total',
           barMaxWidth: 35,
@@ -187,11 +197,11 @@ export default {
               }
             }
           },
-          data: resp.data.data.array
+          data: yData//resp.data.data.array
         },
 
         {
-          name: '2号龙门',
+          name: '占位收费',
           type: 'bar',
           stack: 'total',
           itemStyle: {
@@ -222,7 +232,7 @@ export default {
             220
           ]
         }, {
-          name: 'average',
+          name: '总收入',
           type: 'line',
           stack: 'total',
           symbolSize: 10,
@@ -257,7 +267,7 @@ export default {
         }
         ]
       })
-        }
+        
       }, resp=> {
         this.$message({type: 'error', message: '页面加载失败!'});
       });

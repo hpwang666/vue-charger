@@ -2,12 +2,12 @@
   <div class="center-cmp">
     <div class="cc-header">
       <dv-decoration-1 style="width:200px;height:50px;" />
-      <div>今日耗电总数</div>
+      <div>充电总金额</div>
       <dv-decoration-1 style="width:200px;height:50px;" />
     </div>
 
     <div class="cc-details">
-      <div>耗电量</div>
+      <div>金额</div>
       <div class="card">2</div>
       <div class="card">1</div>
       <div class="card">3</div>
@@ -18,10 +18,10 @@
     <div class="cc-main-container">
       <div class="ccmc-left">
         <div class="station-info">
-          1号龙门<span>1315</span>
+          玉溪<span>1315</span>
         </div>
         <div class="station-info">
-          2号龙门<span>415</span>
+          宜昌<span>415</span>
         </div>
       </div>
 
@@ -29,10 +29,10 @@
 
       <div class="ccmc-right">
         <div class="station-info">
-          <span>90</span>401库1号吊
+          <span>90</span>武汉
         </div>
         <div class="station-info">
-          <span>317</span>401库2号吊
+          <span>317</span>江夏
         </div>
       </div>
 
@@ -54,19 +54,19 @@ export default {
       config: {
         data: [
           {
-            name: '1号龙门',
+            name: '充值',
             value: 1315
           },
           {
-            name: '2号龙门',
+            name: '充电',
             value: 415
           },
           {
-            name: '401库1号吊',
+            name: '占位费',
             value: 90
           },
           {
-            name: '401库2号吊',
+            name: '退款',
             value: 317
           }
         ],
@@ -77,7 +77,7 @@ export default {
       },
 
       labelConfig: {
-        data: ['1号龙门', '2号龙门', '401库1号吊', '401库2号吊']
+        data: ['充值', '充电', '占位', '退款']
       }
     }
   }

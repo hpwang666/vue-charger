@@ -208,27 +208,36 @@ export const asyncRoutes = [
       }
     ]
   },
-  
   {
     path: '/home',
     component: Home,
-    name: '数据统计0',
+    name: '数据统计',
     iconCls: 'fa fa-bar-chart',
     meta : {
       roles: ['admin'] 
     },
     children: [
       {
+        path: 'calcu',
+        iconCls: 'fa fa-bar-chart',
+        name: '数据分析',
+        component: () => import('@/components/show/calcu-data'),
+        meta : {
+          roles: ['admin'] 
+        }
+      },
+      {
         path: 'charts',
         iconCls: 'fa fa-bar-chart',
-        name: '数据统计',
-        component: () => import('@/components/mix-chart'),
+        name: '近期数据',
+        component: () => import('@/components/show/mix-chart'),
         meta : {
           roles: ['admin'] 
         }
       }
     ]
-  },   {
+  },
+  {
     path: '/home',
     component: Home,
     name: '电桩管理0',
@@ -253,6 +262,7 @@ export const asyncRoutes = [
       }
     ]
   },
+  
   {
     path: '/home',
     component: Home,

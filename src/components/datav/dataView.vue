@@ -2,7 +2,7 @@
   <div id="data-view">
     <dv-full-screen-container>
       <div class="main-header">
-        <div class="mh-middle">大连杂货码头能耗管理中心</div>
+        <div class="mh-middle">易路充数据中心</div>
         <div class="mh-right">
           <dv-border-box-2
             style="width: 120px; height: 50px; line-height: 50px; text-align:center;margin-left:200px;"
@@ -15,9 +15,9 @@
       <dv-border-box-1 class="main-container">
         <dv-border-box-3 class="left-chart-container">
 
-          <Left-Chart-1 />
-          <Left-Chart-1 />
-          <Left-Chart-1 />
+           <Left-Chart-1 content='天门' count='123'/>
+           <Left-Chart-1 content='远安' count='12'/>
+           <Left-Chart-1 content='荆州' count='213'/>
 
         </dv-border-box-3>
 
@@ -31,16 +31,16 @@
 
            <dv-border-box-4 class="rmc-bottom-container">
 
-           <Left-Chart-1 />
-           <Left-Chart-1 />
-           <Left-Chart-1 />
+           <Left-Chart-1 content='宜昌' count='123'/>
+           <Left-Chart-1 content='大桥北' count='12'/>
+           <Left-Chart-1 content='武汉市' count='213'/>
            </dv-border-box-4>
           
         </div>
          <dv-border-box-3 class="right-chart-container">
-              <Left-Chart-1 />
-              <Left-Chart-1 />
-              <Left-Chart-1 />
+              <Left-Chart-3 content='宜昌中心充电站' count='123'/>
+              <Left-Chart-3 content='大桥北充电站' count='12'/>
+              <Left-Chart-3 content='湖北高速充电站' count='213'/>
           </dv-border-box-3>
       </dv-border-box-1>
 
