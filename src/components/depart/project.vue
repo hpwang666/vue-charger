@@ -210,7 +210,7 @@
       deleteDepart(index,ids){
         var _this = this;
         request({
-          url: '/sys/depart/delete',
+          url: '/ylc/station/delete',
           method: 'delete',
           params:{id: ids}
         }).then(resp=> {

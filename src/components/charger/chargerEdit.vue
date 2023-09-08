@@ -116,7 +116,7 @@ import request from '@/utils/request'
         value:'',
         form: {   },
         rules:{
-          modelId: [{ required: true, message: '地址未填写', trigger: 'change' }]
+          modelId: [{ required: true, message: '费率未选择', trigger: 'change' }]
       }
       }
     },

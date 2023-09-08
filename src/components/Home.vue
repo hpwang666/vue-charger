@@ -20,14 +20,15 @@
         width="40%"
         :before-close="handleClose">
         
-       <div class="depark—block">
+       
         <span>充电站 </span>
         <el-cascader
+          id="el-cascader"
           v-model="value"
           :options="options"
           :props="{ expandTrigger: 'hover' }"
           @change="handleChange"></el-cascader>
-      </div>
+   
       
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -57,7 +58,7 @@
     </el-header>
 
 
-    <el-container>
+    <el-container class="el-aside-container">
       <el-aside width="210px">
         <el-menu
           default-active="0"
@@ -86,7 +87,7 @@
       </el-aside>
 
 
-      <el-container>
+      <el-container class="home-container0">
         <el-main>
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/dataView' }">首页</el-breadcrumb-item>
@@ -184,7 +185,8 @@
       return false
     },
       handleChange(value){
-        //console.log(value.length)
+        console.log(value.length)
+        this.updateElCascaderStyle(122)
       },
       handleClose()
       {},
@@ -192,6 +194,13 @@
             return value.filter(function(item){
               return !item.hidden;
             });
+    },
+    updateElCascaderStyle(value) {
+      // 效果：项目名称的input框随着内容的长度而自适应，设置 el_cascader 标签的width
+      var el_cascader_element = document.querySelector('#el-cascader')
+      //var length = value.join('.').length + 1
+      //var num =  length * 9  + 'px'  
+      el_cascader_element.style.width = 500+ 'px'
     }
     },
     mounted: function () {
@@ -247,7 +256,10 @@
     top: 0px;
     left: 0px;
     width: 100%;
+    overflow-y:hidden;
   }
+
+    
 
   .el-header {
     background-color: #1f2d3d;
@@ -266,7 +278,14 @@
   .el-aside {
     background-color: #304156 !important;
   }
- 
+  .el-aside-container{
+    height:100%
+  }
+  .el-aside::-webkit-scrollbar {
+     display: none;
+
+}
+
  .el-submenu .el-menu-item {
       background-color: #1f2d3d !important;
  }

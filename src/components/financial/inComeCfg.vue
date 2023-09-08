@@ -5,90 +5,50 @@
  <el-main class="income_cfg_edit">
   
 <br />
-<el-divider content-position="left">分润配置</el-divider>
 
   <el-row :gutter="20" >
-  <el-col :span="14"><div class="grid-content bg-purple"  style="text-align:left">
-    <el-transfer v-model="value" :data="toShareUsers" :titles="titles" label-position="left"></el-transfer>
+  <el-col :span="24">
+    <div class="grid-content bg-purple"  style="text-align:left">
+    <el-divider content-position="left">分润配置</el-divider>
+
+  <myTransfer 
+        v-model="value" 
+        :data="toShareUsers" 
+        :titles="titles" 
+        :panelWidth="600" 
+        :isShowLeftInput="false" 
+        :isShowRightInput="true"
+        ref="qqq">
+</myTransfer>
+
     </div>
   </el-col>
 
-
-  <el-col :span="10"  style="padding-right:0"><div  v-for="(domain,index) in value" :key="index"  class="grid-content bg-purple">
-     <el-row >
-      <el-col :span="8">
-        <div  class="name-ylc">{{toShareUsers[domain].label+': '}}</div>
-      </el-col >
-
-      <el-col :span="12"><div>
-        <el-input v-model="ratio[domain]"  size="small"  > <template slot="append">百分比</template></el-input>
-      </div>
-  
-      </el-col>
-    </el-row>
-  </div>
-  <br />
-   <el-row>
-        合计: {{sum}}%
-      </el-row>
-  </el-col>
- 
 </el-row>
   
  <br />
  <br />
  <br />
- <el-row :gutter="10" >
+
+ <el-row :gutter="1" >
       <el-button type="success" @click="handleCommit()">保存</el-button>
  </el-row>
 
-
-
-
-
 </el-main>
-
-
 </div>
 </template>
+
+
 <script>
 import request from '@/utils/request'
 import { mapGetters } from 'vuex'
+import myTransfer from './myTransfer/src/main'
 
     export default {
-   
+      components: { myTransfer },
       watch: {
       stationId:function (){ //动态监听电站ID的变化，刷新界面
          this.refresh();
-      },
-      value:function(val,old){//为了能够检测到value的变化   value 必须用push改变
-        if(val===old){}
-        else{
-          if(old.length>val.length){
-            old.forEach(element => {
-               let ii =val.indexOf(element)
-              if(-1==ii)  {
-                console.log('del  found: '+ element)
-                this.ratio.splice(element,1);
-                this.ratio.splice(element,0,0);
-              }
-            });
-          }
-          else{
-             val.forEach(element => {
-               let jj =old.indexOf(element)
-              if(-1==jj)  {
-                console.log('add  found: '+ element)
-                this.ratio.splice(element,1);
-                this.ratio.splice(element,0,0);//保证数据结构 长度不变
-              }
-            });
-            
-          }
-          console.log('mod '+this.ratio)
-                  
-        }
-       
       }
     },
       computed: {
@@ -107,18 +67,17 @@ import { mapGetters } from 'vuex'
         
          setTimeout(() => {
            this.refresh();
-         }, 120)
+         }, 320)
       },
     
     data() {
       return {
-        dialogVisible:false,
         value:[],
-        ratio:[],
         titles:['待选股东','已选股东'],
         action:'',
         serialNum:'',
         toShareUsers:[] ,
+        toShareUsers1:[{key:1,label:'我们',Number:12},{key:2,label:'你们',Number:12},{key:3,label:'他们',Number:12},{key:4,label:'啊们',Number:12}] ,
         shareRatios:[],
         sharers:[],
         allSharers:'',
@@ -137,7 +96,6 @@ import { mapGetters } from 'vuex'
       refresh(){
         let _this = this;
         _this.toShareUsers.splice(0);//所有股东的待选项
-        _this.ratio.splice(0);//百分比列表，长度是按照selected 固定的
         _this.value.splice(0);//已经有的股东
         _this.sharers.splice(0);
         request({
@@ -154,27 +112,25 @@ import { mapGetters } from 'vuex'
           
 
             _this.allSharers.map(((item, index)=> {
-              _this.toShareUsers.push({key:index,label:item.name,disabled:false});
+              _this.toShareUsers.push({key:index,label:item.name,Number:0,disabled:false});
              }))
          
        
-          for(i=0;i<_this.toShareUsers.length;i++){
-            this.ratio.push(0);
-          }
+          // for(i=0;i<_this.toShareUsers.length;i++){
+          //   this.ratio.push(0);
+          // }
 
         
-        // this.ratio.splice(3,1);
-        // console.log('init '+this.ratio)
-        // this.ratio.splice(3,0,11);
-        console.log('init '+this.ratio)  
+        
 
         //挑出已经有的股东，放在value里面，那么在待选项里面就不会出现
-        //挑出股东比例放在对应的radio里面
+        
         _this.sharers.map(((item, index)=> {
           let ii =  _this.allSharers.indexOf(this.indexOfById( _this.allSharers,item.sharerId));
           if(ii!=-1){
             this.value.push(ii)
-            _this.ratio[ii]=item.ratio;
+            //_this.ratio[ii]=item.ratio;
+            _this.toShareUsers[ii].Number=item.ratio;
           }
         }));
         
@@ -202,10 +158,11 @@ import { mapGetters } from 'vuex'
        
       handleCommit(){
         let _this = this;
-        this.$alert('百分比合计 ' + this.sum +'%'+ ' ?  请确保100%或则0%', '提示', {
+        console.log( );
+        this.$alert('百分比合计 ' + _this.$refs.qqq.aaa() +'%'+ ' ?  请确保100%或则0%', '提示', {
           confirmButtonText: '确定',
           cancelButtonText:'取消',
-          showConfirmButton:this.sum==100||this.sum==0,
+          showConfirmButton: _this.$refs.qqq.aaa()==100|| _this.$refs.qqq.aaa()==0,
           showCancelButton:true,
           type: 'warning'
         }).then(() => {
@@ -216,8 +173,8 @@ import { mapGetters } from 'vuex'
                 //把id重新写进去
                var ii =  _this.findByUserId( _this.sharers,_this.allSharers[item].id);
                var id=ii==undefined?123:ii.id
-             
-              _this.shareRatios.push({id:id,sharerId:_this.allSharers[item].id,departId: _this.$store.getters.stationId,ratio:_this.ratio[item]});
+             if(_this.toShareUsers[item].Number>0)
+              _this.shareRatios.push({id:id,sharerId:_this.allSharers[item].id,departId: _this.$store.getters.stationId,ratio:_this.toShareUsers[item].Number});
             }));
             console.log(_this.shareRatios)
           _this.commitShare();
@@ -277,5 +234,6 @@ import { mapGetters } from 'vuex'
     min-height: 36px;
   }
  
+
 
 </style>

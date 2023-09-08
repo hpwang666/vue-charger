@@ -174,7 +174,7 @@ export const asyncRoutes = [
         name: '分润配置',
         component: inComeCfg ,
         meta : {
-          roles: ['admin'] 
+          roles: ['superAdmin'] 
         },
       },
       {
@@ -202,7 +202,7 @@ export const asyncRoutes = [
         name: '受理提现',
         component: cashOut ,
         meta : {
-          roles: ['admin'] 
+          roles: ['superAdmin'] 
         },
         
       }
@@ -268,7 +268,7 @@ export const asyncRoutes = [
     component: Home,
     name: '订单查询0',
     meta : {
-      roles: ['superAdmin','admin'] 
+      roles: ['admin'] 
     },
     children: [
       {
@@ -277,7 +277,7 @@ export const asyncRoutes = [
         name: '订单查询',
         component: order,
         meta : {
-          roles: ['superAdmin','admin'] 
+          roles: ['admin'] 
         }
       }
     ]
