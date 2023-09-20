@@ -1,5 +1,5 @@
 <template>
-  <div class="el-transfer-panel" style="width:370px">
+  <div class="el-transfer-panel" v-bind:style="'width:'+divWidth+'px'">
     <p class="el-transfer-panel__header">
       <el-checkbox
         v-model="allChecked"
@@ -11,7 +11,7 @@
       </el-checkbox>
     </p>
     
-    <div :class="['el-transfer-panel__body', hasFooter ? 'is-with-footer' : ''] " v-bind:style=styleObj>
+    <div :class="['el-transfer-panel__body', hasFooter ? 'is-with-footer' : ''] " v-bind:style="'width:'+panelWidth+'px'">
       <el-input
         class="el-transfer-panel__filter"
         v-model="query"
@@ -120,7 +120,7 @@
       panelWidth:{
           type:Number,
           default(){
-              return 200
+              return 340
           }
       },
       renderContent: Function,
@@ -130,7 +130,14 @@
       format: Object,
       filterMethod: Function,
       defaultChecked: Array,
-      props: Object
+      props: Object,
+      divWidth:{
+        type:Number,
+         default(){
+              return 370
+          }
+          
+        },
     },
 
     data() {
@@ -326,7 +333,7 @@
 
 <style scoped>
 .fixwidth:last-child{
-  max-width:295px;
+  max-width:375px;
 }
 
 </style>

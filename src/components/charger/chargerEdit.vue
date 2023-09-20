@@ -11,14 +11,14 @@
     </div>
   </el-form-item>
    <el-form-item label="电桩名称"  >
-    <div style="width:240px">
+    <div style="width:200px">
     <el-input  v-model="form.name"   show-word-limit ></el-input>
     </div>
   </el-form-item>
 
   <el-row :gutter="10" >
     <el-col :span="8">
-    <el-form-item label="电桩厂家"  >
+    <el-form-item label="电桩厂家" prop="brand" >
       <el-select value-key=value v-model="form.brand" placeholder="请选择电桩厂家">
         <el-option label="易路充CHA-01" :value=1></el-option>
         <el-option label="瑞华" :value=2></el-option>
@@ -27,16 +27,16 @@
     </el-col>
 
     <el-col :span="8">
-      <el-form-item label="充电方式" >
-        <el-radio v-model="form.ifFast" class="input-reader-name" :label=1>快充</el-radio>
+      <el-form-item label="充电方式" prop="ifFast">
         <el-radio v-model="form.ifFast" class="input-reader-name" :label=2>慢充</el-radio>
+        <el-radio v-model="form.ifFast" class="input-reader-name" :label=1>快充</el-radio>
       </el-form-item>
     </el-col> 
   </el-row>
 
   <el-row :gutter="10" >
     <el-col :span="8">
-      <el-form-item label="充电功率"  >
+      <el-form-item label="充电功率"  prop="power">
       <el-select v-model="form.power" placeholder="请选择充电功率">
         <el-option label="7KW" :value=1></el-option>
         <el-option label="34KW" :value=2></el-option>
@@ -45,8 +45,8 @@
     </el-col> 
 
     <el-col :span="8">
-    <el-form-item label="充电模式" >
-      <el-radio v-model="form.acdc" class="input-reader-name" :label=1>交流</el-radio>
+    <el-form-item label="充电模式" prop="acdc">
+      <el-radio v-model="form.acdc"  class="input-reader-name" :label=1>交流</el-radio>
       <el-radio v-model="form.acdc" class="input-reader-name" :label=2>直流</el-radio>
     </el-form-item>
     </el-col> 
@@ -116,7 +116,11 @@ import request from '@/utils/request'
         value:'',
         form: {   },
         rules:{
-          modelId: [{ required: true, message: '费率未选择', trigger: 'change' }]
+          modelId: [{ required: true, message: '费率未选择', trigger: 'change' }],
+          acdc: [{ required: true, message: '未选择', trigger: 'change' }],
+          power: [{ required: true, message: '未选择', trigger: 'change' }],
+          ifFast: [{ required: true, message: '未选择', trigger: 'change' }],
+          brand: [{ required: true, message: '未选择', trigger: 'change' }]
       }
       }
     },
@@ -233,7 +237,7 @@ import request from '@/utils/request'
     background-color: #ffffff;
     margin-top: 20px;
     padding-top: 10px;
-    width: 60%;
+    width: 1000px;
   }
 
 

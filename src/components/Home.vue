@@ -18,22 +18,31 @@
         title="充电站选择"
         :visible.sync="dialogVisible"
         width="40%"
-        :before-close="handleClose">
-        
+        class="dialogClass">
+       <div class="el-dialog-div">
+          <el-row :gutter="20">
+            
+            <el-col :span=22>
+              <el-cascader
+            id="el-cascader"
+            v-model="value"
+            :options="options"
+            :props="{ expandTrigger: 'hover' }"
+            @change="handleChange"></el-cascader>
+            </el-col>
+          </el-row>
+          
+          <el-row>
+            <el-col :span=8 :offset="17">
+            <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+            <el-button size="small" type="primary" @click="hangleSelectionConfirm">确 定</el-button>
+            </el-col>
+            
+          </el-row>
+          
+       </div>
+         
        
-        <span>充电站 </span>
-        <el-cascader
-          id="el-cascader"
-          v-model="value"
-          :options="options"
-          :props="{ expandTrigger: 'hover' }"
-          @change="handleChange"></el-cascader>
-   
-      
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="hangleSelectionConfirm">确 定</el-button>
-        </span>
       </el-dialog>
 
       <div class="home_userinfoContainer">
@@ -51,7 +60,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <div class="home_exchange_button">
-        <el-button  icon="el-icon-sort" type="primary" size="mini"  @click="dialogVisible = true">切换</el-button>
+        <el-button  icon="el-icon-sort" type="primary" size="mini"  @click="handleEx">切换</el-button>
         </div>
       </div>
       
@@ -103,11 +112,13 @@
 </template>
 <script>
    import { mapGetters } from 'vuex'
+   import { getSelection, setSelection, removeSelection } from '@/utils/auth'
 
   export default{
     computed: {
       ...mapGetters(['name','depart','departTree','permission_routes','stationId'])
     },
+ 
     methods: {
       handleCommand(command){
         var _this = this;
@@ -137,7 +148,8 @@
           this.$store.commit('station/SET_STATION_ID', this.value[3]);   
          
           this.findIdByName(this.departTree,this.value[3]);
-         //console.log(this.stationId)
+          setSelection(this.value);
+          
         }
         else{
           this.$alert('请选择一个充电站');
@@ -185,8 +197,7 @@
       return false
     },
       handleChange(value){
-        console.log(value.length)
-        this.updateElCascaderStyle(122)
+        
       },
       handleClose()
       {},
@@ -195,13 +206,34 @@
               return !item.hidden;
             });
     },
-    updateElCascaderStyle(value) {
-      // 效果：项目名称的input框随着内容的长度而自适应，设置 el_cascader 标签的width
-      var el_cascader_element = document.querySelector('#el-cascader')
-      //var length = value.join('.').length + 1
-      //var num =  length * 9  + 'px'  
-      el_cascader_element.style.width = 500+ 'px'
-    }
+   
+    handleEx(){
+      this.options = this.departTree;
+      this.dialogVisible=true;
+    },
+    treeFind (tree, func) {
+      for (const data of tree) {
+        if (func(data)) return data
+        if (data.children) {
+          const res = this.treeFind(data.children, func)
+          if (res) return res
+        }
+      }
+      return null
+    },
+    treeFindPath (tree, func,path=[]) {
+        if (!tree) return []
+        for (const node of tree) {
+          path.push(node.value)
+          if (func(node)) return path
+          if (node.children) {
+            const findChildren = this.treeFindPath(node.children,func, path)
+            if (findChildren.length) return findChildren
+          }
+          path.pop()
+        }
+        return []
+      }
     },
     mounted: function () {
       var _this = this;
@@ -217,14 +249,32 @@
         _this.options = _this.departTree;
         var _depart = _this.departTree[0];
         var i=0;
-        while(true)
-        {
-            _this.selectedPark[i]=_depart.value;
-            i++;
-            if(_depart.hasOwnProperty('children')&&_depart.children!=null )
-            _depart=_depart.children[0];
-            else break;
+        let s = getSelection()
+        if(s){
+          let cookiedSelection = JSON.parse(s);//字符串转数组
+            let station=_this.treeFind(_this.departTree,node=>node.value==cookiedSelection[3]) ;//找出充电站
+            if(station){
+              let path=[];
+              _this.treeFindPath(_this.departTree,node=>node.value==station.value,path) ;//城市，集团，公司,项目
+               if(path.toString==cookiedSelection.toString){//要求充电站名字  路径 完全一样
+                 _depart=station;
+                _this.selectedPark = cookiedSelection;
+                i=4;
+                _this.value = cookiedSelection;
+               }
+            }
         }
+        if(i==0){
+          while(true)
+          {
+              _this.selectedPark[i]=_depart.value;
+              i++;
+              if(_depart.hasOwnProperty('children')&&_depart.children!=null )
+              _depart=_depart.children[0];
+              else break;
+          }
+        }
+       
 
         //如果是完整的即包含了电站ID ，那么就进行存储更新
         if(i==4){
@@ -341,4 +391,37 @@
     
    
   }
+
+  .el-row{
+    margin-top:10px;
+  }
+
+  /*选择器框框的宽度 */
+  #el-cascader{
+    width:90%;
+  }
+
+  .dialogClass .el-dialog__body {
+  /*padding: 20px;*/
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-left: 10px;
+  color: #606266;
+  font-size: 14px;
+}
+.dialogClass .el-dialog__footer {
+  text-align: left;
+}
+
+
+</style>
+
+
+
+<style lang="scss" scoped>           
+.el-dialog-div {
+  height: 100px;
+}
+
+
 </style>

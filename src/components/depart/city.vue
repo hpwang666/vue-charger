@@ -25,6 +25,9 @@
           label="城市名称"
           prop="departName"
           width="250" align="left">
+          <template v-slot="scope">
+            <a link href="javascript:void(0);" class="cityRef"  @click="go2group(scope.row)">{{scope.row.departName}}</a>
+          </template>
         </el-table-column>
         <el-table-column
           prop="updateTime"
@@ -223,6 +226,15 @@
           }
         })
       },
+      go2group(row){
+        var _this = this;
+        this.$router.push({
+          path: 'group',
+          query: {
+            id: row.id
+          }
+        })
+      },
       refresh(){
         let _this = this;
         request({
@@ -323,5 +335,8 @@
     background-color: #ececec;
     margin-top: 20px;
     padding-top: 10px;
+  }
+   .cityRef{
+    text-decoration: none;
   }
 </style>

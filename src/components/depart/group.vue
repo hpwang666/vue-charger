@@ -25,6 +25,9 @@
           label="集团名称"
           prop="departName"
           width="250" align="left">
+          <template v-slot="scope">
+            <a link href="javascript:void(0);" class="groupRef"  @click="go2company(scope.row)">{{scope.row.departName}}</a>
+          </template>
         </el-table-column>
         <el-table-column
           prop="updateTime"
@@ -232,13 +235,23 @@
           }
         })
       },
+      go2company(row){
+        var _this = this;
+        this.$router.push({
+          path: 'company',
+          query: {
+            id: row.id
+          }
+        })
+      },
       refresh(){
         let _this = this;
         request({
           url: '/sys/depart/list',
           method: 'get',
           params: {
-            orgCategory:2
+            orgCategory:2,
+            cityId:this.$route.query.id
           }
         }).then(resp=> {
           _this.departs = resp.result;
@@ -252,7 +265,8 @@
           url: '/sys/depart/list',
           method: 'get',
           params: {
-            orgCategory:1
+            orgCategory:1,
+            
           }
         }).then(resp=> {
           _this.parentDeparts = resp.result;
@@ -346,5 +360,8 @@
     background-color: #ececec;
     margin-top: 20px;
     padding-top: 10px;
+  }
+  .groupRef{
+    text-decoration: none;
   }
 </style>

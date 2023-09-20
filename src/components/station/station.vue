@@ -3,50 +3,40 @@
 <div >
   
  <el-main class="station_edit_main">
-   <el-row :gutter="10" >
-     <el-col :span="8">
-      <el-form class= "station_form_main" ref="dataForm" :model="form"   label-width="80px" >
+   <el-row :gutter="30" >
+     <el-col :span="7">
+      <el-form class= "station_form_main" ref="dataForm" :model="form"  :rules="rules" label-width="80px" >
         <el-form-item label="电站名称"  >
       
           <el-input  v-model="form.name"  :disabled="true" show-word-limit ></el-input>
         
         </el-form-item>
-
         <el-form-item label="电站地址" >
-        
           <el-input  v-model="form.address"    show-word-limit ></el-input>
-        
         </el-form-item>
         
-        <el-form-item label="电话号码"  >
-        
-          <el-input  v-model="form.phone"   show-word-limit ></el-input>
-        
+        <el-form-item label="电话号码"  prop="phone">    
+          <el-input  v-model="form.phone"   show-word-limit ></el-input>  
         </el-form-item>
         
-
-        <el-form-item style="float: left">
+        <el-form-item style="float: left" >
           <el-button style="float: left" type="success" @click="dialogVisible = true">设置经纬度</el-button>
         </el-form-item>
       
-        
-    
-          <el-form-item label="纬度" label-width="80px"  >
-            <el-input  :disabled="true" size="small"  v-model="form.latitude"> <template slot="append">度</template></el-input>
-          </el-form-item>
-          <el-form-item label="经度" label-width="80px" >
-            <el-input  :disabled="true" size="small"  v-model="form.longitude"> <template slot="append">度</template></el-input>
-          </el-form-item>
-        
+        <el-form-item label="纬度" label-width="80px" prop="latitude" >
+          <el-input  :disabled="true" size="small"  v-model="form.latitude"> <template slot="append">度</template></el-input>
+        </el-form-item>
+        <el-form-item label="经度" label-width="80px" prop="longitude">
+          <el-input  :disabled="true" size="small"  v-model="form.longitude"> <template slot="append">度</template></el-input>
+        </el-form-item>
 
-      
         
-        <el-form-item label="电站位置" >
+        <el-form-item label="电站位置" prop="location" >
           <el-radio v-model="form.location" class="input-reader-name" label="1">地上电站</el-radio>
           <el-radio v-model="form.location" class="input-reader-name" label="2">地下电站</el-radio>
         </el-form-item>
 
-        <el-form-item label="供电模式" style="padding-left">
+        <el-form-item label="供电模式" style="padding-left" prop="supplyMode">
           
           <el-radio v-model="form.supplyMode" label="1">独立增容</el-radio>
           <el-radio v-model="form.supplyMode" label="2">扩展容量</el-radio>
@@ -54,13 +44,13 @@
         </el-form-item>
 
 
-        <el-form-item label="供电容量"  >
+        <el-form-item label="供电容量"  prop="supplyCapacity">
           
             <el-input  v-model="form.supplyCapacity"    ><template slot="append">K.VA</template></el-input>
           
         </el-form-item>
         
-        <el-form-item label="电站类型"  >
+        <el-form-item label="电站类型" prop="ownType" >
           
             <el-select v-model="form.ownType" placeholder="请选择电站类型">
               <el-option label="个人" value="1"></el-option>
@@ -72,7 +62,7 @@
 
     </el-form>
      </el-col>
-     <el-col :span="8">
+     <el-col :span="7">
         <br />
         <el-divider content-position="left">提供服务</el-divider>
        <el-form class= "station_form_main" ref="serviceForm" :model="form"   label-width="80px" >
@@ -162,7 +152,16 @@ import { mapGetters } from 'vuex'
           supplyMode:'1',
           supplyCapacity:'200',
           ownType:'2'
-        }
+        },
+        rules:{
+          supplyMode: [{ required: true, message: '未选择', trigger: 'change' }],
+          phone: [{ required: true, message: '未选择', trigger: 'change' }],
+          location: [{ required: true, message: '未选择', trigger: 'change' }],
+          supplyCapacity: [{ required: true, message: '未选择', trigger: 'change' }],
+          ownType: [{ required: true, message: '未选择', trigger: 'change' }],
+          longitude: [{ required: true, message: '未选择', trigger: 'change' }],
+          latitude: [{ required: true, message: '未选择', trigger: 'change' }]
+      }
       }
     },
     methods: {
@@ -204,24 +203,28 @@ import { mapGetters } from 'vuex'
       },
       
 
-       
+      
    
     commitStation(){
         var _this = this;
+        this.$refs['dataForm'].validate((valid) => {
+        if (valid) { 
          request({
            url: '/ylc/station/edit',
             method: 'post',
             data:  _this.form 
         }).then(resp=> {
-          
           _this.$message({
             type: 'success',
             message: resp.result
           });
         })
-      },
+
+        } 
+      })
     }
   }
+    }
 </script>
 
 

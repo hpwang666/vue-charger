@@ -202,7 +202,7 @@
       
       setTimeout(() => {
         this.refresh();
-      }, 400)
+      }, 300)
     },
     data(){
       return {

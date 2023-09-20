@@ -15,7 +15,6 @@
         v-model="value" 
         :data="toShareUsers" 
         :titles="titles" 
-        :panelWidth="600" 
         :isShowLeftInput="false" 
         :isShowRightInput="true"
         ref="qqq">

@@ -306,7 +306,7 @@
           update:
               {
                 phone: [{ required: true, message: '手机号码未填写', trigger: 'blur' },
-                        {pattern:/^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/,message: '手机号码格式错误', trigger: 'blur'}],
+                        {pattern:/^((0\d{2,3}-\d{7,8})|(1[345789]\d{9}))$/,message: '手机号码格式错误', trigger: 'blur'}],
                 name: [{ required: true, message: 'name is required', trigger: 'blur' }],
                 account: [{ required: true, message: '账号未填写', trigger: 'blur' }],
                 passwd:[{ validator: validatePasswd, trigger: ["blur", "change"]}],
@@ -315,7 +315,7 @@
           create:
               {
                 phone: [{ required: true, message: '手机号码未填写', trigger: 'blur' },
-                        {pattern:/^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/,message: '手机号码格式错误', trigger: 'blur'}],
+                        {pattern:/^((0\d{2,3}-\d{7,8})|(1[345789]\d{9}))$/,message: '手机号码格式错误', trigger: 'blur'}],
                 name: [{ required: true, message: 'name is required', trigger: 'blur' }],
                 account: [{ required: true, message: '账号未填写', trigger: 'blur' }],
                 passwd:[{ required: true, validator: validatePasswd, trigger: ["blur"]}],

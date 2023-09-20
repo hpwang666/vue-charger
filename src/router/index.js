@@ -43,6 +43,44 @@ export const asyncRoutes = [
   {
     path: '/home',
     component: Home,
+    iconCls: 'fa fa-bar-chart',
+    name: '我的账户',
+    meta : {
+      roles: ['admin'] 
+    },
+    children: [
+      {
+        path: 'inCome',
+        iconCls: 'fa fa-reorder',
+        name: '分润账单',
+        component: inCome ,
+        meta : {
+          roles: ['admin'] 
+        },
+      },
+      {
+        path: 'inComeSum',
+        iconCls: 'fa fa-reorder',
+        name: '分润报表',
+        component: inCome ,
+        meta : {
+          roles: ['admin'] 
+        },
+      },
+      {
+        path: 'cashOutTrade',
+        iconCls: 'fa fa-reorder',
+        name: '提现账单',
+        component: cashOutTrade ,
+        meta : {
+          roles: ['admin'] 
+        },
+      }
+    ]
+  },
+  {
+    path: '/home',
+    component: Home,
     name: '组织机构',
     iconCls: 'fa fa-file-text-o',
     meta: {
@@ -123,6 +161,36 @@ export const asyncRoutes = [
   {
     path: '/home',
     component: Home,
+    iconCls: 'fa fa-bar-chart',
+    name: '财务管理',
+    meta : {
+      roles: ['superAdmin'] 
+    },
+    children: [
+      {
+        path: 'inComeCfg',
+        iconCls: 'fa fa-reorder',
+        name: '分润配置',
+        component: inComeCfg ,
+        meta : {
+          roles: ['superAdmin'] 
+        },
+      },
+      {
+        path: 'cashOut',
+        iconCls: 'fa fa-reorder',
+        name: '受理提现',
+        component: cashOut ,
+        meta : {
+          roles: ['superAdmin'] 
+        },
+        
+      }
+    ]
+  },
+  {
+    path: '/home',
+    component: Home,
     name: '全局配置',
     iconCls: 'fa fa-bar-chart',
     meta : {
@@ -159,55 +227,7 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: '/home',
-    component: Home,
-    iconCls: 'fa fa-bar-chart',
-    name: '财务管理',
-    meta : {
-      roles: ['admin'] 
-    },
-    children: [
-      {
-        path: 'inComeCfg',
-        iconCls: 'fa fa-reorder',
-        name: '分润配置',
-        component: inComeCfg ,
-        meta : {
-          roles: ['superAdmin'] 
-        },
-      },
-      {
-        path: 'inCome',
-        iconCls: 'fa fa-reorder',
-        name: '分润账单',
-        component: inCome ,
-        meta : {
-          roles: ['admin'] 
-        },
-      },
-      {
-        path: 'cashOutTrade',
-        iconCls: 'fa fa-reorder',
-        name: '提现账单',
-        component: cashOutTrade ,
-        meta : {
-          roles: ['admin'] 
-        },
-        
-      },
-      {
-        path: 'cashOut',
-        iconCls: 'fa fa-reorder',
-        name: '受理提现',
-        component: cashOut ,
-        meta : {
-          roles: ['superAdmin'] 
-        },
-        
-      }
-    ]
-  },
+  
   {
     path: '/home',
     component: Home,

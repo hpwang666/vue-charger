@@ -4,7 +4,8 @@
       v-bind="$props"
       :data="sourceData"
       :title="titles[0]"
-      :panelWidth="panelWidth"
+      :divWidth=320
+      :panelWidth=300
       :isShowInput="isShowLeftInput"
       :default-checked="leftDefaultChecked"
       :placeholder="filterPlaceholder"
@@ -33,7 +34,8 @@
       v-bind="$props"
       :data="targetData"
       :title="titles[1]"
-      :panelWidth="panelWidth"
+      :divWidth=440
+      :panelWidth=420
       :isShowInput="isShowRightInput"
       :default-checked="rightDefaultChecked"
       :placeholder="filterPlaceholder"
@@ -63,6 +65,7 @@
 
     props: {
       panelWidth: Number,
+      divWidth: Number,
       isShowLeftInput: Boolean,
       isShowRightInput: Boolean,
       data: {
