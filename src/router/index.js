@@ -305,6 +305,43 @@ export const asyncRoutes = [
   {
     path: '/home',
     component: Home,
+    iconCls: 'fa fa-hand-pointer-o',
+    name: '综合控制',
+    meta : {
+      roles: ['admin'] 
+    },
+    children: [
+      {
+        path: 'uctrl',
+        name: '用户查询',
+        component: () => import('@/components/query/userInfo'),
+        meta : {
+          roles: ['admin'] 
+        }
+      },
+      {
+        path: 'feedback',
+        iconCls: 'fa fa-hand-pointer-o',
+        name: '用户反馈',
+        component: () => import('@/components/query/feedback'),
+        meta : {
+          roles: ['admin'] 
+        }
+      },
+      {
+        path: 'cctrl',
+        iconCls: 'fa fa-hand-pointer-o',
+        name: '电桩控制',
+        component: () => import('@/components/query/userInfo'),
+        meta : {
+          roles: ['admin'] 
+        }
+      }
+    ]
+  },
+  {
+    path: '/home',
+    component: Home,
     name: '操作日志0',
     meta : {
       roles: ['superAdmin'] 

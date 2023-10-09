@@ -208,7 +208,7 @@
 
         let tmpCity = this.treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
         tmpCity.map(((item, index)=> {
-          this.citys.push({id:item.key,departName:item.value+'0'});
+          this.citys.push({id:item.key,departName:item.value});
         }))
 
         //this.treeForeach(tmpCity,node =>console.log(node.value))
@@ -218,7 +218,7 @@
 
         this.groups.length=0;
         cityChildren[0].children.map(((item, index)=> {
-          this.groups.push({id:item.key,departName:item.value+'0'});
+          this.groups.push({id:item.key,departName:item.value});
         }))
       },
       updateData() {

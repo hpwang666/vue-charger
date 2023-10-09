@@ -2,7 +2,7 @@
   <el-container class="in_come_container">
     <el-header class="in_come_header">
       <el-row :gutter="20" >
-         <el-col :span="16">
+         <el-col :span="18">
           账户余额: {{amount}} 元   
          </el-col>
          <el-col :span=3>

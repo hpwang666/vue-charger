@@ -4,8 +4,8 @@
       v-bind="$props"
       :data="sourceData"
       :title="titles[0]"
-      :divWidth=320
-      :panelWidth=300
+      :divWidth=340
+      :panelWidth=320
       :isShowInput="isShowLeftInput"
       :default-checked="leftDefaultChecked"
       :placeholder="filterPlaceholder"

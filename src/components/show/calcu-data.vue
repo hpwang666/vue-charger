@@ -110,6 +110,10 @@
           _this.chargeFeeByTime = resp.result.chargeFeeByTime;
           _this.chargeQtyByTime = resp.result.chargeQtyByTime;
 
+          if(_this.pieData0==null){
+            _this.pieData0= new Array();
+          }
+
           if(_this.pieData0.length == 0){
             _this.pieData0.push( {value:0, name:'=0h'});
           }

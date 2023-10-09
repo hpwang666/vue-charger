@@ -2,7 +2,7 @@
   <el-container class="cash_out_trade_container">
     <el-header class="cash_out_trade_header">
       <el-row :gutter="20" >
-         <el-col :span="16">
+         <el-col :span="18">
           账户余额: {{amount}} 元   
          </el-col>
          <el-col :span=3>
@@ -22,7 +22,7 @@
       <br />
       <el-divider content-position="left">分润流水</el-divider>
 
-    <el-main class="in_come_main">
+    <el-main class="cash_out_trade_main">
       
      
        <el-table
@@ -263,7 +263,7 @@
     justify-content: flex-start;
   }
 
-  .in_come_main {
+  .cash_out_trade_main {
     /*justify-content: flex-start;*/
     display: flex;
     flex-direction: column;
