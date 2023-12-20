@@ -1,7 +1,7 @@
 <template>
   <el-container class="home_container">
     <el-header height=90px>
-      <div class="home_title" color = "#000">易路充充电管理系统</div>
+      <div class="home_title" color = "#000">{{homeTitle}}</div>
     
       <div class="user_depart" >
         <i v-if="selectedPark[0]" class="el-icon-map-location" ></i>
@@ -145,7 +145,8 @@
         if(this.value.length == 4){
           this.selectedPark = this.value;
           this.dialogVisible = false;
-          this.$store.commit('station/SET_STATION_ID', this.value[3]);   
+          
+          console.log("存储ID_1: "+this.value[3]+" 名称_1:"+this.value[3])  
          
           this.findIdByName(this.departTree,this.value[3]);
           setSelection(this.value);
@@ -159,6 +160,8 @@
         departs.forEach(element => {
           if(element.orgCategory===4&& element.value===stationName) {
            this.$store.commit('station/SET_STATION_ID', element.key);  
+           this.$store.commit('station/SET_STATION_NAME', element.value); 
+           console.log("存储ID_2: "+element.key+" 名称_2:"+element.value)  
           }
           if(element.hasOwnProperty('children')&&element.children!=null )
           {
@@ -237,7 +240,7 @@
     },
     mounted: function () {
       var _this = this;
-     
+     this.homeTitle=process.env.NODE_ENV=='development'?'大连杂货码头电源管理系统':'易路充充电管理系统';
       this.$store.dispatch('user/getInfo').then(()=> {
           _this.currentUserName = _this.name;
         }).catch(() => {
@@ -279,8 +282,8 @@
         //如果是完整的即包含了电站ID ，那么就进行存储更新
         if(i==4){
             _this.$store.commit('station/SET_STATION_ID', _depart.key);   
-            console.log("存储ID: "+_this.stationId)
-
+            console.log("存储ID: "+_this.stationId+" 名称："+_depart.value)
+            this.$store.commit('station/SET_STATION_NAME', _depart.value); 
         }
             
       }).catch((e) => {
@@ -294,7 +297,8 @@
         value:[],
         selectedPark:[],
         options:[],
-        onlyOneChild:null
+        onlyOneChild:null,
+        homeTitle:''
       }
     }
   }
@@ -309,6 +313,12 @@
     overflow-y:hidden;
   }
 
+ .home-container0 {
+    height: 100%;
+    top: 0px;
+    left: 0px;
+   
+  }
     
 
   .el-header {

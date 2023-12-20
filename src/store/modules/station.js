@@ -1,11 +1,15 @@
 
 const state = {
-  stationId: ''
+  stationId: '',
+  stationName:''
 }
 
 const mutations = {
   SET_STATION_ID: (state, id) => {
     state.stationId = id
+  },
+  SET_STATION_NAME: (state, name) => {
+    state.stationName = name
   }
 }
 

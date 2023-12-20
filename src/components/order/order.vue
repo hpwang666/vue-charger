@@ -1,8 +1,8 @@
 <template>
   <el-container>
-    <el-header class="order_header">
+    <el-header class="order_header" >
       
-      <el-select v-model="settlement" placeholder='结算状态' clearable style="margin-left: 10px" >
+      <el-select v-model="settlement" placeholder='结算状态' clearable  style="margin-left: 10px">
         <el-option v-for="item in settleFlag" :key="item" :label="item" :value="item" />
       </el-select>
 
@@ -21,6 +21,9 @@
     </div>
       
       <el-button type="success" size="medium" style="margin-left: 20px" @click="handleQuery">查询</el-button>
+      
+      <el-button type="primary" size="medium"  style="margin-left: auto" @click="handleDownload">导出</el-button>
+      
     </el-header>
     <el-main class="order_main">
       <el-table
@@ -114,6 +117,9 @@
 </template>
 <script>
   import request from '@/utils/request'
+
+  
+
    import { mapGetters } from 'vuex'
   
   export default{
@@ -131,7 +137,7 @@
 
     },
      computed: {
-      ...mapGetters(['stationId'])
+      ...mapGetters(['stationId','stationName'])
     },
     methods: {
       
@@ -196,7 +202,37 @@
             message: '加载失败'
           });
         });
-      }
+      },
+      handleDownload() {
+        this.downloadLoading = true;
+        var _this=this;
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ['序号', '订单号', '桩号', '充电量', '金额', '时间']
+          const filterVal = ['index', 'orderNum', 'serialNum', 'totalKwh','totalCost','orderTime']
+          const list = this.orders
+          const data0 = [];
+
+          list.map((item, index) => {
+            data0.push(
+              Object.assign({ index: index+1},item )
+            );
+          });
+        const data = this.formatJson(filterVal, data0);
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: _this.stationName,
+            autoWidth: true,
+            bookType: 'xlsx'
+          })
+          this.downloadLoading = false
+        })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+          return v[j]
+      }))
+    }
     },
     mounted: function () {
       
@@ -251,7 +287,7 @@
     margin-top: 20px;
     padding-left: 5px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 
   .order_main {

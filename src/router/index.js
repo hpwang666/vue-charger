@@ -19,16 +19,29 @@ export const constantRoutes = [
     hidden: true,
     component: Login
   }, 
+  // {
+  //   path: '/home',
+  //   component: Home,
+  //   name: '实时数据0',
+  //   children: [
+  //     {
+  //       path: 'dataView',
+  //       iconCls: 'fa fa-television',
+  //       name: '实时数据',
+  //       component: () => import('@/components/datav/dataView'),
+  //     }
+  //   ]
+  // },
   {
     path: '/home',
     component: Home,
     name: '实时数据0',
     children: [
       {
-        path: 'dataView',
+        path: 'realtimeView',
         iconCls: 'fa fa-television',
         name: '实时数据',
-        component: () => import('@/components/datav/dataView'),
+        component: () => import('@/components/view/index'),
       }
     ]
   },
@@ -75,7 +88,15 @@ export const asyncRoutes = [
         meta : {
           roles: ['admin'] 
         },
-      }
+      },
+      {
+        path: 'ExportExcel',
+        component: () => import('@/components/excel/export-excel'),
+        name: '导出报表',
+        meta : {
+          roles: ['admin'] 
+        },
+      },
     ]
   },
   {

@@ -5,6 +5,7 @@ const getters = {
   departTree: state => state.user.departTree,
   permission_routes: state => state.permission.routes,
   depart: state => state.user.depart,
-  stationId: state=>state.station.stationId
+  stationId: state=>state.station.stationId,
+  stationName: state=>state.station.stationName
 }
 export default getters

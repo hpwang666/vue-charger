@@ -82,9 +82,23 @@
    </el-row>
 
 <br />
-<el-divider content-position="left">其他配置</el-divider>
+<el-divider content-position="left">场景图片</el-divider>
 
- 
+ <my-upload
+    action="http://up-z2.qiniup.com"
+    name="file"
+    :data="dataObj"
+    :file-list="qiniuList"
+    :limit=5
+    list-type="picture-card"
+    :before-upload="beforeUpload"
+    :on-preview="handlePictureCardPreview"
+    :on-error="handleError"
+    :on-remove="handleRemove"
+    :on-success="handleSuccess"
+    :on-exceed="handleExceed">
+    <i class="el-icon-plus"></i>
+</my-upload>
 
  <br />
  <el-row :gutter="10" >
@@ -106,6 +120,9 @@
   </span>
 </el-dialog>
 
+<el-dialog :visible.sync="photoVisible">
+  <img width="100%" :src="dialogImageUrl" alt="">
+</el-dialog>
 
 
 </el-main>
@@ -117,10 +134,13 @@
 import request from '@/utils/request'
 import TencentMap from './tencentMap'
 import { mapGetters } from 'vuex'
+import MyUpload from '@/components/upload'
+
 
     export default {
       components: {
-      TencentMap
+      TencentMap,
+      MyUpload
     },
       watch: {
       stationId:function (){ //动态监听电站ID的变化，刷新界面
@@ -140,6 +160,10 @@ import { mapGetters } from 'vuex'
     data() {
       return {
         dialogVisible:false,
+        dialogImageUrl: '',
+        photoVisible: false,
+        dataObj: { token: '', key: '' },
+        qiniuList: [],
                
         form:{
           id:'',
@@ -200,6 +224,25 @@ import { mapGetters } from 'vuex'
           });
         });
 
+        request({
+          url: '/ylc/station/getPhotos',
+          method: 'get',
+          params:{
+            departId:_this.stationId
+          }
+        }).then(resp=> {
+          var i = 0;
+        
+          _this.qiniuList =  resp.result;
+          
+
+        }).catch(()=>{
+          _this.$message({
+            type: 'error',
+            message: '加载失败'
+          });
+        });
+
       },
       
 
@@ -222,7 +265,90 @@ import { mapGetters } from 'vuex'
 
         } 
       })
-    }
+    },
+    handleSuccess(res, file, uploadFiles)
+    {
+      var _this = this;
+      request({
+        url: '/ylc/station/addPhoto',
+        method: 'get',
+        params: {
+          departId:_this.stationId,
+          key:file.name
+        } 
+      }).then(resp=> {
+        _this.$message({
+          type: 'success',
+          message: resp.result
+        });
+      })
+    },
+    handleRemove(file, fileList) {
+      var _this = this;
+      request({
+        url: '/ylc/station/qiniuDelete',
+        method: 'get',
+        params:{
+          departId:_this.stationId,
+          key:file.name
+        }
+      }).then().catch(()=>{
+        _this.$message({
+          type: 'error',
+          message: '加载失败'
+        });
+      });
+    },
+    handleError(err, rawFile){
+      console.log(err)
+    },
+    handlePictureCardPreview(file) {
+      console.log('handle preview')
+      this.dialogImageUrl = file.url;
+      this.photoVisible = true;
+    },
+    handleExceed()
+    {
+      alert("最多上传5个文件")
+    },
+    beforeUpload(rawFile) {
+      const _self = this
+       console.log('to get token '+ rawFile.name)
+
+      
+      return new Promise((resolve, reject) => {
+        this.getToken(rawFile.name).then(resp => {
+          console.log('1没问题啊 '+resp)
+    
+          _self.dataObj.token = resp.result;
+          _self.dataObj.key = rawFile.name
+          resolve(true)
+        }).catch(err => {
+          console.log(err)
+          reject(false)
+        })
+      })
+    },
+    getToken(filename) {
+      const _self = this
+      return request({
+        url: '/ylc/station/qiniuToken',
+        method: 'get',
+        params: {
+            key: filename
+          }
+      });
+  },
+  removeFile(filename){
+     const _self = this
+      return request({
+        url: '/ylc/station/qiniuDelete',
+        method: 'get',
+        params: {
+            key: filename
+          }
+      });
+  }
   }
     }
 </script>

@@ -44,6 +44,7 @@ module.exports = {
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
+        exclude: [resolve('src/icons')],//1、添加这句
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
@@ -64,7 +65,28 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      }
+      },
+      {//2、添加这句
+        test: /\.(svg)(\?.*)?$/,
+        include: [resolve('src/icons')],
+        use: [
+          {
+            loader: 'svg-sprite-loader',
+            options: {
+              symbolId: "icon-[name]",
+            },
+          },
+          {//去除fill 才能动态改变颜色
+              loader: 'svgo-loader',
+              options: {
+                  plugins: [
+                      { removeAttrs:{attrs:'fill'} }
+                  ]
+              }
+          }
+        ],
+    },
+    
     ]
   },
   node: {

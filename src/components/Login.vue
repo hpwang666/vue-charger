@@ -51,7 +51,11 @@
             this.$store.dispatch('user/login', this.loginForm).then((resp)=> {
               _this.loading = false;
             //console.log(this.token,resp.result.token);
-              _this.$router.push({path: '/home'});
+              //_this.$router.push({path: '/home/realtimeView'});
+
+              _this.$router.replace('/home/realtimeView').catch(err => {
+                console.log('all good')
+              }) 
             }).catch(() => {
                 this.loading = false
                 _this.$alert('登录失败', '失败~');
