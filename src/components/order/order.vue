@@ -30,7 +30,7 @@
         ref="multipleTable"
         :data="orders"
         style="width: 100%"
-        max-height="600"
+        max-height="580"
         max-width="600"
         border>
         <el-table-column
@@ -51,13 +51,13 @@
         <el-table-column
           label="充电金额"
           prop="totalCost"
-          width="110" align="left">
+          width="100" align="left">
         </el-table-column>
 
          <el-table-column
           label="服务费"
           prop="feeService"
-          width="110" align="left">
+          width="90" align="left">
         </el-table-column>
 
       <el-table-column
@@ -284,7 +284,7 @@
 <style>
   .order_header {
     background-color: #ececec;
-    margin-top: 20px;
+    margin-top: 0px;
     padding-left: 5px;
     display: flex;
     justify-content: flex-end;

@@ -1,0 +1,740 @@
+/* #region 常用前景色 */
+/*root是全局作用域，在这里定义的变量可在其他任何{}内获取到*/
+:root {
+  --palepurple: rgb(192, 64, 192);
+  /*定义一个名为--palepurple的变量，其值是淡紫色的颜色值，css变量必须以--开头*/
+}
+
+.color-palepurple,
+.palepurple {
+  color: var(--palepurple);
+  /*使用var()函数获取已定义的变量的值*/
+}
+
+.bg-palepurple {
+  background-color: var(--palepurple);
+  /*使用var()函数获取已定义的变量的值*/
+}
+
+.color-purewhite,
+.purewhite {
+  color: #fff;
+}
+
+.color-white,
+.white {
+  color: #eee;
+}
+
+.color-gray,
+.gray {
+  color: gray;
+}
+
+.color-darkgray,
+.darkgray {
+  color: #666666;
+}
+
+.color-midgray,
+.midgray {
+  color: #888888;
+}
+
+.color-lightgray,
+.lightgray {
+  color: #808080;
+}
+
+.color-littlegray,
+.littlegray {
+  color: #aaaaaa;
+}
+
+.color-gray2,
+.gray2 {
+  color: #999;
+}
+
+.color-zs,
+.zs {
+  color: #3612d6;
+}
+
+.color-blue,
+.blue {
+  color: #4784b1;
+}
+
+.color-blue0,
+.blue0 {
+  color: #006699;
+}
+
+.color-blue1,
+.blue1 {
+  color: #073ccc;
+}
+
+.color-blue2,
+.blue2 {
+  color: #2952f5;
+}
+
+.color-blue3,
+.blue3 {
+  color: #0690eb;
+}
+
+.color-blue4,
+.blue4 {
+  color: #445cfc;
+}
+
+.color-blue5,
+.blue5 {
+  color: #0099cc;
+}
+
+.color-blue6,
+.blue6 {
+  color: #3366ff;
+}
+
+.color-blue7,
+.blue7 {
+  background-color: #1144ff;
+}
+
+.color-paleblue,
+.paleblue {
+  color: #a2cbe0;
+}
+
+.color-lightblue,
+.lightblue {
+  color: #007fff;
+}
+
+.color-highblue,
+.highblue {
+  color: #007fff;
+}
+
+.color-skyblue,
+.skyblue {
+  color: skyblue;
+}
+
+.color-green,
+.green {
+  color: #45cb89;
+}
+
+.color-lime,
+.lime {
+  color: lime;
+}
+
+.color-lightgreen,
+.lightgreen {
+  color: lightgreen;
+}
+
+.color-deepgreen,
+.deepgreen {
+  color: #08ad39;
+}
+
+.color-redgod,
+.redgod {
+  color: #e55f1b;
+}
+
+.color-warn,
+.warn {
+  color: #ff6622;
+}
+
+.color-red,
+.red {
+  color: #ff0000;
+}
+
+.color-redark,
+.redark {
+  color: #670707;
+}
+
+.color-darkred,
+.darkred {
+  color: #b60a0a;
+}
+
+.color-orange,
+.orange {
+  color: #ff6a00;
+}
+
+.color-lightyellow,
+.lightyellow {
+  color: #eae621;
+}
+
+.color-yellow,
+.yellow {
+  color: #cfb20f;
+}
+
+.color-darkyellow,
+.darkyellow {
+  color: #9b850b;
+}
+
+.color-dark,
+.dark {
+  color: #666;
+}
+
+.color-black,
+.black {
+  color: #333;
+}
+
+.color-violet,
+.violet {
+  color: violet;
+}
+
+.color-magenta,
+.magenta {
+  color: magenta;
+}
+
+.color-darkmagenta,
+.darkmagenta {
+  color: darkmagenta;
+}
+
+/**紫色*/
+.color-purple,
+.purple {
+  color: purple;
+}
+
+.cc {
+  color: rgb(0, 128, 255);
+}
+
+.color-lightpurple,
+.lightpurple {
+  color: rgb(168, 32, 168);
+}
+
+.color-pink,
+.pink {
+  color: pink;
+}
+
+.color-deeppink,
+.deeppink {
+  color: deeppink;
+}
+
+.color-aqua,
+.aqua {
+  color: aqua;
+}
+
+.color-cyan,
+.cyan {
+  color: cyan;
+}
+
+.color-darkcyan,
+.darkcyan {
+  color: darkcyan;
+}
+
+.color-silvery,
+.silvery {
+  color: #e6e8fa;
+}
+
+.color-hl,
+.hl {
+  color: #33f7f1;
+}
+
+.color-main,
+.main {
+  color: #002a57;
+}
+
+/* #endregion */
+
+/* #region 常用背景色 */
+.bg-theme-blue {
+  background-color: #445cfc;
+}
+
+.bg-theme-red {
+  background-color: #e50505;
+}
+
+.bg-theme-orange {
+  background-color: #ff6a00;
+}
+
+.bg-theme-green {
+  background-color: #48c0a4;
+}
+
+.bg-transparent {
+  background-color: transparent;
+}
+
+.bg-white {
+  background-color: #fff;
+}
+
+.bg-gray {
+  background-color: gray;
+}
+
+.bg-midgray {
+  background-color: #ccc;
+}
+
+.bg-lightgray {
+  background-color: #e6e6e6;
+}
+
+.bg-smallgray {
+  background-color: #f4f4f4;
+}
+
+.bg-darkred {
+  background-color: #b60a0a;
+}
+
+.bg-zs {
+  background-color: #3612d6;
+}
+
+.bg-op {
+  background-color: rgba(00, 7f, ff, 0.25);
+}
+
+.bg-c {
+  background-color: #5470c6;
+  /*background-color: #5470c6','#ee6666', '#fac858','#3ba272', '#9a60b4', '#73c0de','#ea7ccc', '#fc8452',  '#91cc75'*/
+}
+
+.bg-paleblue {
+  background-color: #a2cbe0;
+}
+
+.bg-skyblue {
+  background-color: skyblue;
+}
+
+.bg-highblue {
+  background-color: #0a98eb;
+}
+
+.bg-blue {
+  background-color: #4784b1;
+}
+
+.bg-blue0 {
+  background-color: #336699;
+}
+
+.bg-blue1 {
+  background-color: #073ccc;
+}
+
+.bg-blue2 {
+  background-color: #2952f5;
+}
+
+.bg-blue3 {
+  background-color: #0690eb;
+}
+
+.bg-blue4 {
+  background-color: #445cfc;
+}
+
+.bg-blue5 {
+  background-color: #0099cc;
+}
+
+.bg-blue6 {
+  background-color: #3366ff;
+}
+
+.bg-blue7 {
+  background-color: #1144ff;
+}
+
+/*高亮的蓝色*/
+.bg-lightblue {
+  background-color: #007fff;
+}
+
+.bg-green {
+  background-color: #45cb89;
+}
+
+.bg-lightgreen {
+  background-color: lightgreen;
+}
+
+.bg-deepgreen {
+  background-color: rgb(4, 128, 4);
+}
+
+.bg-lime {
+  background-color: lime;
+}
+
+.bg-red {
+  background-color: #ff0000;
+}
+
+.bg-warn {
+  background-color: #ff6622;
+}
+
+.bg-redgod {
+  background-color: #e55f1b;
+}
+
+.bg-orange {
+  background-color: #ff6a00;
+}
+
+.bg-lightyellow {
+  background-color: #fffc2f;
+}
+
+.bg-yellow {
+  background-color: #d4d800;
+}
+
+.bg-darkyellow {
+  background-color: #c9b714;
+}
+
+.bg-dark {
+  background-color: #666;
+}
+
+.bg-444 {
+  background-color: #444;
+}
+
+.bg-black {
+  background-color: #333;
+}
+
+.bg-violet {
+  background-color: violet;
+}
+
+.bg-pink {
+  background-color: hotpink;
+}
+
+.bg-deeppink {
+  background-color: deeppink;
+}
+
+.bg-magenta {
+  background-color: magenta;
+}
+
+.bg-darkmagenta {
+  background-color: darkmagenta;
+}
+
+.bg-purple {
+  background-color: purple;
+}
+
+.bg-lightpurple {
+  background-color: rgb(168, 32, 168);
+}
+
+.bg-aqua {
+  background-color: aqua;
+}
+
+.bg-cyan {
+  background-color: darkcyan;
+}
+
+.bg-hl {
+  background-color: #33f7f1;
+}
+
+.bg-f0 {
+  background-color: #f0f0f0;
+}
+
+.bg-fullblack {
+  background-color: #000;
+}
+
+.bg-main {
+  background-color: #002a57;
+}
+
+/* #endregion */
+
+/* #region 渐变色 */
+/**视频渐变背景色 ，从上到下不用写方向*/
+.videobg {
+  /* Safari 5.1 到 6.0 */
+  background: -webkit-linear-gradient(
+    rgba(66, 66, 66, 0.25),
+    rgba(0, 0, 0, 0.75)
+  );
+  /* Opera 11.1 到 12.0 */
+  background: -o-linear-gradient(rgba(66, 66, 66, 0.25), rgba(0, 0, 0, 0.75));
+  /* Firefox 3.6 到 15 */
+  background: -moz-linear-gradient(rgba(66, 66, 66, 0.25), rgba(0, 0, 0, 0.75));
+  /* 标准语法 (必须是最后一个) */
+  background: linear-gradient(rgba(66, 66, 66, 0.25), rgba(0, 0, 0, 0.75));
+}
+
+/*********************************使用多个停止色创造出的彩虹渐变**********************************/
+/* 下面实例演示了如何使用彩虹颜色和一些文本来创建一个线性渐变（从左到右）
+*渐变背景
+*例如：
+*/
+.caihong {
+  background: blue;
+  /*对于那些不支持渐变的浏览器 */
+  /*  Safari 5.1 到 6.0 */
+  background: -webkit-linear-gradient(
+    left,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+  /*  Opera 11.1 到 12.0 */
+  background: -o-linear-gradient(
+    left,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+  /*  Fx 3.6 到 15 */
+  background: -moz-linear-gradient(
+    left,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+  /* Standard syntax */
+  background: linear-gradient(
+    to right,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+}
+
+/* #endregion */
+
+/* #region 左上到右下渐变色 */
+/*********************************左上到右下颜色渐变***********************************/
+.bg-jb1 {
+  background: linear-gradient(to bottom right, #ff6a00, #ffd800);
+  background: -webkit-linear-gradient(to bottom right, #ff6a00, #ffd800);
+}
+
+.bg-jb2 {
+  background: linear-gradient(to bottom, #af5a7d, #a54d45);
+  background: -webkit-linear-gradient(to bottom right, #af5a7d, #a54d45);
+}
+
+.bg-jb3 {
+  background: linear-gradient(to bottom, #ae58a6, #a4456c);
+  background: -webkit-linear-gradient(to bottom, #ae58a6, #a4456c);
+}
+
+.bg-jb4 {
+  background: linear-gradient(to bottom, #7057af, #af5a84);
+  background: -webkit-linear-gradient(to bottom, #7057af, #af5a84);
+}
+
+.bg-jb5 {
+  background: linear-gradient(to bottom, #575bad, #7045a5);
+  background: -webkit-linear-gradient(to bottom, #575bad, #7045a5);
+}
+
+.bg-jb6 {
+  background: linear-gradient(to bottom, lime, #007fff);
+  background: -webkit-linear-gradient(to bottom, lime, #007fff);
+}
+
+.bg-jb11 {
+  background: linear-gradient(to right, #002a57, #007fff);
+  background: -webkit-linear-gradient(to right, #002a57, #007fff);
+}
+
+.bg-jb12 {
+  background: linear-gradient(to right, #007fff, #002a57);
+  background: -webkit-linear-gradient(to right, #007fff, #002a57);
+}
+
+/* #endregion */
+
+/* #region 径向渐变 */
+/**************************以下部分为径向渐变**************************/
+.bg-rjb6 {
+  background: radial-gradient(#3e054e, #2a1e38, #1b021e);
+  background: -webkit-radial-gradient(#3e054e, #2a1e38, #1b021e);
+}
+
+.bg-rjb7 {
+  background: radial-gradient(#9215b6, #c95fd5, #7e1380);
+  background: -webkit-radial-gradient(#9215b6, #c95fd5, #7e1380);
+}
+
+.bg-rjb9 {
+  background: radial-gradient(#5099e9, #2371de, #20658d);
+  background: -webkit-radial-gradient(#5099e9, #2371de, #20658d);
+}
+
+.bg-rjb10 {
+  background: radial-gradient(#ff6a00, #23b9de, #6a208d);
+  background: -webkit-radial-gradient(#ff6a00, #23b9de, #6a208d);
+}
+
+/**********************************************************************/
+.bg-jb8 {
+  background: linear-gradient(
+    to bottom,
+    #fff,
+    #fff,
+    #fff,
+    #fff,
+    #fff,
+    #5099e9,
+    #2371de
+  );
+  background: -webkit-linear-gradient(
+    to bottom,
+    #fff,
+    #fff,
+    #fff,
+    #fff,
+    #fff,
+    #5099e9,
+    #2371de
+  );
+}
+
+/* #endregion */
+
+/* #region 文字渐变 */
+/********************************渐变文字******************************/
+.text-jb01 {
+  background: linear-gradient(to right, #20daeb, #62ef16);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+.text-jb02 {
+  background: linear-gradient(to right, #ffd800, #ff0000);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+.text-jb03 {
+  background: linear-gradient(to right, #62ef16, #20daeb);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+/* #endregion */
+
+/* #region 莫兰迪配色 */
+.mblue {
+  color: #686789;
+}
+
+.bg-mblue {
+  background-color: #686789;
+}
+
+.mgreen {
+  color: #849b91;
+}
+
+.bg-mgreen {
+  background-color: #849b91;
+}
+
+.mred {
+  color: #b77f70;
+}
+
+.bg-mred {
+  background-color: #b77f70;
+}
+
+/* #endregion */
+
+/****************************一组蓝色系***************************/
+.color012345,
+.c012345 {
+  color: #012345;
+}
+.bg012345 {
+  background-color: #012345;
+}
+.color123456,
+.c123456 {
+  color: #123456;
+}
+.bg123456 {
+  background-color: #123456;
+}
+.color234567,
+.c234567 {
+  color: #234567;
+}
+.bg234567 {
+  background-color: #234567;
+}
+.color345678,
+.c345678 {
+  color: #345678;
+}
+.bg345678 {
+  background-color: #345678;
+}
+
+/****************************************************************/

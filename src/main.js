@@ -12,6 +12,12 @@ import './icons' // icon
 import '@/permission' // permission control
 
 
+import "./assets/css/common.css";
+import "./assets/css/flex-layout.css";
+import "./assets/css/site.css";
+
+
+
 Vue.use(ElementUI)
 Vue.use(dataV)
 Vue.config.productionTip = false

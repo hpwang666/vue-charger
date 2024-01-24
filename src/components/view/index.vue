@@ -37,6 +37,13 @@ import LineChart from './components/LineChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 
+var result = window.matchMedia('(max-width: 1200px)');
+
+if (result.matches) {
+  console.log('页面宽度小于等于700px');
+} else {
+  console.log('页面宽度大于700px');
+}
 
 const lineChartData = {
   newVisitis: {

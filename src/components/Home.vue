@@ -55,7 +55,7 @@
         </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="sysMsg">系统消息</el-dropdown-item>
-            <el-dropdown-item command="MyHome">个人主页</el-dropdown-item>
+            <el-dropdown-item command="modify">修改密码</el-dropdown-item>
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -71,6 +71,7 @@
       <el-aside width="210px">
         <el-menu
           default-active="0"
+          :unique-opened="true"
           class="el-menu-vertical-demo" style="background-color: #304156" text-color="#ECECEC" active-text-color="#ffd04b" router>
           <template v-for="(item,index) in permission_routes">
             <template v-if="!item.hidden">
@@ -96,23 +97,47 @@
       </el-aside>
 
 
-      <el-container class="home-container0">
+      
         <el-main>
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/dataView' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item v-text="this.$router.currentRoute.name"></el-breadcrumb-item>
           </el-breadcrumb>
          
-            <router-view></router-view>
+          <div class="rview">
+          <router-view></router-view>
+        </div>
+
+         <el-dialog class ="dialogClass" title="修改密码" :visible.sync="passwdVisible" width="400px">
+          <el-form ref="modifyForm" :rules="rulesMap" :model="temp" label-position="right" size="mini" label-width="80px" style="width: 100%">
+      
+         <el-form-item label="密码" prop="passwd">
+          <el-input type="password" v-model="temp.passwd" />
+        </el-form-item>
+          <el-form-item label="重复密码" prop="repasswd">
+          <el-input type="password" v-model="temp.repasswd" />
+        </el-form-item>
+        
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="passwdVisible = false">
+          取消
+        </el-button>
+        <el-button  size="small" type="primary" @click="handleConfirmPasswd">
+          确认
+        </el-button>
+      </div>
+    </el-dialog>
          
         </el-main>
-      </el-container>
+     
     </el-container>
   </el-container>
 </template>
 <script>
    import { mapGetters } from 'vuex'
    import { getSelection, setSelection, removeSelection } from '@/utils/auth'
+   import request from '@/utils/request'
 
   export default{
     computed: {
@@ -138,6 +163,9 @@
           }, function () {
             //取消
           })
+        }
+        if(command=='modify'){
+          this.handlemodifyPasswd();
         }
       },
       hangleSelectionConfirm(){
@@ -213,6 +241,38 @@
     handleEx(){
       this.options = this.departTree;
       this.dialogVisible=true;
+    },
+     handlemodifyPasswd(){
+      this.passwdVisible=true;
+      this.temp={};
+       
+    },
+    handleConfirmPasswd(){
+      
+      let _this = this;
+      this.$refs['modifyForm'].validate((valid) => {
+        if (valid) {
+          request({
+            url: '/sys/user/modifyPassword',
+            method: 'get',
+            params:{
+              password:_this.temp.passwd
+            }
+          }).then(resp=> {
+            _this.$message({
+              type: 'success',
+              message: resp.result
+            });
+            this.passwdVisible=false;
+        
+          }).catch(()=>{
+            _this.$message({
+              type: 'error',
+              message: '加载失败'
+            });
+          });
+          }
+      })
     },
     treeFind (tree, func) {
       for (const data of tree) {
@@ -291,14 +351,42 @@
       });
     },
     data(){
+       var validatePasswd = (rule, value, callback) => {
+          if (value === "") {
+              callback(new Error("请输入密码"));
+          } else {
+              if (this.temp.repasswd !== "") {
+                  this.$refs.modifyForm.validateField("repasswd");
+              }
+              callback();
+          }
+      };
+      var validateRePassWd = (rule, value, callback) => {
+        console.log( this.temp.passwd);
+          if (value === "") {
+            console.log(this.temp.passwd);
+              callback(new Error("请再次输入密码"));
+          } else if (value !== this.temp.passwd) {
+              callback(new Error("两次输入密码不一致!"));
+          } else {
+            
+              callback();
+          }
+      };
       return {
         currentUserName: '',
         dialogVisible: false,
+        passwdVisible: false,
+        temp: {},
         value:[],
         selectedPark:[],
         options:[],
         onlyOneChild:null,
-        homeTitle:''
+        homeTitle:'',
+        rulesMap:{ 
+          passwd:[{ validator: validatePasswd, trigger: ["blur", "change"]}],
+           repasswd:[{ validator: validateRePassWd, trigger: ["blur", "change"]}]
+        },
       }
     }
   }
@@ -313,12 +401,19 @@
     overflow-y:hidden;
   }
 
- .home-container0 {
-    height: 100%;
-    top: 0px;
-    left: 0px;
-   
-  }
+.rview {
+  margin-top: 3px;
+  width: calc(100% -30px);
+  min-height: calc(100vh - 156px);
+  max-height: calc(100vh - 156px);
+  overflow-y: scroll;
+  background-color: #fff;
+  padding: 15px;
+}
+
+.rview::-webkit-scrollbar {
+  width: 10px;
+}
     
 
   .el-header {

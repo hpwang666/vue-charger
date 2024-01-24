@@ -1,70 +1,92 @@
 <template>
-  <div class="app-container">
-     
-      
-   
-    
-    <el-row :gutter="10">
-    <el-col :span="8"> 
-      <span class="demonstration" style="font-size:14px">日期:</span>
-      <el-date-picker
-        v-model="selectedDate"
-        type="daterange"
-        align="right"
-        size="small"
-        unlink-panels
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        :picker-options="pickerOptions">
-      </el-date-picker>
-    
-      <el-button type="success" size="small" style="margin-left: 20px" @click="fetchData">查询</el-button></el-col> 
-    <el-col :span="5" :offset=2>
-      <FilenameOption v-model="filename" /></el-col> 
-    <el-col :span="3">
-      <AutoWidthOption v-model="autoWidth" /></el-col> 
-    <el-col :span="4">
-      <BookTypeOption v-model="bookType" /></el-col> 
-    <el-col :span="2">
-      <el-button :loading="downloadLoading" style="margin:4px 0 20px 20px;"  size="small" type="primary" icon="el-icon-document" @click="handleDownload">
-       导出
-      </el-button></el-col> 
+  <!-- <div class="app-container"> -->
+  <div class="fw flex-col jc-center ai-start">
+    <div class="fw flex-row flex-wrap jc-between ai-center">
+      <div>
+        <span class="demonstration" style="font-size: 14px">日期:</span>
+        <el-date-picker
+          style="width: 250px"
+          v-model="selectedDate"
+          type="daterange"
+          align="right"
+          size="small"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions"
+        >
+        </el-date-picker>
+        <el-button
+          type="success"
+          size="small"
+          style="margin-left: 20px"
+          @click="fetchData"
+          >查询</el-button
+        >
+      </div>
 
+      <div>
+        <FilenameOption v-model="filename" />
+      </div>
+      <div>
+        <BookTypeOption v-model="bookType" />
+      </div>
+      <div>
+        <AutoWidthOption v-model="autoWidth" />
+      </div>
 
-    </el-row>
-   
-
-    <el-table v-loading="listLoading" size="small"  :data="list" element-loading-text="Loading..." border fit highlight-current-row>
-      <el-table-column align="center" label="序号" width="95">
+      <div>
+        <el-button
+          :loading="downloadLoading"
+          size="small"
+          type="primary"
+          icon="el-icon-document"
+          @click="handleDownload"
+          >导出
+        </el-button>
+      </div>
+    </div>
+    <br />
+    <el-table
+      v-loading="listLoading"
+      size="small"
+      :data="list"
+      element-loading-text="Loading..."
+      border
+      fit
+      highlight-current-row
+      :header-cell-style="{ 'text-align': 'center' }"
+    >
+      <el-table-column align="center" label="序号" min-width="10%">
         <template slot-scope="scope">
-          {{ scope.$index+1 }}
+          {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="电站名称" width="310">
+      <el-table-column label="电站名称" min-width="50%">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column label="订单数量" width="110" align="center">
+      <el-table-column label="订单数量" min-width="10%" align="right">
         <template slot-scope="scope">
           {{ scope.row.count }}
         </template>
       </el-table-column>
-      <el-table-column label="用电量" width="115" align="center">
+      <el-table-column label="用电量" min-width="15%" align="right">
         <template slot-scope="scope">
           {{ scope.row.kwh }}
         </template>
       </el-table-column>
-      <el-table-column label="金额" width="115" align="center">
+      <el-table-column label="金额" min-width="15%" align="right">
         <template slot-scope="scope">
           {{ scope.row.income }}
         </template>
       </el-table-column>
-   
     </el-table>
   </div>
 </template>
+
 
 <script>
 import { parseTime } from '@/utils'

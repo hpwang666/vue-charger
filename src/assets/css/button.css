@@ -1,0 +1,138 @@
+/* #region 常用前景色 */
+/*root是全局作用域，在这里定义的变量可在其他任何{}内获取到*/
+:root {
+  /*定义一个名为--palepurple的变量，其值是淡紫色的颜色值，css变量必须以--开头*/
+  --palepurple: rgb(192, 64, 192);
+
+  --orange: #ff6a00;
+  /*背景色*/
+  --bg-color: #007fff;
+  /*前景色*/
+  --fg-color: #ffffff;
+  /*边框色*/
+  --bd-color: #999999;
+  /*浅色*/
+  --light: #666666;
+  /*深色*/
+  --deep: #333333;
+
+  --fth: 800px;
+  /*定义变量时也可以使用calc，且calc中可嵌套变量*/
+  --test: calc(100vh - var(--fth));
+}
+
+/*大多数现代浏览器已支持嵌套，但是老版本可能还不支持，但是由于build时会使用postcss还原为经典css，所以可以放心使用嵌套*/
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px dotted var(--bd-color);
+  border-radius: 3px;
+  box-shadow: 1px 1px 2px var(--light);
+  cursor: pointer;
+  position: relative;
+  /* height: var(--test); */
+  transition: all 1s 0.1s;
+
+  /*嵌套伪类，相当于 .btn:hover */
+  &:hover {
+    background-color: var(--bg-color);
+    color: #fff;
+    box-shadow: 1px 1px 3px var(--bg-color);
+    transition: all 1s 0.1s;
+
+    /*增加过渡时间产生渐变效果,伪类中嵌套的元素，相当于 .btn:hover i */
+    & i {
+      color: var(--palepurple);
+      transition: all 1s 0.1s;
+    }
+  }
+
+  /*嵌套伪类，相当于 .btn:active */
+  /*
+    * 为保证样式生效，需要把 :active 的样式放在所有链接相关的样式之后。 这种链接伪类先后顺序被称为 
+    * LVHA 顺序 ： :link — :visited — :hover — :active 。
+    * 备注： 在有多键鼠标的系统中，CSS 3 规定 :active 伪类必须只匹配主按键；对于右手操作鼠标来说，就是左键。
+    */
+  &:active {
+    box-shadow: inset 1px 1px 2px var(--deep);
+    color: var(--deep);
+    transition: all 1s 0.1s;
+  }
+
+  /*嵌套的元素,相当于 .btn i{}，注意和上面的伪类中嵌套的元素的区别*/
+  & i {
+    color: var(--bg-color);
+    margin-right: 10px;
+
+    /*嵌套元素的伪类，相当于 .btn i:hover */
+    &:hover {
+      color: #ff0000;
+      transition: all 1s 0.1s;
+    }
+  }
+}
+
+/*
+.btn:hover {
+    background-color: var(--bg-color);
+    color: #fff;
+    box-shadow: 1px 1px 3px var(--bg-color);
+    transition: all 1s .1s;
+}
+*/
+
+.btn i.fa-check-square {
+  color: var(--bg-color);
+  position: absolute;
+  float: right;
+  right: 0px;
+  top: 5px;
+}
+
+.bigItem {
+  padding: 5px 10px;
+  border: 1px dotted var(--bd-color);
+  border-radius: 8px;
+  box-shadow: 0px 0px 6px var(--light);
+  cursor: default;
+  position: relative;
+}
+
+.bigItem:hover {
+  border: 1px solid var(--bg-color);
+  box-shadow: 0px 0px 6px var(--bg-color);
+  transition: all 1s 0.1s;
+}
+
+.ico_btn {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.ico_btn:hover {
+  color: #fff;
+}
+
+.circleBtn {
+  cursor: pointer;
+  font-size: 10px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid var(--bd-color);
+  box-shadow: 0px 0px 2px var(--light);
+}
+
+.circleBtn:hover {
+  border: 1px solid var(--bg-color);
+  box-shadow: 0px 0px 6px var(--bg-color);
+}
+
+.circleBtn:active {
+  border: 1px solid var(--bg-color);
+  box-shadow: 0px 0px 2px var(--bg-color);
+}

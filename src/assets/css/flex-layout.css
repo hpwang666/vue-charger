@@ -1,0 +1,365 @@
+/*************************************flex布局***************************************/
+/*
+flex-direction: 
+值为 row 或 row-reverse 时水平方向是主轴垂直方向为侧轴
+值为 colum 或 colum-reverse 时垂直方向是主轴水平方向为侧轴
+row：水平方向排列，方向从左到右。
+row-reverse:水平方向排列，从右到左
+column：垂直方向排列，从上到下
+column-reverse：垂直方向排列，从下到上。
+
+各种可取值的编号及该值的含义：
+01:stretch:按子元素平分其轴向上的所有空间，autosize的子元素被拉伸以适应容器。
+02:flex-start：沿其轴向起点到终点
+03:flex-end：沿其轴向终点到起点
+04:center:沿其轴向中点位置排列
+05:space-between:左右与父容器的左右对齐，中间产生同等的间距
+06:space-around:将多余的空间，平均的分在每个子元素的两边，类似magin + auto
+07:space-evenly:将多余的空间分成N+1份用来包裹N份子元素，和space-around看起来的效果接近，但是最外端的空白与元素之间的空白是相等的
+08:left:水平左对齐(当flex-direction的值为column时无效，所以一般仅使用flex-start)
+09:right:水平右对齐(当flex-direction的值为column时无效，所以一般仅使用flex-end)
+
+justify-content：调整内部网格在主轴上的对齐方式，可取值：01——09
+justify-items:调整所有网格内元素在主轴上的对齐方式，取值范围：01-04
+justify-self:调整某个网格内单个元素在主轴上的对齐方式，仅作用于单个网格内元素时有效，取值范围：01-04
+
+align-content：调整内部网格在侧轴上的对齐方式(仅在多于一行时有效):，取值范围：01-06
+align-items：调整所有网格内元素在侧轴上的对齐方式，取值范围：01-04
+align-self:调整某个网格内元素在侧轴上的对齐方式，取值范围：01-04
+
+place-content是align-content和justify-content的符合属性，简写，就是可以同时设置这两个属性的值
+用法：place-content:align-content-property-value justify-content-property-value
+示例：place-content:flex-start center表示侧轴起点，主轴的中间点排列
+place-content:同时调整内部网格在侧轴与主轴上的对齐方式：取值范围：01-06
+place-items:同时调整所有网格内元素在侧轴与主轴上的对齐方式：取值范围：01-04
+place-self:调整某个网格内元素在侧轴与主轴上的对齐方式，取值范围：01-04
+
+flex-flow:是flex-direction和flex-wrap的复合属性，可同时设定这两个值
+
+flex-grow:设置或检索弹性盒的扩展比率。根据弹性盒子元素所设置的扩展因子作为比率来分配剩余空间示例：b,c将按照1:3的比率分配剩余空间,则a的flex-grow:1，b为flex-grow:3,该值默认是0，就是不分配剩余空间
+flex-basis:设置或检索弹性盒伸缩基准值。如果所有子元素的基准值之和大于剩余空间，则会根据每项设置的基准值，按比率伸缩剩余空间,可设置数值 800px 或百分比 50% 或者auto等类型的值
+flex-shrink:设置或检索弹性盒的收缩比率。根据弹性盒子元素所设置的收缩因子作为比率来收缩空间。示例：a,b,c将按照1:1:3的比率来收缩空间则只需设置c的flex-shrink:3即可，因为a和b未设置时默认值为1.
+
+兼容方式：
+display: -webkit-flex; Safari
+-webkit-justify-content: space-around; Safari 6.1+
+*/
+/***************************flex排列方向******************************/
+/*水平排列*/
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+/*反向水平排列*/
+.flex-row-rs {
+  display: flex;
+  flex-direction: row-reverse;
+}
+/*垂直排列*/
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+/*反向垂直排列*/
+.flex-col-rs {
+  display: flex;
+  flex-direction: column-reverse;
+}
+/************************换行***********************/
+/*换行*/
+.flex-wrap {
+  flex-wrap: wrap;
+}
+/*不换行*/
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+/*反向换行*/
+.flex-wrap-rs {
+  flex-wrap: wrap-reverse;
+}
+/******************************flex主轴网格对齐********************************/
+/*平均分布，但是autosize的元素会被拉伸以填满其所在的格子*/
+.jc-stretch {
+  justify-content: stretch;
+}
+/*沿主轴上的对齐方式：start*/
+.jc-start {
+  justify-content: flex-start;
+}
+/*沿主轴上的对齐方式：center*/
+.jc-center {
+  justify-content: center;
+}
+/*沿主轴上的对齐方式：end*/
+.jc-end {
+  justify-content: flex-end;
+}
+/*分散对齐到两端*/
+.jc-between {
+  justify-content: space-between;
+}
+/*平均分布各列(行)*/
+.jc-around {
+  justify-content: space-around;
+}
+/*将容器多余部分分割成N+1个空白间隔(N是当前容纳的元素个数)，然后以两端分散对齐的方式排列：元素都被空白间隔隔开，两端也是空白间隔*/
+/*这种方式看起来和around有点像，但本质确是相反的*/
+/*据说在Safari中兼容性不太好，一般很少使用*/
+.jc-evenly {
+  justify-content: space-evenly;
+}
+/**********************************flex主轴元素对齐*************************************/
+/*平均分布，但是autosize的元素会被拉伸以填满其所在的格子*/
+.ji-stretch {
+  -webkit-justify-items: stretch;
+  justify-items: stretch;
+}
+/*沿主轴上的对齐方式：start*/
+.ji-start {
+  -webkit-justify-items: flex-start;
+  justify-items: flex-start;
+}
+/*沿主轴上的对齐方式：center*/
+.ji-center {
+  -webkit-justify-items: center;
+  justify-items: center;
+}
+/*沿主轴上的对齐方式：end*/
+.ji-end {
+  -webkit-justify-items: flex-end;
+  justify-items: flex-end;
+}
+.ji-baseline {
+  justify-items: baseline;
+}
+/**********************************flex主轴单元素对齐*************************************/
+/*autosize的元素会被拉伸以填满其所在的格子*/
+.js-stretch {
+  justify-self: stretch;
+}
+/*沿主轴上的对齐方式：start*/
+.js-start {
+  justify-self: flex-start;
+}
+/*沿主轴上的对齐方式：center*/
+.js-center {
+  justify-self: center;
+}
+/*沿主轴上的对齐方式：end*/
+.js-end {
+  justify-self: flex-end;
+}
+.js-baseline {
+  justify-self: baseline;
+}
+/**********************************flex侧轴网格对齐*************************************/
+/*平均分布，autosize的元素会被拉伸以填满其所在的格子*/
+.ac-stretch {
+  justify-content: stretch;
+}
+.ac-start {
+  -webkit-align-content: flex-start;
+  align-content: flex-start;
+}
+.ac-center {
+  -webkit-align-content: center;
+  align-content: center;
+}
+.ac-end {
+  -webkit-align-content: flex-end;
+  align-content: flex-end;
+}
+.ac-between {
+  -webkit-align-content: space-between;
+  align-content: space-between;
+}
+.ac-around {
+  -webkit-align-content: space-around;
+  align-content: space-around;
+}
+/**********************************flex侧轴整体元素*************************************/
+/*平均分布，autosize的元素会被拉伸以填满其所在的格子*/
+.ai-stretch {
+  align-items: stretch;
+}
+.ai-start {
+  align-items: flex-start;
+}
+.ai-center {
+  align-items: center;
+}
+.ai-end {
+  align-items: flex-end;
+}
+.ai-baseline {
+  align-items: baseline;
+}
+/**********************************flex侧轴单个元素*************************************/
+.as-stretch {
+  align-self: stretch;
+}
+.as-start {
+  align-self: flex-start;
+}
+.as-center {
+  align-self: center;
+}
+.as-end {
+  align-self: flex-end;
+}
+.as-baseline {
+  align-self: baseline;
+}
+/**********************************flex双轴网格对齐*************************************/
+
+.pc-stretch {
+  place-content: stretch;
+}
+/*左上角*/
+.pc-start {
+  place-content: flex-start;
+}
+/*左中*/
+.pc-start-center {
+  place-content: flex-start center;
+}
+/*左下*/
+.pc-start-end {
+  place-content: flex-start flex-end;
+}
+/*右上*/
+.pc-end-start {
+  place-content: flex-end flex-start;
+}
+/*右中*/
+.pc-end-center {
+  place-content: flex-end center;
+}
+/*右下*/
+.pc-end {
+  place-content: flex-end;
+}
+/*中上*/
+.pc-center-start {
+  place-content: center flex-start;
+}
+/*中中*/
+.pc-center {
+  place-content: center center;
+}
+/*中下*/
+.pc-cneter-end {
+  place-content: center flex-end;
+}
+/**********************************flex双轴整体元素对齐*************************************/
+.pi-stretch {
+  place-items: stretch;
+}
+/*左上角*/
+.pi-start {
+  place-items: flex-start;
+}
+/*左中*/
+.pi-start-center {
+  place-items: flex-start center;
+}
+/*左下*/
+.pi-start-end {
+  place-items: flex-start flex-end;
+}
+/*右上*/
+.pi-end-start {
+  place-items: flex-end flex-start;
+}
+/*右中*/
+.pi-end-center {
+  place-items: flex-end center;
+}
+/*右下*/
+.pi-end {
+  place-items: flex-end;
+}
+/*中上*/
+.pi-center-start {
+  place-items: center flex-start;
+}
+/*中中*/
+.pi-center {
+  place-items: center;
+}
+/*中下*/
+.pi-cneter-end {
+  place-items: center flex-end;
+}
+/**********************************flex双轴单个元素对齐*************************************/
+.ps-stretch {
+  place-self: stretch;
+}
+/*左上角*/
+.ps-start {
+  place-self: flex-start;
+}
+/*左中*/
+.ps-start-center {
+  place-self: flex-start center;
+}
+/*左下*/
+.ps-start-end {
+  place-self: flex-start flex-end;
+}
+/*右上*/
+.ps-end-start {
+  place-self: flex-end flex-start;
+}
+/*右中*/
+.ps-end-center {
+  place-self: flex-end center;
+}
+/*右下*/
+.ps-end {
+  place-self: flex-end;
+}
+/*中上*/
+.ps-center-start {
+  place-self: center flex-start;
+}
+/*中中*/
+.ps-center {
+  place-self: center;
+}
+/*中下*/
+.ps-cneter-end {
+  place-self: center flex-end;
+}
+/****************************flex占比*************************/
+.grow0 {
+  flex-grow: 0;
+}
+.grow1 {
+  flex-grow: 1;
+}
+.grow2 {
+  flex-grow: 2;
+}
+.grow3 {
+  flex-grow: 3;
+}
+.grow4 {
+  flex-grow: 4;
+}
+.grow5 {
+  flex-grow: 5;
+}
+.grow6 {
+  flex-grow: 6;
+}
+.grow7 {
+  flex-grow: 7;
+}
+.grow8 {
+  flex-grow: 8;
+}
+.grow9 {
+  flex-grow: 9;
+}
