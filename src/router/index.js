@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import inCome  from '@/components/financial/inCome'
+import inComeSum  from '@/components/excel/export-share-sum'
 import inComeCfg from '@/components/financial/inComeCfg'
 import cashOut  from '@/components/financial/cashOut'
 import cashOutTrade  from '@/components/financial/cashOutTrade'
@@ -75,7 +76,7 @@ export const asyncRoutes = [
         path: 'inComeSum',
         iconCls: 'fa fa-reorder',
         name: '分润报表',
-        component: inCome ,
+        component: inComeSum ,
         meta : {
           roles: ['admin'] 
         },

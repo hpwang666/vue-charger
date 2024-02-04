@@ -1,9 +1,9 @@
 ﻿/* #region 全局*/
 body {
   margin: 0;
-  -webkit-user-select: none;
+  /* -webkit-user-select: none;
   -moz-user-select: none;
-  user-select: none;
+  user-select: none; */
   /*用来防止火狐浏览器双击选中文字*/
   /*font-family: '微软雅黑','华文中宋',Arial, Helvetica, sans-serif;*/
   font-family: "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei",

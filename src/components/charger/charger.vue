@@ -199,7 +199,7 @@
       return {
         onOffLine: '',
         chargers: [],
-        onLineStatus: ['在线','离线'],
+        onLineStatus: ['在线','离线','充电'],
         dialogStatus: ''
       }
     },
@@ -207,7 +207,8 @@
     statusFilter(status) {
       const statusMap = {
         在线: 'success',
-        离线: 'danger'
+        离线: 'danger',
+        充电: ''
       }
       return statusMap[status]
     }
