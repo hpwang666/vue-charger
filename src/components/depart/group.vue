@@ -69,7 +69,7 @@
         <el-form-item label="所属城市" prop="parentId">
           <el-select v-model="temp.parentId" placeholder="请选择城市">
             <el-option
-              v-for="item in parentDeparts"
+              v-for="item in citys"
               :key="item.id"
               :label="item.departName"
               :value="item.id">
@@ -125,7 +125,13 @@
         this.dialogFormVisible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
-        })
+        });
+
+        this.citys.length=0;
+        let tmpCity = this.treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
+        tmpCity.map(((item, index)=> {
+          this.citys.push({id:item.key,departName:item.value});
+        }))
       },
       createData() {
         this.$refs['dataForm'].validate((valid) => {
@@ -141,9 +147,7 @@
               } 
             }).then(resp => {
               
-              this.temp.updateTime=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
-              this.temp.id=resp.result.id;//返回的新的ID
-              this.departs.unshift(this.temp)//新的object添加到数组头部
+              this.refresh();
               this.dialogFormVisible = false
               this.$message({
                 message: resp.message,
@@ -169,6 +173,12 @@
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })
+
+        this.citys.length=0;
+        let tmpCity = this.treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
+        tmpCity.map(((item, index)=> {
+          this.citys.push({id:item.key,departName:item.value});
+        }))
       },
       updateData() {
         this.$refs['dataForm'].validate((valid) => {
@@ -184,6 +194,7 @@
               this.temp.updateTime=new Date().format("yyyy-MM-dd hh:mm:ss");//生成个最新时间
               this.departs.splice(index, 1, this.temp) //添加新元素
               this.dialogFormVisible = false
+              this.refresh();
               this.$message({
                 message: resp.result,
                 type: 'success',
@@ -221,7 +232,8 @@
             type: 'success',
             message: resp.result
           });
-          this.departs.splice(index, 1)
+        this.refresh();
+
         })
       },
       handleAccount(row){
@@ -246,6 +258,12 @@
       },
       refresh(){
         let _this = this;
+        this.$store.dispatch('user/getDepartTree').then(()=> { 
+          _this.$message({
+            type: 'success',
+            message: '加载机构树成功'
+          });
+        });
         request({
           url: '/sys/depart/list',
           method: 'get',
@@ -287,6 +305,33 @@
           memo: ''
         }
       },
+       treeFindPath (tree, func,path=[]) {
+        if (!tree) return []
+        for (const node of tree) {
+          path.push(node.key)
+          if (func(node)) return path
+          if (node.children) {
+            const findChildren = this.treeFindPath(node.children,func, path)
+            if (findChildren.length) return findChildren
+          }
+          path.pop()
+        }
+        return []
+      },
+      treeFilter (tree, func) {
+        // 使用map复制一下节点，避免修改到原树
+        return tree.map(node => ({ ...node })).filter(node => {
+          node.children = node.children && this.treeFilter(node.children, func)
+          return func(node) || (node.children && node.children.length)
+        })
+      },
+      treeForeach (tree, func) {
+        let node, list = [...tree]
+        while (node = list.shift()) {
+          func(node)
+          node.children && list.push(...node.children)
+        }
+      },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
       },
@@ -303,6 +348,7 @@
         inputDepartName:"",
         departs: [],
         parentDeparts: [],
+        citys:[],
         temp: "",
         dialogFormVisible: false,
         dialogStatus: '',

@@ -301,7 +301,17 @@ export const asyncRoutes = [
         meta : {
           roles: ['admin','city','group','com','prj'] 
         }
+      },
+      {
+        path: 'bindUser',
+        hidden: true,
+        name: '绑定用户',
+        component: () => import('@/components/charger/bindUser'),
+        meta : {
+          roles: ['admin','city','group','com','prj'] 
+        }
       }
+
     ]
   },
   

@@ -97,6 +97,7 @@ export default {
       // beforeUpload 上传文件之前的钩子，参数为上传的文件，若返回 false 或者返回 Promise 且被 reject，则停止上传
       const before = this.beforeUpload(rawFile);
       // 在调用beforeUpload钩子后返回的是true，则继续上传
+      console.log(before.then+"beforeload")
       if (before && before.then) {
         before.then(processedFile => {
           // processedFile转成对象

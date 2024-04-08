@@ -16,6 +16,11 @@
         max-height="600"
         max-width="600"
         border>
+         <el-table-column
+          label="序号"
+          type = "index"
+          width="70" align="left">
+        </el-table-column>
         <el-table-column
           label="设备ID"
           prop="serialNum"
@@ -25,13 +30,13 @@
          <el-table-column
           label="电桩名称"
           prop="name"
-          width="320" align="left">
+          width="220" align="left">
         </el-table-column>
 
         <el-table-column
           label="电桩型号"
           prop="terminalName"
-          width="320" align="left">
+          width="200" align="left">
         </el-table-column>
 
         <el-table-column
@@ -60,8 +65,24 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="left" width="180">
+        <el-table-column
+          prop="plugs"
+          label="二维码" align="left">
           <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="handleQrcode(scope.row)">查看
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="left" width="240">
+          <template slot-scope="scope">
+             <el-button
+              size="mini"
+              type="success"
+              @click="handleBind(scope.$index, scope.row)">绑定
+            </el-button>
             <el-button
               size="mini"
               @click="handleUpdate(scope.row)">修改
@@ -75,22 +96,36 @@
         </el-table-column>
       </el-table>
 
+      <el-dialog width=25% :visible.sync="qrVisible" class="qrDialog">
+        <div id="qrHtml">
+          <div class="qrContent">
+            <span>{{selectedQr}}</span>
+          </div>
+          <vue-qr   :logoSrc=logoSrc :text=selectedUrl :size="300"></vue-qr>
+        </div>
+        <div>
+           <el-button type="primary" class="myButton"  @click="downloadPoster(selectedQr)">生成下载二维码</el-button>
+        </div>
 
-     
+      </el-dialog>
+          
     </el-main>
     <div style="height: 20px"></div>
-   
-
    
     
   </el-container>
   
 </template>
 <script>
-  import request from '@/utils/request'
+   import request from '@/utils/request'
    import { mapGetters } from 'vuex'
+   import VueQr from 'vue-qr'
+   import html2canvas from 'html2canvas';
   
   export default{
+    components:{
+      VueQr
+    },
     watch: {
       onOffLine: function () {
        
@@ -128,6 +163,51 @@
             action:'update'
           }
         })
+      },
+       handleBind(row) {
+       var _this = this;
+        this.$router.push({
+          path: 'bindUser',
+          query: {
+            id: row.id,
+            stationId:_this.stationId,
+            action:'update'
+          }
+        })
+      },
+
+      handleQrcode(row) {
+        this.qrVisible = true;
+        this.selectedQr = row.serialNum;
+        this.selectedUrl = 'http://www.ylc5858.com/ylc?chargerId='+row.serialNum+'01';
+      },
+       // 生成海报
+      createPoster(fileName) {
+          let that = this
+          let qrDOM = document.getElementById('qrHtml')
+          html2canvas(qrDOM, {
+              width: qrDOM.offsetWidth,
+              height: qrDOM.offsetHeight,
+              //按比例增加分辨率
+              scale: window.devicePixelRatio, // 设备像素比
+              useCORS: true,//（图片跨域相关）
+              allowTaint: true,//允许跨域（图片跨域相关）
+              logging: false,
+              letterRendering: true,
+          }).then(function (canvas) {
+              that.qrImgURL = canvas.toDataURL('image/png')
+
+              let a = document.createElement('a')
+              a.download = fileName
+              a.href =  that.qrImgURL
+              a.dispatchEvent(new MouseEvent('click'))
+
+          })
+      },
+      // 下载二维码
+      downloadPoster(fileName) {
+          this.createPoster(fileName);
+         
       },
      
       handleDelete(index, row){
@@ -198,9 +278,13 @@
     data(){
       return {
         onOffLine: '',
+        selectedQr:'',
+        selectedUrl:'',
+        qrVisible:false,
         chargers: [],
         onLineStatus: ['在线','离线','充电'],
-        dialogStatus: ''
+        dialogStatus: '',
+        logoSrc: 'http://image.ylc5858.com/l1.png', // 二维码中间的logo
       }
     },
     filters: {
@@ -232,5 +316,15 @@
     background-color: #ececec;
     margin-top: 20px;
     padding-top: 10px;
+  }
+  
+  .qrContent {
+    font-size:20px;
+    font-family:"Microsoft YaHei";
+    font-weight:bold;
+  }
+  #qrHtml{
+    padding-top:20px;
+    padding-bottom:20px;
   }
 </style>

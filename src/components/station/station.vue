@@ -102,7 +102,7 @@
 
  <br />
  <el-row :gutter="10" >
-      <el-button type="success" @click="commitStation()">保存</el-button>
+      <el-button type="success" @click="commitStation()" :loading=uploading>保存</el-button>
  </el-row>
 
 <el-dialog
@@ -161,6 +161,7 @@ import MyUpload from '@/components/upload'
       return {
         dialogVisible:false,
         dialogImageUrl: '',
+        uploading:false,
         photoVisible: false,
         dataObj: { token: '', key: '' },
         qiniuList: [],
@@ -252,6 +253,7 @@ import MyUpload from '@/components/upload'
         var _this = this;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) { 
+          _this.uploading=true;
          request({
            url: '/ylc/station/edit',
             method: 'post',
@@ -261,6 +263,7 @@ import MyUpload from '@/components/upload'
             type: 'success',
             message: resp.result
           });
+          _this.uploading=false;
         })
 
         } 

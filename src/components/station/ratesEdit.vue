@@ -102,7 +102,7 @@
     <el-input type="textarea" v-model="form.desc"></el-input>
   </el-form-item>
   <el-form-item>
-    <el-button type="primary" @click="action==='create'?createData():updateData()">确认</el-button>
+    <el-button type="primary" @click="action==='create'?createData():updateData()" :loading=uploading>确认</el-button>
     <el-button  @click="handleBack">取消</el-button>
   </el-form-item>
 </div>
@@ -132,7 +132,7 @@ import request from '@/utils/request'
         },
         action:'',
         id:'',
-       
+        uploading:false,
         fuckRead:[false,false,false,false,false,false,false,false],
         form: {
           modelName:'',
@@ -169,9 +169,10 @@ import request from '@/utils/request'
     },
     methods: {
       updateData() {
+        var _this=this;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          var _this = this;
+          _this.uploading=true;
             if(_this.row_last_endTime !=''){
                const tempNewRate =   {
                   startTime:_this.row_last_startTime,
@@ -204,6 +205,7 @@ import request from '@/utils/request'
         var _this= this;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          _this.uploading=true;
           if(_this.row_last_endTime !=''){
                const tempNewRate =   {
                   startTime:_this.row_last_startTime,

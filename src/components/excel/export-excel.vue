@@ -162,8 +162,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['序号', '电站名称', '订单数量', '金额']
-        const filterVal = ['index', 'name', 'count', 'income']
+        const tHeader = ['序号', '电站名称', '订单数量', '用电量','金额']
+        const filterVal = ['index', 'name', 'count', 'kwh','income']
         const list = this.list
         const data0 = [];
 

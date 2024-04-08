@@ -156,7 +156,7 @@
 
         if(cityChildren.length>0){
           cityChildren.map(((item, index)=> {
-            _this.groups.push({id:item.key,departName:item.value+'0'});
+            _this.groups.push({id:item.key,departName:item.value});
           }))
         }
         
@@ -172,7 +172,7 @@
 
           this.companys.length=0;
           groupChildren.map(((item, index)=> {
-            this.companys.push({id:item.key,departName:item.value+'0'});
+            this.companys.push({id:item.key,departName:item.value});
           }))
 
           
@@ -199,7 +199,7 @@
         }
 
         groupChildren.map(((item, index)=> {
-          _this.companys.push({id:item.key,departName:item.value+'0'});
+          _this.companys.push({id:item.key,departName:item.value});
         }))
 
         if(_this.temp.parentId!=null){
@@ -223,7 +223,7 @@
         this.cityId=null;
         let tmpCity = this.treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
         tmpCity.map(((item, index)=> {
-          this.citys.push({id:item.key,departName:item.value+'0'});
+          this.citys.push({id:item.key,departName:item.value});
         }))
 
         this.companys.length=0;

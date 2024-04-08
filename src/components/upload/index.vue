@@ -126,7 +126,6 @@ export default {
     fileList: {
       immediate: true,
       handler (fileList) {
-        console.log('12121');
         this.uploadFiles = fileList.map(item => {
           item.uid = item.uid || (Date.now() + this.tempIndex++)
           item.status = item.status || 'success'
@@ -169,7 +168,7 @@ export default {
     },
     // 文件上传成功后改用该方法，在该方法中调用用户设置的on-success和on-change方法，并将对应的参数传递出去
     handleSuccess(res, rawFile) {
-       console.log('ok')
+       console.log('upload ok')
       const file = this.getFile(rawFile)
 
       if (file) {

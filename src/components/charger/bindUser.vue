@@ -22,7 +22,6 @@
       <el-select value-key=value v-model="form.brand" placeholder="请选择电桩厂家">
         <el-option label="易路充CHA-01" :value=1></el-option>
         <el-option label="瑞华" :value=2></el-option>
-        <el-option label="易路充YX" :value=3></el-option>
       </el-select>
     </el-form-item>
     </el-col>
@@ -77,7 +76,7 @@
       <el-input type="textarea" v-model="form.desc"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="action==='create'?createData():updateData()" :loading=uploading>确认</el-button>
+      <el-button type="primary" @click="action==='create'?createData():updateData()">确认</el-button>
       <el-button  @click="handleBack">取消</el-button>
     </el-form-item>
   </el-col>
@@ -112,7 +111,6 @@ import request from '@/utils/request'
         },
         action:'',
         serialNum:'',
-        uploading:false,
         id:'',
         models:[],
         value:'',
@@ -131,7 +129,7 @@ import request from '@/utils/request'
         var _this = this;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          _this.uploading=true;
+      
           request({
             url: '/ylc/charger/edit',
             method: 'post',
@@ -155,7 +153,6 @@ import request from '@/utils/request'
         var _this= this;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-           _this.uploading=true;
           request({
             url: '/ylc/charger/add',
             method: 'post',

@@ -127,7 +127,7 @@
        
         _this.groups.length=0;
         cityChildren[0].children.map(((item, index)=> {
-          _this.groups.push({id:item.key,departName:item.value+'0'});
+          _this.groups.push({id:item.key,departName:item.value});
         }))
 
         if(_this.temp.parentId!=null){
@@ -150,7 +150,7 @@
         this.cityId=null;
         let tmpCity = this.treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
         tmpCity.map(((item, index)=> {
-          this.citys.push({id:item.key,departName:item.value+'0'});
+          this.citys.push({id:item.key,departName:item.value});
         }))
       },
       createData() {
@@ -332,7 +332,7 @@
         }
       },
 
-    
+    //单线去找满足func的路径，并将id保存
       treeFindPath (tree, func,path=[]) {
         if (!tree) return []
         for (const node of tree) {
