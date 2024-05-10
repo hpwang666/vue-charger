@@ -68,13 +68,13 @@
        <el-form class= "station_form_main" ref="serviceForm" :model="form"   label-width="80px" >
         <el-form-item label="休息室"  >
       
-          <el-input  v-model="form.name"  :disabled="true" show-word-limit ></el-input>
+          <el-input    :disabled="true" show-word-limit ></el-input>
         
         </el-form-item>
 
         <el-form-item label="停车收费" >
         
-          <el-input  v-model="form.address"    show-word-limit ></el-input>
+          <el-input      show-word-limit ></el-input>
         
         </el-form-item>
        </el-form>

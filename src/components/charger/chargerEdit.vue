@@ -68,6 +68,12 @@
     </el-col> 
   </el-row>
   
+
+   <el-form-item label="物联网卡"  >
+    <div style="width:200px">
+    <el-input  v-model="form.iccid"   show-word-limit ></el-input>
+    </div>
+  </el-form-item>  
 <br/>
 <br/>
    

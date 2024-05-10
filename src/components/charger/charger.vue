@@ -1,12 +1,20 @@
 <template>
   <el-container>
     <el-header class="charger_header">
-      
-      <el-select v-model="onOffLine" placeholder='在线状态' clearable style="margin-left: 10px" >
-        <el-option v-for="item in onLineStatus" :key="item" :label="item" :value="item" />
-      </el-select>
-      
-      <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加设备</el-button>
+      <div   class="fw flex-row flex-start">
+        <el-select v-model="onOffLine" placeholder='在线状态' clearable style="margin-left: 10px" >
+          <el-option v-for="item in onLineStatus" :key="item" :label="item" :value="item" />
+        </el-select>
+        
+        
+        <div style="width:200px;margin-left: 20px">
+          <el-input v-model="searchSerialNum" clearable placeholder="桩号模糊查询" ></el-input>
+        </div>
+         <div style="width:200px;margin-left: 20px">
+          <el-input v-model="searchName" clearable placeholder="桩名称模糊查询" ></el-input>
+        </div>
+        <el-button type="success" size="medium" style="margin-left: 20px" @click="handleCreate">添加设备</el-button>
+      </div>
     </el-header>
     <el-main class="charger_main">
       <el-table
@@ -30,7 +38,7 @@
          <el-table-column
           label="电桩名称"
           prop="name"
-          width="220" align="left">
+          width="160" align="left">
         </el-table-column>
 
         <el-table-column
@@ -65,6 +73,19 @@
             </el-tag>
           </template>
         </el-table-column>
+        
+        <el-table-column
+          prop="plugs"
+          label="物联网卡" align="left">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="handleIccid(scope.row)">查看
+            </el-button>
+          </template>
+        </el-table-column>
+
         <el-table-column
           prop="plugs"
           label="二维码" align="left">
@@ -134,6 +155,27 @@
         this.refresh();
         
           },
+      searchSerialNum: function () {
+       
+        //console.log(this.chargers.length+" fuck "+this.searchSerialNum);
+        //return this.onOffLine
+        if(this.searchSerialNum == '')
+          this.refresh();
+        else
+          this.handleSearch();
+        
+      },
+      searchName: function () {
+       
+        //console.log(this.chargers.length+" fuck "+this.searchSerialNum);
+        //return this.onOffLine
+        if(this.searchName == '')
+          this.refresh();
+        else
+          this.handleSearchName();
+        
+      },
+          
       stationId:function (){ //动态监听电站ID的变化，刷新界面
          this.refresh();
       }
@@ -142,6 +184,36 @@
       ...mapGetters(['stationId'])
     },
     methods: {
+
+      handleSearch() {
+       //this.refresh();
+        var i = 0;
+        if(this.searchSerialNum!=''){
+          while (i < this.chargers.length) {
+            if (!this.chargers[i].serialNum.includes(this.searchSerialNum)) {
+              //console.log(this.chargers[i].onLine);
+              this.chargers.splice(i, 1);
+            } else {
+              ++i;
+            }
+          }
+        }
+      },
+       handleSearchName() {
+       //this.refresh();
+        var i = 0;
+        if(this.searchName!=''){
+          while (i < this.chargers.length) {
+            if (!this.chargers[i].name.includes(this.searchName)) {
+              //console.log(this.chargers[i].onLine);
+              this.chargers.splice(i, 1);
+            } else {
+              ++i;
+            }
+          }
+        }
+      },
+
       handleCreate() {
          this.$router.push({
           path: 'chargerEdit',
@@ -175,7 +247,15 @@
           }
         })
       },
-
+      handleIccid(row){
+        if(row.iccid==null){
+          this.$alert(row.name+' 没有绑定物联卡号');
+          return;
+        }
+        this.qrVisible = true;
+        this.selectedQr = '物联卡: '+row.iccid;
+        this.selectedUrl = 'http://m2iot.musmoon.com/qrcode/camera/?iccid='+row.iccid;
+      },
       handleQrcode(row) {
         this.qrVisible = true;
         this.selectedQr = row.serialNum;
@@ -258,9 +338,9 @@
               }
             }
           }
-          
+
           _this.chargers = tempList;
-          console.log(_this.chargers);
+        
         }).catch(()=>{
           _this.$message({
             type: 'error',
@@ -278,13 +358,17 @@
     data(){
       return {
         onOffLine: '',
+        searchSerialNum:'',
+        searchName:'',
         selectedQr:'',
         selectedUrl:'',
         qrVisible:false,
         chargers: [],
         onLineStatus: ['在线','离线','充电'],
         dialogStatus: '',
-        logoSrc: 'http://image.ylc5858.com/l1.png', // 二维码中间的logo
+        logoSrc: require('@/assets/YLC.png'), // 二维码中间的logo
+        //logoSrc: 'http://image.ylc5858.com/l1.png', // 二维码中间的logo
+
       }
     },
     filters: {
