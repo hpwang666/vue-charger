@@ -17,6 +17,17 @@
   </el-form-item>
 
   <el-row :gutter="10" >
+     <el-col :span="8">
+      <el-form-item label="电枪数量" prop="plugs" >
+        <el-select v-model="form.plugs"  placeholder="请选择电枪数量">
+           <el-option label="1" :value=1></el-option>
+          <el-option label="2" :value=2></el-option>
+        </el-select>
+    </el-form-item>
+    </el-col> 
+  </el-row>
+
+  <el-row :gutter="10" >
     <el-col :span="8">
     <el-form-item label="电桩厂家" prop="brand" >
       <el-select value-key=value v-model="form.brand" placeholder="请选择电桩厂家">
@@ -128,7 +139,8 @@ import request from '@/utils/request'
           acdc: [{ required: true, message: '未选择', trigger: 'change' }],
           power: [{ required: true, message: '未选择', trigger: 'change' }],
           ifFast: [{ required: true, message: '未选择', trigger: 'change' }],
-          brand: [{ required: true, message: '未选择', trigger: 'change' }]
+          brand: [{ required: true, message: '未选择', trigger: 'change' }],
+          plugs: [{ required: true, message: '未选择', trigger: 'change' }]
       }
       }
     },

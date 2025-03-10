@@ -1,251 +1,252 @@
 <template>
+  <el-container>
+    <el-header class="bindUser_header">
+          <el-button type="primary" icon="el-icon-back" size="medium" style="margin-left: 10px" @click="handleBack">返回</el-button>
+          <el-input type="text" v-model="phone" auto-complete="off" placeholder="电话" style="width:200px;margin-left: 120px"></el-input>
+        
+          <el-input type="text" v-model="openid" auto-complete="off" placeholder="openid" style="margin-left: 20px;width:300px"></el-input>
+       
+          <el-input type="text" v-model="userId" auto-complete="off" placeholder="userId" style="margin-left: 20px;width:300px" ></el-input>
+        
+          <el-button type="success" size="small" style="margin-left: 20px" @click="handleQueryUserInfo" >查询</el-button>
+          <el-button type="success" size="small" style="margin-left: 20px" @click="resetAll" >清空</el-button>
+          <el-button id="bindBtn" type="success" size="small" style="margin-left: 20px;" @click="bindUser" >绑定</el-button>
+    </el-header>
 
-<div style="max-height:600px">
-  
- <el-main class="charger_edit_main">
-  <el-form ref="dataForm" :model="form"   :rules="rules" label-width="120px" >
+    <h3 style="margin:3px;margin-top:30px; text-align:left; padding-left:20px;color:#00b7ff;">已绑定用户</h3>
+    <el-main class="bindUser_main">
+      <el-table
+        ref="multipleTable"
+        :data="bindedUsers"
+        style="width: 100%"
+        max-height="600"
+        border>
+         <el-table-column
+          label="序号"
+          type = "index"
+          width="130" align="left">
+        </el-table-column>
+        <el-table-column
+          label="账号"
+          prop="openId"
+          width="280" align="left">
+        </el-table-column>
+      
+        <el-table-column
+          label="电话"
+          prop="phone"
+          width="160" align="left">
+        </el-table-column>
+       
+        <el-table-column
+          label="绑定时间"
+          prop="createTime"
+          width="260" align="left">
+        </el-table-column>
+      
+       
+        <el-table-column label="操作" align="left">
+          <template v-slot="scope">
+       
+           
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleUnbind(scope.$index,scope.row)">解绑
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-main>
+
+    <div style="height: 20px"></div>
    
-  <el-form-item label="电桩ID"  >
-    <div style="width:140px">
-    <el-input :disabled=true v-model="form.serialNum"   show-word-limit ></el-input>
-    </div>
-  </el-form-item>
-   <el-form-item label="电桩名称"  >
-    <div style="width:200px">
-    <el-input  v-model="form.name"   show-word-limit ></el-input>
-    </div>
-  </el-form-item>
 
-  <el-row :gutter="10" >
-    <el-col :span="8">
-    <el-form-item label="电桩厂家" prop="brand" >
-      <el-select value-key=value v-model="form.brand" placeholder="请选择电桩厂家">
-        <el-option label="易路充CHA-01" :value=1></el-option>
-        <el-option label="瑞华" :value=2></el-option>
-      </el-select>
-    </el-form-item>
-    </el-col>
-
-    <el-col :span="8">
-      <el-form-item label="充电方式" prop="ifFast">
-        <el-radio v-model="form.ifFast" class="input-reader-name" :label=2>慢充</el-radio>
-        <el-radio v-model="form.ifFast" class="input-reader-name" :label=1>快充</el-radio>
-      </el-form-item>
-    </el-col> 
-  </el-row>
-
-  <el-row :gutter="10" >
-    <el-col :span="8">
-      <el-form-item label="充电功率"  prop="power">
-      <el-select v-model="form.power" placeholder="请选择充电功率">
-        <el-option label="7KW" :value=1></el-option>
-        <el-option label="34KW" :value=2></el-option>
-      </el-select>
-    </el-form-item>
-    </el-col> 
-
-    <el-col :span="8">
-    <el-form-item label="充电模式" prop="acdc">
-      <el-radio v-model="form.acdc"  class="input-reader-name" :label=1>交流</el-radio>
-      <el-radio v-model="form.acdc" class="input-reader-name" :label=2>直流</el-radio>
-    </el-form-item>
-    </el-col> 
-
-  </el-row>
-  <el-row :gutter="10" >
-     <el-col :span="8">
-      <el-form-item label="选择费率" prop="modelId" >
-        <el-select v-model="form.modelId"  placeholder="请选择">
-          <el-option
-            v-for="item in models"
-            :key="item.id"
-            :label="item.modelName"
-            :value="item.id">
-          </el-option>
-        </el-select>
-    </el-form-item>
-    </el-col> 
-  </el-row>
-  
-<br/>
-<br/>
    
-<el-row>
-  <el-col :span="16">
-    <el-form-item label="备注">
-      <el-input type="textarea" v-model="form.desc"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="action==='create'?createData():updateData()">确认</el-button>
-      <el-button  @click="handleBack">取消</el-button>
-    </el-form-item>
-  </el-col>
-</el-row>
-</el-form>
-</el-main>
-</div>
+    
+  </el-container>
+  
 </template>
 <script>
-import request from '@/utils/request'
-    export default {
-   mounted:function(){
-      this.action=this.$route.query.action;
-      if(this.action =='create')
-        this.getId();
-      else {
-        this.id =this.$route.query.id;
-        this.refresh();
-      }
-      this.$refs['dataForm'].clearValidate()
-
-       setTimeout(() => {
-        this.getFeeModel();
-      }, 120)
-     
-   },
-    data() {
-      return {
-        textMap: {
-          update: '修改',
-          create: '新建'
-        },
-        action:'',
-        serialNum:'',
-        id:'',
-        models:[],
-        value:'',
-        form: {   },
-        rules:{
-          modelId: [{ required: true, message: '费率未选择', trigger: 'change' }],
-          acdc: [{ required: true, message: '未选择', trigger: 'change' }],
-          power: [{ required: true, message: '未选择', trigger: 'change' }],
-          ifFast: [{ required: true, message: '未选择', trigger: 'change' }],
-          brand: [{ required: true, message: '未选择', trigger: 'change' }]
-      }
-      }
+  import request from '@/utils/request'
+   import { mapGetters } from 'vuex'
+  
+  export default{
+    mounted:function(){
+        this.chargerId=this.$route.query.id;
+        this.handleQuery();
     },
     methods: {
-      updateData() {
-        var _this = this;
-        this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
       
-          request({
-            url: '/ylc/charger/edit',
-            method: 'post',
-            data:  _this.form ,
-            params:{
-              id: _this.id
-            }
-          }).then(resp => {
-                _this.$message({
-              type: 'success',
-              message:resp.result
-            });
-              setTimeout(function () {
-                _this.handleBack();
-              },1200);
-          });
-        }
-        })
-      },
-      createData() {
-        var _this= this;
-        this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          request({
-            url: '/ylc/charger/add',
-            method: 'post',
-            data:  _this.form ,
-            params:{
-              departId: _this.$store.getters.stationId,
-            }
-          }).then(resp => {
-                _this.$message({
-              type: 'success',
-              message:resp.result
-            });
-              setTimeout(function () {
-                _this.handleBack();
-              },1200);
-          });
-        }
-        })
-      },
-      getFeeModel(){
-        var _this = this;
-          request({
-          url: '/ylc/feeModel/queryByDepartId',
-            method: 'get',
-            params:{
-              departId:_this.$store.getters.stationId
-            }
-          }).then(resp => {
-              _this.$message({
-              type: 'success',
-              message:resp.message,
-            });
-            _this.models = resp.result;
-            console.log(_this.models)
-          });
-      },
-
-      refresh(){
-       var  _this=this;
-        request({
-        url: '/ylc/charger/queryById',
-        method: 'get',
-        params:{
-          id:_this.id
-        }
-      }).then(resp => {
-            _this.$message({
-          type: 'success',
-          message:resp.message,
-        });
-        _this.form = resp.result;
-      });
-      },
-      getId(){
-        var _this= this;
-         request({
-              url: '/ylc/charger/genSerialNum',
-              method: 'get'
-            }).then(resp => {
-              _this.form.serialNum = resp.result.serialNum;
-            });
-      },
-     
       handleBack(){
         var _this = this;
         this.$router.push({
           path: 'chargers'
         })
+      },
+      resetAll() {
+        this.userId='';
+        this.openid='';
+        this.phone='';
+        
+        this.DisplayAndHiddenBtn("bindBtn","h");
+      },
+      handleQuery()
+      { 
+        let _this = this;
+        request({
+          url: '/ylc/charger/queryBindedUsers',
+          method: 'post',
+          data: {
+                chargerId:_this.chargerId
+          } 
+        }).then(resp=> {
+
+
+         _this.bindedUsers= resp.result;
+
+        _this.$message({
+            message:resp.message,
+            type: 'success',
+            duration: 2000
+          })
+      
+        }).catch(()=>{
+          _this.$message({
+            type: 'error',
+            message: '加载失败'
+          });
+        });
+     },
+     handleQueryUserInfo()
+     { 
+        let _this = this;
+        request({
+          url: '/ylc/query/userInfo',
+          method: 'post',
+          data: {
+                phone:_this.phone==''?null:_this.phone,
+                userId:_this.userId==''?null:_this.userId,
+                openid:_this.openid==''?null:_this.openid
+          } 
+        }).then(resp=> {
+
+
+          _this.phone = resp.result.phone;
+          _this.userId = resp.result.userId;
+          _this.openid = resp.result.openid;
+
+          if(_this.userId!=null && _this.openid!=null){
+             _this.DisplayAndHiddenBtn("bindBtn","d");
+          }
+          else _this.DisplayAndHiddenBtn("bindBtn","h");
+
+          _this.$message({
+            message: (_this.userId!=null && _this.openid!=null)?resp.message:'查无此用户',
+            type: 'success',
+            duration: (_this.userId!=null && _this.openid!=null)?2000:4000
+          })
+      
+        }).catch(()=>{
+          _this.$message({
+            type: 'error',
+            message: '加载失败'
+          });
+        });
+     },
+       handleUnbind(index,row){
+        let _this = this;
+        this.$confirm('确认解除 ' + row.phone + ' 绑定?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          _this.unbind(index,row.userId);
+        });
+      },
+      unbind(index,id){
+      var _this = this;
+      request({
+        url: '/ylc/charger/unbindUser',
+       method: 'post',
+        data:{
+            chargerId:_this.chargerId,
+            userId:id
+        }    
+      }).then(resp=> {
+        _this.$message({
+          type: 'success',
+          message: resp.result
+        });
+        _this.bindedUsers.splice(index, 1)
+      })
+      },
+
+      bindUser(){
+      var _this = this;
+     
+      request({
+        url: '/ylc/charger/bindUser',
+        method: 'post',
+        data:{
+            chargerId:_this.chargerId,
+            userId:_this.userId
+        }   
+      }).then(()=> {
+        _this.$message({
+          type: 'success',
+          message: '绑定成功'
+        });
+       _this.handleQuery();
+      })
+      },
+   
+      DisplayAndHiddenBtn(btnId, type) 
+      {    
+        var currentBtn = document.getElementById(btnId);    
+        if (type == "d")
+        {       
+          currentBtn.style.display = "block"; //style中的display属性   
+        }    
+        else if (type == "h") 
+        {        
+          currentBtn.style.display = "none";    
+        }
+      }
+    },
+   
+    data(){
+      return {
+        userId:'',
+        chargerId:'',
+        openid:'',
+        phone:'',
+        bindedUsers: [],
       }
     }
   }
 </script>
-
-
 <style>
-
-  .charger_edit_main {
+  .bindUser_header {
+    background-color: #ececec;
+    margin-top: 20px;
+    padding-left: 5px;
+  display: flex;
     justify-content: flex-start;
+   
+  }
+
+  .bindUser_main {
+    /*justify-content: flex-start;*/
     display: flex;
     flex-direction: column;
     padding-left: 5px;
-    background-color: #ffffff;
-    margin-top: 20px;
-    padding-top: 10px;
-    width: 1000px;
+    background-color: #ececec;
+    margin-top: 10px;
+    padding-top: 30px;
+    width:1300px;
   }
-
-
-  #defaultStartTime{
-    background-color: #d0d0d0;
+  #bindBtn{
+    display: none;
   }
-   #defaultEndTime{
-    background-color: #d0d0d0;
-  }
- 
 </style>

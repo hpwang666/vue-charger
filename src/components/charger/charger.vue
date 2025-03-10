@@ -102,7 +102,7 @@
              <el-button
               size="mini"
               type="success"
-              @click="handleBind(scope.$index, scope.row)">绑定
+              @click="handleBind(scope.row)">绑定
             </el-button>
             <el-button
               size="mini"
@@ -117,12 +117,20 @@
         </el-table-column>
       </el-table>
 
-      <el-dialog width=25% :visible.sync="qrVisible" class="qrDialog">
+      <el-dialog width=35% :visible.sync="qrVisible" class="qrDialog">
         <div id="qrHtml">
-          <div class="qrContent">
-            <span>{{selectedQr}}</span>
+          <div >
+            <div class="qrContent">
+              <span>{{selectedQr}}</span>
+            </div>
+            <vue-qr   :logoSrc=logoSrc :text=selectedUrl :size="300"></vue-qr>
           </div>
-          <vue-qr   :logoSrc=logoSrc :text=selectedUrl :size="300"></vue-qr>
+          <div  v-if="plug2Visable">
+            <div class="qrContent">
+              <span>{{selectedQr_2}}</span>
+            </div>
+            <vue-qr   :logoSrc=logoSrc :text=selectedUrl_2 :size="300"></vue-qr>
+          </div>
         </div>
         <div>
            <el-button type="primary" class="myButton"  @click="downloadPoster(selectedQr)">生成下载二维码</el-button>
@@ -237,13 +245,10 @@
         })
       },
        handleBind(row) {
-       var _this = this;
         this.$router.push({
           path: 'bindUser',
           query: {
             id: row.id,
-            stationId:_this.stationId,
-            action:'update'
           }
         })
       },
@@ -258,8 +263,18 @@
       },
       handleQrcode(row) {
         this.qrVisible = true;
-        this.selectedQr = row.serialNum;
-        this.selectedUrl = 'http://www.ylc5858.com/ylc?chargerId='+row.serialNum+'01';
+        if(row.plugs==2){
+            this.plug2Visable = true;  
+            this.selectedQr = row.serialNum+'-01';
+            this.selectedUrl = 'http://www.ylc5858.com/ylc?chargerId='+row.serialNum+'01';
+            this.selectedQr_2 = row.serialNum+'-02';
+            this.selectedUrl_2 = 'http://www.ylc5858.com/ylc?chargerId='+row.serialNum+'02';
+        }
+        if(row.plugs==1){
+            this.plug2Visable = false; 
+            this.selectedQr = row.serialNum;
+            this.selectedUrl = 'http://www.ylc5858.com/ylc?chargerId='+row.serialNum+'01';
+        }
       },
        // 生成海报
       createPoster(fileName) {
@@ -331,7 +346,6 @@
           if(_this.onOffLine!=''){
             while (i < tempList.length) {
               if (tempList[i].onLine != _this.onOffLine) {
-                console.log(tempList[i].onLine);
                 tempList.splice(i, 1);
               } else {
                 ++i;
@@ -362,9 +376,14 @@
         searchName:'',
         selectedQr:'',
         selectedUrl:'',
+      
+       plug2Visable :false,
+        selectedQr_2:'',
+        selectedUrl_2:'',
+
         qrVisible:false,
         chargers: [],
-        onLineStatus: ['在线','离线','充电'],
+        onLineStatus: ['在线','离线','充电','急停'],
         dialogStatus: '',
         logoSrc: require('@/assets/YLC.png'), // 二维码中间的logo
         //logoSrc: 'http://image.ylc5858.com/l1.png', // 二维码中间的logo
@@ -376,7 +395,8 @@
       const statusMap = {
         在线: 'success',
         离线: 'danger',
-        充电: ''
+        充电: '',
+        急停:'warning'
       }
       return statusMap[status]
     }
@@ -410,5 +430,8 @@
   #qrHtml{
     padding-top:20px;
     padding-bottom:20px;
+    display: flex;
+    justify-content:space-around;
   }
+ 
 </style>

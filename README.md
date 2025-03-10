@@ -14,7 +14,8 @@ npm run dev
 
 ```
 npm run build--test 
-npm run build--prod
+npm run build--prod 
+再运行 install.sh -r 就可以自动部署，服务器上有脚本配合
 ```
 
 支持压缩打包，需要安装

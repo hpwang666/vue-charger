@@ -27,7 +27,7 @@
             id="el-cascader"
             v-model="value"
             :options="options"
-            :props="{ expandTrigger: 'hover' }"
+            :props="{}"
             @change="handleChange"></el-cascader>
             </el-col>
           </el-row>
@@ -100,7 +100,7 @@
       
         <el-main>
           <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/dataView' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/realtimeView' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item v-text="this.$router.currentRoute.name"></el-breadcrumb-item>
           </el-breadcrumb>
          
@@ -169,14 +169,16 @@
         }
       },
       hangleSelectionConfirm(){
-        
-        if(this.value.length == 4){
+
+        //console.log(this.depart.orgCategory)  
+        //这里保证不同权限下都能选中电站，超级管理员的depart是null
+        if((this.value.length+(this.depart==null?1:this.depart.orgCategory))== 5){
           this.selectedPark = this.value;
           this.dialogVisible = false;
           
-          console.log("存储ID_1: "+this.value[3]+" 名称_1:"+this.value[3])  
+          console.log("存储ID_1: "+this.value[this.value.length-1]+" 名称_1:"+this.value[this.value.length-1])  
          
-          this.findIdByName(this.departTree,this.value[3]);
+          this.findIdByName(this.departTree,this.value[this.value.length-1]);
           setSelection(this.value);
           
         }
@@ -312,22 +314,26 @@
         _this.options = _this.departTree;
         var _depart = _this.departTree[0];
         var i=0;
+        let findedCookiedStation = false;
         let s = getSelection()
         if(s){
           let cookiedSelection = JSON.parse(s);//字符串转数组
-            let station=_this.treeFind(_this.departTree,node=>node.value==cookiedSelection[3]) ;//找出充电站
+            let station=_this.treeFind(_this.departTree,node=>node.value==cookiedSelection[cookiedSelection.length-1]) ;//找出充电站
             if(station){
               let path=[];
               _this.treeFindPath(_this.departTree,node=>node.value==station.value,path) ;//城市，集团，公司,项目
-               if(path.toString==cookiedSelection.toString){//要求充电站名字  路径 完全一样
+              //console.log(path.toString())
+              //console.log(cookiedSelection.toString())
+              if(path.toString()==cookiedSelection.toString()){//要求充电站名字  路径 完全一样
                  _depart=station;
                 _this.selectedPark = cookiedSelection;
-                i=4;
+                findedCookiedStation=true;
                 _this.value = cookiedSelection;
-               }
+              }
             }
         }
-        if(i==0){
+        if(findedCookiedStation==false){
+          i=0;
           while(true)
           {
               _this.selectedPark[i]=_depart.value;
@@ -340,14 +346,15 @@
        
 
         //如果是完整的即包含了电站ID ，那么就进行存储更新
-        if(i==4){
+        if(_depart.orgCategory==4){
             _this.$store.commit('station/SET_STATION_ID', _depart.key);   
             console.log("存储ID: "+_this.stationId+" 名称："+_depart.value)
             this.$store.commit('station/SET_STATION_NAME', _depart.value); 
         }
+        else throw "初始化没有加载到电站"
             
       }).catch((e) => {
-            _this.$alert('获取用户部门树失败'+e);
+            _this.$alert('获取用户部门树失败: '+e);
       });
     },
     data(){

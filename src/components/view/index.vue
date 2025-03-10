@@ -1,13 +1,10 @@
 <template>
   <div class="dashboard-editor-container">
   
-
     <panel-group/>
 
-    
-      <line-chart style="background:#fff;padding:8px 8px 0;margin-bottom:8px;"  />
+    <line-chart style="background:#fff;padding:8px 8px 0;margin-bottom:8px;"  />
   
-
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">

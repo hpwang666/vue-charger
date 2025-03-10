@@ -68,7 +68,7 @@ export default {
         }).catch(()=>{
           _this.$message({
             type: 'error',
-            message: '加载失败'
+            message: '加载失败orders30days'
           });
       });
       

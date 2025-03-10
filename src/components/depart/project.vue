@@ -62,7 +62,7 @@
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="520px">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" size="mini" label-width="100px" style="width: 100%">
           
-          <el-form-item label="所属城市">
+          <el-form-item label="所属城市" id="cityInPrj">
           <el-select v-model="cityId" placeholder="请选择城市">
             <el-option
               v-for="item in citys"
@@ -73,7 +73,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="所属集团" prop="groupId">
+        <el-form-item label="所属集团" prop="groupId" id="groupInPrj">
           <el-select v-model="groupId" placeholder="请选择集团">
             <el-option
               v-for="item in groups"
@@ -84,7 +84,7 @@
           </el-select>
         </el-form-item>
        
-        <el-form-item label="所属公司" prop="parentId">
+        <el-form-item label="所属公司" prop="parentId" id="companyInPrj">
           <el-select v-model="temp.parentId" placeholder="请选择公司">
             <el-option
               v-for="item in companys"
@@ -221,17 +221,33 @@
 
         this.citys.length=0;
         this.cityId=null;
-        let tmpCity = this.treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
-        tmpCity.map(((item, index)=> {
-          this.citys.push({id:item.key,departName:item.value});
-        }))
-
         this.companys.length=0;
         this.companyId=null;
         this.groups.length=0;
         this.groupId=null;
-
-
+        let tmpCity = this.treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
+        if(tmpCity.length>0){
+            tmpCity.map(((item, index)=> {
+              this.citys.push({id:item.key,departName:item.value});
+            }))
+           
+        }else{
+            let tmpGroup=this.treeFilter(this.departTree,node=>node.orgCategory==2) ;//过滤出所有集团
+            if(tmpGroup.length>0){
+              tmpGroup.map(((item, index)=> {
+                this.groups.push({id:item.key,departName:item.value});
+              }))
+            }
+            else{
+               let tmpCompany=this.treeFilter(this.departTree,node=>node.orgCategory==3) ;//过滤出所有公司
+              if(tmpCompany.length>0){
+                tmpCompany.map(((item, index)=> {
+                  this.companys.push({id:item.key,departName:item.value});
+                }))
+              }
+            }
+        }
+      
 
       },
       createData() {
@@ -280,17 +296,23 @@
 
         let path=[];
         this.treeFindPath(this.departTree,node=>node.key==row.id,path) ;//城市，集团，公司,项目
-        console.log("path: "+path);
+        console.log("path: "+path.length);
 
-        this.cityId=path[0];
-        this.groupId=path[1];
-        this.temp.parentId=path[2];
+        this.cityId=path.length==4? path[0]:null;
+        this.groupId=path.length>2? path[path.length-3]:null;
+        this.temp.parentId=path.length>1? path[path.length-2]:null;
         this.citys.length=0;
 
+        
+
+      
         let tmpCity = this.treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
-        tmpCity.map(((item, index)=> {
-          this.citys.push({id:item.key,departName:item.value});
-        }))
+        if(tmpCity.length>0){
+            tmpCity.map(((item, index)=> {
+            this.citys.push({id:item.key,departName:item.value});
+          }))
+        }
+      
 
         //this.treeForeach(tmpCity,node =>console.log(node.value))
 
@@ -298,21 +320,34 @@
         
 
         this.groups.length=0;
-        cityChildren[0].children.map(((item, index)=> {
-          this.groups.push({id:item.key,departName:item.value});
-        }))
+        if(cityChildren.length>0){
+          cityChildren[0].children.map(((item, index)=> {
+            this.groups.push({id:item.key,departName:item.value});
+          }))
+        }
+        if(path.length==3){
+          let groupTemp= this.treeFind(this.departTree,node=>node.key==this.groupId) ;
+          this.groups.push({id:groupTemp.key,departName:groupTemp.value});
+           console.log(" this.group: "+ this.groups[0].departName);
+        }
+        
+        let groupChildren= this.treeFind(this.departTree,node=>node.key==this.groupId) ;//找出是哪个集团
+        //this.treeForeach(groupChildren,node =>console.log(node.value))
 
-
-        let groupChildren= this.treeFind(this.departTree,node=>node.key==this.groupId).children ;//找出是哪个集团
-        this.treeForeach(groupChildren,node =>console.log(node.value))
-
-        console.log("len: "+groupChildren.length);
+        //console.log("groupChildren.len: "+groupChildren.length);
 
         this.companys.length=0;
-        groupChildren.map(((item, index)=> {
-          this.companys.push({id:item.key,departName:item.value});
-        }))
-
+        if(groupChildren!=null){
+          groupChildren.children.map(((item, index)=> {
+            this.companys.push({id:item.key,departName:item.value});
+          }))
+        }
+        if(path.length==2){
+          let companyTemp= this.treeFind(this.departTree,node=>node.key==this.temp.parentId) ;
+          this.companys.push({id:companyTemp.key,departName:companyTemp.value});
+           console.log(" this.company: "+ this.companys[0].departName);
+        }
+        
       },
       updateData() {
         this.$refs['dataForm'].validate((valid) => {
@@ -483,7 +518,7 @@
           create: false
         },
         rules: {
-          parentId: [{ required: true, message: '选择集团', trigger: 'change ' }],
+          parentId: [{ required: true, message: '选择公司', trigger: 'change ' }],
           departName: [{ required: true, message: '输入名称', trigger: 'blur' }]
         }
       }
@@ -528,5 +563,14 @@
     background-color: #ececec;
     margin-top: 20px;
     padding-top: 10px;
+  }
+  #cityInPrj{
+    display:block;
+  }
+  #groupInPrj{
+    display:block;
+  }
+  #companyInPrj{
+    display:block;
   }
 </style>

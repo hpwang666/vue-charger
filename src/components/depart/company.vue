@@ -147,11 +147,22 @@
         })
 
         this.citys.length=0;
+        this.groups.length=0;
         this.cityId=null;
         let tmpCity = this.treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
-        tmpCity.map(((item, index)=> {
-          this.citys.push({id:item.key,departName:item.value});
-        }))
+        if(tmpCity.length>0){
+          tmpCity.map(((item, index)=> {
+            this.citys.push({id:item.key,departName:item.value});
+          }))
+        }else{
+          let tmpGroup=this.treeFilter(this.departTree,node=>node.orgCategory==2) ;//过滤出所有集团
+          if(tmpGroup.length>0){
+            tmpGroup.map(((item, index)=> {
+              this.groups.push({id:item.key,departName:item.value});
+            }))
+          }
+        }
+       
       },
       createData() {
         this.$refs['dataForm'].validate((valid) => {
@@ -202,24 +213,37 @@
         this.treeFindPath(this.departTree,node=>node.key==row.id,path) ;//城市，集团，公司
         //console.log("path: "+path);
 
-        this.cityId=path[0];
-        this.temp.parentId=path[1];
+        this.cityId=path.length==3? path[0]:null;
+        this.temp.parentId=path.length>1? path[path.length-2]:null;
+        
+        //this.cityId=path[0];
+        //this.temp.parentId=path[1];
         this.citys.length=0;
 
         let tmpCity = this.treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
-        tmpCity.map(((item, index)=> {
-          this.citys.push({id:item.key,departName:item.value});
-        }))
+        if(tmpCity.length>0){
+            tmpCity.map(((item, index)=> {
+            this.citys.push({id:item.key,departName:item.value});
+          }))
+        }
+        
 
         //this.treeForeach(tmpCity,node =>console.log(node.value))
 
         let cityChildren=this.departTree.filter(ele => ele.key == this.cityId);//找出是哪个城市
-        
-
         this.groups.length=0;
-        cityChildren[0].children.map(((item, index)=> {
-          this.groups.push({id:item.key,departName:item.value});
-        }))
+        if(cityChildren.length>0){
+          cityChildren[0].children.map(((item, index)=> {
+            this.groups.push({id:item.key,departName:item.value});
+          }))
+        }
+
+        if(path.length==2){
+          let groupTemp= this.treeFilter(this.departTree,node=>node.key==this.temp.parentId) ;
+          this.groups.push({id:groupTemp[0].key,departName:groupTemp[0].value});
+           console.log(" this.group: "+ this.groups[0].departName);
+        }
+       
       },
       updateData() {
         var _this=this;
