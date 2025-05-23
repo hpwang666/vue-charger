@@ -114,7 +114,7 @@ import request from '@/utils/request'
         this.id =this.$route.query.id;
         this.refresh();
       }
-      this.$refs['dataForm'].clearValidate()
+      this.$refs['dataForm'].clearValidate();
 
        setTimeout(() => {
         this.getFeeModel();

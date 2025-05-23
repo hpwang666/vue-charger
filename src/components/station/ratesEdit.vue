@@ -28,7 +28,7 @@
   </el-form>
    
 <div style=" float:left" >
-  <el-form-item v-for="(item,index) in form.timeQuantum"    :key=index :label="'配置时间段'+index">
+  <el-form-item v-for="(item,index) in form.timeQuantum"    :key=index :label="'配置时间段-'+index">
     <el-col :span="7">
       <el-time-select  size="small"  v-model="item.startTime"  :readonly=true :clearable=false style="width: 60%;" 
         :picker-options="{
@@ -97,7 +97,29 @@
 
   </el-form-item>
 
+  <el-form-item label="利润计算范围"   >
+  <div id="rangeSelect">
+    <el-switch 
+      v-model="form.electricityIn"
+      style="padding-left:15px"
+      active-color="#ff4949"
+      inactive-color="#13ce66"
+      active-text="电费纳入利润计算"
+      inactive-text="仅以服务费计算利润">
+    </el-switch>
+     <!--span style="padding-left:45px;font-size:18px;color:red;font-weight: bold">谨慎设置</span-->
+    <el-popover
+    placement="top-start"
+    title="注意"
+    style="padding-left:35px"
+    width="200"
+    trigger="hover"
+    content="如果打开选项,上面的电费服务费将作废,而是取其和作为利润来源">
+    <el-button slot="reference" type="text" style="font-size:18px;color:red;font-weight: bold">谨慎设置</el-button>
+  </el-popover>
+  </div>
   
+  </el-form-item>
   <el-form-item label="备注">
     <el-input type="textarea" v-model="form.desc"></el-input>
   </el-form-item>
@@ -148,6 +170,7 @@ import request from '@/utils/request'
             endTime:'',
             rate:''          }
           ],
+          electricityIn:false,
           desc: ''
         },
         row_last_startTime:"0:00",
@@ -321,6 +344,12 @@ import request from '@/utils/request'
   }
    #defaultEndTime{
     background-color: #d0d0d0;
+  }
+  #rangeSelect{
+   
+     width: 470px;
+   text-align: left;
+
   }
  
 </style>

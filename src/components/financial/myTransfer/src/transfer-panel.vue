@@ -152,7 +152,7 @@
           width:'340px'
         },
         inputStyle:{
-          width:'100px!important',
+          width:'108px!important',
           float:'right'          
         }
       };

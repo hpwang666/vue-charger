@@ -308,7 +308,6 @@
         }).catch(() => {
              _this.$alert('获取用户信息失败');
       });
-
       this.$store.dispatch('user/getDepartTree').then(()=> {
         
         _this.options = _this.departTree;
@@ -317,11 +316,13 @@
         let findedCookiedStation = false;
         let s = getSelection()
         if(s){
+          console.log("有 cookie");
           let cookiedSelection = JSON.parse(s);//字符串转数组
-            let station=_this.treeFind(_this.departTree,node=>node.value==cookiedSelection[cookiedSelection.length-1]) ;//找出充电站
+            let station=_this.treeFind(_this.departTree,node=>{return (node.orgCategory==4&&node.value==cookiedSelection[cookiedSelection.length-1])}) ;//找出充电站
             if(station){
               let path=[];
-              _this.treeFindPath(_this.departTree,node=>node.value==station.value,path) ;//城市，集团，公司,项目
+              _this.treeFindPath(_this.departTree,node=>{return (node.value==station.value&&node.orgCategory==4)},path) ;//城市，集团，公司,项目
+              //console.log("station: "+station.value,+" "+station.orgCategory)
               //console.log(path.toString())
               //console.log(cookiedSelection.toString())
               if(path.toString()==cookiedSelection.toString()){//要求充电站名字  路径 完全一样
@@ -332,6 +333,7 @@
               }
             }
         }
+        else console.log("没哟cookie");
         if(findedCookiedStation==false){
           i=0;
           while(true)
