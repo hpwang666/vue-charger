@@ -97,29 +97,7 @@
 
   </el-form-item>
 
-  <el-form-item label="利润计算范围"   >
-  <div id="rangeSelect">
-    <el-switch 
-      v-model="form.electricityIn"
-      style="padding-left:15px"
-      active-color="#ff4949"
-      inactive-color="#13ce66"
-      active-text="电费纳入利润计算"
-      inactive-text="仅以服务费计算利润">
-    </el-switch>
-     <!--span style="padding-left:45px;font-size:18px;color:red;font-weight: bold">谨慎设置</span-->
-    <el-popover
-    placement="top-start"
-    title="注意"
-    style="padding-left:35px"
-    width="200"
-    trigger="hover"
-    content="如果打开选项,上面的电费服务费将作废,而是取其和作为利润来源">
-    <el-button slot="reference" type="text" style="font-size:18px;color:red;font-weight: bold">谨慎设置</el-button>
-  </el-popover>
-  </div>
-  
-  </el-form-item>
+
   <el-form-item label="备注">
     <el-input type="textarea" v-model="form.desc"></el-input>
   </el-form-item>
@@ -170,7 +148,6 @@ import request from '@/utils/request'
             endTime:'',
             rate:''          }
           ],
-          electricityIn:false,
           desc: ''
         },
         row_last_startTime:"0:00",

@@ -7,7 +7,7 @@
    
   <el-form-item label="电桩ID"  >
     <div style="width:140px">
-    <el-input :disabled=true v-model="form.serialNum"   show-word-limit ></el-input>
+    <el-input :disabled="editable" v-model="form.serialNum"   show-word-limit ></el-input>
     </div>
   </el-form-item>
    <el-form-item label="电桩名称"  >
@@ -109,7 +109,8 @@ import request from '@/utils/request'
    mounted:function(){
       this.action=this.$route.query.action;
       if(this.action =='create')
-        this.getId();
+      ;
+        //this.getId();
       else {
         this.id =this.$route.query.id;
         this.refresh();
@@ -130,6 +131,7 @@ import request from '@/utils/request'
         action:'',
         serialNum:'',
         uploading:false,
+        editable:false,
         id:'',
         models:[],
         value:'',
@@ -146,6 +148,7 @@ import request from '@/utils/request'
     },
     methods: {
       updateData() {
+         this.editable=true;
         var _this = this;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -171,6 +174,7 @@ import request from '@/utils/request'
       },
       createData() {
         var _this= this;
+        this.editable=false;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
            _this.uploading=true;

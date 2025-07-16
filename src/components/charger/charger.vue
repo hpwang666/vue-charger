@@ -222,15 +222,25 @@
         }
       },
 
-      handleCreate() {
-         this.$router.push({
+    handleCreate() {
+        var _this=this;
+        request({
+          url: '/ylc/charger/checkStation',
+          method: 'get',
+          params:{
+            departId:_this.stationId
+          }
+        }).then(resp=> {
+          
+          _this.$router.push({
           path: 'chargerEdit',
           query: {
             id: '000',
-            stationId:this.stationId,
+            stationId:_this.stationId,
             action:'create'
           }
         })
+        }).catch();
       },
      
       handleUpdate(row) {

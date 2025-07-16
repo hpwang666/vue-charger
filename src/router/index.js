@@ -4,6 +4,7 @@ import Login from '@/components/Login'
 import Home from '@/components/Home'
 import inCome  from '@/components/financial/inCome'
 import inComeSum  from '@/components/excel/export-share-sum'
+import inComeQuery from '@/components/financial/inComeQuery'
 import inComeCfg from '@/components/financial/inComeCfg'
 import cashOut  from '@/components/financial/cashOut'
 import cashOutTrade  from '@/components/financial/cashOutTrade'
@@ -190,9 +191,19 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'inComeQuery',
+        iconCls: 'fa fa-reorder',
+        name: '分润配置',
+        component: inComeQuery ,
+        meta : {
+          roles: ['superAdmin'] 
+        },
+      },
+      {
         path: 'inComeCfg',
         iconCls: 'fa fa-reorder',
         name: '分润配置',
+        hidden: true,
         component: inComeCfg ,
         meta : {
           roles: ['superAdmin'] 
@@ -318,7 +329,7 @@ export const asyncRoutes = [
   {
     path: '/home',
     component: Home,
-    name: '订单查询0',
+    name: '订单查询',
     meta : {
       roles: ['admin'] 
     },

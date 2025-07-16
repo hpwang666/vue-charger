@@ -142,7 +142,7 @@
          
         }).then(resp=> {
           var i = 0;
-          var tempList = resp.result;
+          var tempList = resp.result.records;
            
           _this.trades = tempList;
           

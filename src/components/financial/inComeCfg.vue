@@ -1,57 +1,67 @@
 <template>
 
-<div >
-  
- <el-main class="income_cfg_edit">
-  
-<br />
+ <div class="income_cfg_edit -w10">
+      
 
-  <el-row :gutter="20" >
-  <el-col :span="24">
+  <div>
+   
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+      </br>
+      <span style="display: block; text-align:left; color:#6495ED; font-size:24px;">充电站名称: {{$route.query.departName}}</span>
+     <el-tab-pane label="分润管理" name="share"> <el-divider content-position="left">分润配置</el-divider></el-tab-pane>
+     <el-tab-pane label="电费管理" name="electricity"> <el-divider content-position="left">电费管理</el-divider></el-tab-pane>
+    </el-tabs>
+    </br>
     <div class="grid-content bg-purple"  style="text-align:left">
-    <el-divider content-position="left">分润配置</el-divider>
-
-  <myTransfer 
-        v-model="value" 
-        :data="toShareUsers" 
-        :titles="titles" 
-        :isShowLeftInput="false" 
-        :isShowRightInput="true"
-        ref="qqq">
-</myTransfer>
-
+      <myTransfer 
+            v-model="value" 
+            :data="toShareUsers" 
+            :titles="titles" 
+            :isShowLeftInput="false" 
+            :isShowRightInput="true"
+            ref="qqq">
+      </myTransfer>
     </div>
-  </el-col>
 
-</el-row>
+  </div>
   
  <br />
  <br />
  <br />
 
- <el-row :gutter="1" >
-      <el-button type="success" @click="handleCommit()">保存</el-button>
- </el-row>
+ <div class="inCome_btn">
+  <el-button type="primary" icon="el-icon-back" size="medium" style="margin-left: 10px" @click="handleBack">返回</el-button>
+      <el-button type="success" size="medium" @click="handleCommit()">保存</el-button>
+ </div>
 
-</el-main>
 </div>
+
 </template>
 
 
 <script>
 import request from '@/utils/request'
-import { mapGetters } from 'vuex'
 import myTransfer from './myTransfer/src/main'
 
     export default {
       components: { myTransfer },
       watch: {
-      stationId:function (){ //动态监听电站ID的变化，刷新界面
+
+      activeName:function(name){
+        console.log(name);
+        if(name==='share') {
+          this.requestUrl='/ylc/station/shareHolding';
+          this.committUrl='/ylc/station/updateSharers';
+        }
+        if(name==='electricity') {
+          this.requestUrl='/ylc/station/elecHolding';
+          this.committUrl='/ylc/station/updateElecSharers';
+        }
          this.refresh();
       }
     },
-      computed: {
-        ...mapGetters(['stationId']),
+    computed: {
+       
         sum:{
           get:function(){
             return this.ratio.reduce((sum, e) => sum + Number(e || 0), 0)
@@ -63,20 +73,19 @@ import myTransfer from './myTransfer/src/main'
         }
       },
       mounted: function () {
-        
-         setTimeout(() => {
            this.refresh();
-         }, 320)
       },
     
     data() {
       return {
+        requestUrl:'/ylc/station/shareHolding',
+        committUrl:'/ylc/station/updateSharers',
+        activeName: 'share',
         value:[],
         titles:['待选股东','已选股东'],
         action:'',
         serialNum:'',
         toShareUsers:[] ,
-        toShareUsers1:[{key:1,label:'我们',Number:12},{key:2,label:'你们',Number:12},{key:3,label:'他们',Number:12},{key:4,label:'啊们',Number:12}] ,
         shareRatios:[],
         sharers:[],
         allSharers:'',
@@ -84,8 +93,17 @@ import myTransfer from './myTransfer/src/main'
       }
     },
     methods: {
+      handleClick(tab, event) {
+        console.log(tab, event);
+      },
+      handleBack(){
+        var _this = this;
+        this.$router.push({
+          path: 'inComeQuery'
+        })
+      },
     
-       handleClose(done) {
+      handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
             done();
@@ -98,10 +116,10 @@ import myTransfer from './myTransfer/src/main'
         _this.value.splice(0);//已经有的股东
         _this.sharers.splice(0);
         request({
-          url: '/ylc/station/shareHolding',
+          url: _this.requestUrl,
           method: 'get',
           params:{
-            departId:_this.stationId
+            departId:_this.$route.query.id
           }
         }).then(resp=> {
           var i = 0;
@@ -173,7 +191,7 @@ import myTransfer from './myTransfer/src/main'
                var ii =  _this.findByUserId( _this.sharers,_this.allSharers[item].id);
                var id=ii==undefined?123:ii.id
              if(_this.toShareUsers[item].Number>0)
-              _this.shareRatios.push({id:id,sharerId:_this.allSharers[item].id,departId: _this.$store.getters.stationId,ratio:_this.toShareUsers[item].Number});
+              _this.shareRatios.push({id:id,sharerId:_this.allSharers[item].id,departId: _this.$route.query.id,ratio:_this.toShareUsers[item].Number});
             }));
             console.log(_this.shareRatios)
           _this.commitShare();
@@ -182,11 +200,11 @@ import myTransfer from './myTransfer/src/main'
       commitShare(){
         var _this = this;
          request({
-           url: '/ylc/station/updateSharers',
+           url: _this.committUrl,
             method: 'post',
             data:  _this.shareRatios ,
             params:{
-              departId: _this.$store.getters.stationId
+              departId: _this.$route.query.id
             }
         }).then(resp=> {
           
@@ -212,7 +230,7 @@ import myTransfer from './myTransfer/src/main'
     background-color: #ffffff;
     margin-top: 20px;
     padding-top: 10px;
-    width: 1100px;
+    
   }
 
   .income_form_main{
@@ -231,6 +249,12 @@ import myTransfer from './myTransfer/src/main'
   .grid-content {
     border-radius: 4px;
     min-height: 36px;
+  }
+
+  .inCome_btn{
+    margin-left:300px;
+    text-align: left;
+    
   }
  
 
