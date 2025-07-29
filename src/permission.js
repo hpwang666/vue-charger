@@ -17,7 +17,7 @@ router.beforeEach(async(to, from, next) => {
   if (hasToken) {
     if (to.path === '/login'|| to.path === '/') {
       // if is logged in, redirect to the home page
-      next({ path: '/home' })
+      next({ path: '/home/realtimeView' })
     } else {
       // determine whether the user has obtained his permission roles through getInfo
       const hasRoles = store.getters.roles && store.getters.roles.length > 0

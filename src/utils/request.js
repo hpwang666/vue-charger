@@ -52,8 +52,13 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
+    //console.log(response.status);
+    // 可能返回的不是自定义的数据包(Result)  可能是导出文件
+    if(typeof(res.code)  ==="undefined"){
+      return response;//所有的HEADER都返回去
+    }
+   
 
-    // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
       Message({
         message: res.message || 'Error 不是200 in util/request',

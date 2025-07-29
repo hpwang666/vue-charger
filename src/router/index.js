@@ -11,6 +11,8 @@ import cashOutTrade  from '@/components/financial/cashOutTrade'
 import Charger from '@/components/charger/charger'
 import order from '@/components/order/order'
 
+import genCharger from '@/components/operation/genCharger' 
+import importCharger from '@/components/operation/importCharger' 
 Vue.use(Router)
 
 
@@ -21,6 +23,7 @@ export const constantRoutes = [
     hidden: true,
     component: Login
   }, 
+  
   // {
   //   path: '/home',
   //   component: Home,
@@ -218,6 +221,35 @@ export const asyncRoutes = [
           roles: ['superAdmin'] 
         },
         
+      }
+    ]
+  },
+  {
+    path: '/home',
+    component: Home,
+    iconCls: 'fa fa-bar-chart',
+    name: '运营管理',
+    meta : {
+      roles: ['superAdmin'] 
+    },
+    children: [
+      {
+        path: 'genCharger',
+        iconCls: 'fa fa-reorder',
+        name: '电桩管理',
+        component: genCharger ,
+        meta : {
+          roles: ['superAdmin'] 
+        },
+      },
+      {
+        path: 'genCharger1',
+        iconCls: 'fa fa-reorder',
+        name: '导入电桩',
+        component: importCharger ,
+        meta : {
+          roles: ['superAdmin'] 
+        },
       }
     ]
   },

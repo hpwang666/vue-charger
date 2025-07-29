@@ -6,8 +6,8 @@
   <el-form ref="dataForm" :model="form"   :rules="rules" label-width="120px" >
    
   <el-form-item label="电桩ID"  >
-    <div style="width:140px">
-    <el-input :disabled="editable" v-model="form.serialNum"   show-word-limit ></el-input>
+    <div style="width:145px">
+    <el-input :disabled=true v-model="form.serialNum"   show-word-limit ></el-input>
     </div>
   </el-form-item>
    <el-form-item label="电桩名称"  >
@@ -33,7 +33,8 @@
       <el-select value-key=value v-model="form.brand" placeholder="请选择电桩厂家">
         <el-option label="易路充CHA-01" :value=1></el-option>
         <el-option label="瑞华" :value=2></el-option>
-        <el-option label="易路充YX" :value=3></el-option>
+        <el-option label="公牛" :value=3></el-option>
+        <el-option label="宇视" :value=4></el-option>
       </el-select>
     </el-form-item>
     </el-col>
@@ -109,8 +110,7 @@ import request from '@/utils/request'
    mounted:function(){
       this.action=this.$route.query.action;
       if(this.action =='create')
-      ;
-        //this.getId();
+        this.getId();
       else {
         this.id =this.$route.query.id;
         this.refresh();
@@ -131,7 +131,6 @@ import request from '@/utils/request'
         action:'',
         serialNum:'',
         uploading:false,
-        editable:false,
         id:'',
         models:[],
         value:'',
@@ -148,7 +147,6 @@ import request from '@/utils/request'
     },
     methods: {
       updateData() {
-         this.editable=true;
         var _this = this;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -174,7 +172,6 @@ import request from '@/utils/request'
       },
       createData() {
         var _this= this;
-        this.editable=false;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
            _this.uploading=true;
@@ -211,7 +208,6 @@ import request from '@/utils/request'
               message:resp.message,
             });
             _this.models = resp.result;
-            console.log(_this.models)
           });
       },
 

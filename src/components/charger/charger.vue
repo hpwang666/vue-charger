@@ -44,19 +44,19 @@
         <el-table-column
           label="电桩型号"
           prop="terminalName"
-          width="200" align="left">
+          width="160" align="left">
         </el-table-column>
 
         <el-table-column
           label="功率"
           prop="power"
-          width="160" align="left">
+          width="100" align="left">
         </el-table-column>
 
          <el-table-column
           label="充电模式"
           prop="ifFast"
-          width="160" align="left">
+          width="120" align="left">
         </el-table-column>
 
         <el-table-column
@@ -65,8 +65,9 @@
         </el-table-column>
         <el-table-column
           label="在线状态"
+          align="center"
           prop="onLine"
-          width="140" >
+          width="100" >
           <template slot-scope="{row}">
             <el-tag :type="row.onLine | statusFilter" effect="dark" size="small">
               {{ row.onLine }}
@@ -76,7 +77,7 @@
         
         <el-table-column
           prop="plugs"
-          label="物联网卡" align="left">
+          label="物联网卡" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -88,7 +89,7 @@
 
         <el-table-column
           prop="plugs"
-          label="二维码" align="left">
+          label="二维码" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -97,7 +98,7 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="left" width="240">
+        <el-table-column label="操作" align="left" width="300">
           <template slot-scope="scope">
              <el-button
               size="mini"
@@ -107,6 +108,10 @@
             <el-button
               size="mini"
               @click="handleUpdate(scope.row)">修改
+            </el-button>
+            <el-button
+              size="mini"
+              @click="handleReboot(scope.row)">重启
             </el-button>
             <el-button
               size="mini"
@@ -242,7 +247,7 @@
         })
         }).catch();
       },
-     
+   
       handleUpdate(row) {
        var _this = this;
         this.$router.push({
@@ -314,7 +319,30 @@
           this.createPoster(fileName);
          
       },
-     
+     handleReboot(row){
+      var _this=this;
+        if(row.onLine=='在线'){
+              this.$confirm('确认重启 ' + row.serialNum + ' ?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              request({
+              url: '/ylc/charger/remoteReboot',
+              method: 'get',
+              params:{
+                serialNum:row.serialNum
+              }
+            }).then(resp=> {
+              
+              _this.$message({
+                type: 'success',
+                message: resp.result
+              });
+            })
+          });
+        }
+     },
       handleDelete(index, row){
         let _this = this;
         this.$confirm('确认删除 ' + row.serialNum + ' ?', '提示', {

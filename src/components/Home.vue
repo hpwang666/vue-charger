@@ -333,7 +333,7 @@
               }
             }
         }
-        else console.log("没哟cookie");
+        else console.log("没有cookie");
         if(findedCookiedStation==false){
           i=0;
           while(true)
