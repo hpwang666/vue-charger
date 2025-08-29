@@ -6,6 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import resize from '@/components/mixins/resize'
+import request from '@/utils/request'
 
 const animationDuration = 6000
 
@@ -44,9 +45,28 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      let _this = this;
+      request({
+          url: '/ylc/sum/trades7days',
+          method: 'get'
+        }).then(resp=> {
+           resp.result.forEach(element => {
+            _this.xaxis.push(element.day);
+            _this.value.push(element.value);
 
-      this.chart.setOption({
+            _this.chart = echarts.init(this.$el, 'macarons');
+            _this.setOptions()
+          });
+        }).catch(()=>{
+          _this.$message({
+            type: 'error',
+            message: 'trades7days'
+          });
+      });
+    },
+    setOptions(){
+      let _this=this;
+        this.chart.setOption({
         tooltip: {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -54,10 +74,10 @@ export default {
           }
         },
         title: {
-    text: '最近充值',
-     left: '8%',
-      top: '1%'
-  },
+          text: '最近充值',
+          left: '10%',
+            top: '5%'
+        },
         grid: {
           top: 10,
           left: '2%',
@@ -67,7 +87,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: _this.xaxis,
           axisTick: {
             alignWithLabel: true
           }
@@ -79,15 +99,22 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
+          name: '金额',
           type: 'bar',
           stack: 'vistors',
           barWidth: '35%',
            color: '#fc8452',
-          data: [79, 52, 200, 334, 390, 330, 220],
+          data: _this.value,
           animationDuration
         }]
       })
+    }
+  },//end of method
+  data(){
+    return{
+      chart: null,
+      xaxis:[],
+      value:[]
     }
   }
 }

@@ -9,6 +9,8 @@
        
        
            <el-input type="text" v-model="userId" auto-complete="off" placeholder="userId" style="margin-left: 20px;width:300px" ></el-input>
+
+           <el-input type="text" v-model="orderNum" auto-complete="off" placeholder="订单号" style="margin-left: 20px;width:300px" ></el-input>
         
           <el-button type="success" size="small" style="margin-left: 20px" @click="handleQuery" >查询</el-button>
            <el-button type="success" size="small" style="margin-left: 20px" @click="resetAll" >清空</el-button>
@@ -147,6 +149,7 @@
       resetAll() {
         this.userId='';
         this.openid='';
+        this.orderNum='';
         this.phone='';
         this.settlement= '';
         this.orders= [];
@@ -158,6 +161,7 @@
         this.userId= _this.userId==''?'':_this.userId;
         this.openid= _this.openid==''?'':_this.openid;
         this.phone= _this.phone==''?'':_this.phone;
+        this.orderNum= _this.orderNum==''?'':_this.orderNum;
         this.settlement= '';
         this.orders= [];
         this.trade=[];
@@ -174,6 +178,7 @@
           data: {
                 phone:_this.phone==''?null:_this.phone,
                 userId:_this.userId==''?null:_this.userId,
+                 orderNum:_this.orderNum==''?null:_this.orderNum,
                 openid:_this.openid==''?null:_this.openid
           } 
         }).then(resp=> {
@@ -255,6 +260,7 @@
       return {
         userId:'',
         openid:'',
+        orderNum:'',
         phone:'',
         settlement: '',
         orders: [],

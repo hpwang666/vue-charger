@@ -53,7 +53,7 @@ const actions = {
     return new Promise(resolve => {
       let accessedRoutes
       if (roles.includes('superAdmin')) {
-        accessedRoutes = asyncRoutes || []
+        accessedRoutes = asyncRoutes || []//超级管理员包含了所有目录
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }

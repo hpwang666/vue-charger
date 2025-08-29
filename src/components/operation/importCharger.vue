@@ -74,27 +74,70 @@
 
     
 
-      <el-dialog title="批量关联桩号" :visible.sync="importChargerVisible" width="450px">
+      <el-dialog title="批量关联桩号" :visible.sync="importChargerVisible" width="480px">
       <el-form ref="importChargersForm"  :model="importChargerData" :rules="rulesMap" label-position="right" size="mini" label-width="100px" style="width: 100%;padding-left:20px;">
        
-     
-        <el-form-item label="导入项目" >
-          <div style="width:200px;padding-left:20px;">
-          <el-input  :disabled=true v-model="importChargerData.projectName" >
-          
-          </el-input>
+           <el-form-item label="所属城市" id="cityInPrj">
+            <div style="width:180px;padding-left:20px;">
+          <el-select v-model="cityId" placeholder="请选择城市">
+            <el-option
+              v-for="item in citys"
+              :key="item.id"
+              :label="item.departName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+            </div>
+        </el-form-item>
+
+        <el-form-item label="所属集团" prop="groupId" id="groupInPrj">
+          <div style="width:180px;padding-left:20px;">
+          <el-select v-model="groupId" placeholder="请选择集团">
+            <el-option
+              v-for="item in groups"
+              :key="item.id"
+              :label="item.departName"
+              :value="item.id">
+            </el-option>
+          </el-select>
           </div>
         </el-form-item>
        
+        <el-form-item label="所属公司" prop="companyId" id="companyInPrj">
+          <div style="width:180px;padding-left:20px;">
+          <el-select v-model="companyId" placeholder="请选择公司">
+            <el-option
+              v-for="item in companys"
+              :key="item.id"
+              :label="item.departName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+          </div>
+        </el-form-item>
+        <el-form-item label="所属项目" prop="parentId" id="stationInPrj">
+          <div style="width:180px;padding-left:20px;">
+          <el-select v-model="stationId" placeholder="请选择充电站">
+            <el-option
+              v-for="item in stations"
+              :key="item.id"
+              :label="item.departName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+             </div>
+        </el-form-item>
+        
+       
         <el-form-item label="导入数量" prop="num">
-           <div style="width:200px;padding-left:20px;">
+           <div style="width:180px;padding-left:20px;">
             <el-input  :disabled=true v-model="importChargerData.num" >
                </el-input>
            </div>
         </el-form-item>
 
-         <el-form-item label="名称前缀" prop="chargerName" >
-          <div style="width:200px;padding-left:20px;">
+         <el-form-item label="电桩名称" prop="chargerName" >
+          <div style="width:180px;padding-left:20px;">
           <el-input   v-model="importChargerData.chargerName" >
           
           </el-input>
@@ -147,17 +190,115 @@
 </template>
 <script>
    import request from '@/utils/request'
+   import { treeFilter,treeFind } from '@/utils/utils'
    import { mapGetters } from 'vuex'
   
   export default{
    
    
     watch: {
-        stationId:function (){ //动态监听电站ID的变化，刷新界面
-         this.getFeeModel();
+    
+      cityId: function (val) {
+        var _this=this;
+
+         if(this.cityId==null) return;//cityId的变化导致这个可能为null
+        
+        //let cityChildren=this.departTree.filter(ele => ele.key == val);
+        let cityChildren=treeFind(this.departTree,node=>node.key==val).children ;//找出城市下面的集团
+       
+        _this.groups.length=0;
+        if( cityChildren == null){//这个城市没有子节点
+          _this.groupId=null;
+          return;
+        }
+
+
+        if(cityChildren.length>0){
+          cityChildren.map(((item, index)=> {
+            _this.groups.push({id:item.key,departName:item.value});
+          }))
+        }
+        
+
+        if(_this.groupId!=null){
+          let v= _this.groups.filter(i=>i.id==_this.groupId);
+          if( v.length==0)//这时候已经不属于城市下面的集团id了
+            _this.groupId=null;
+        }
+
+    
+
+      },
+       groupId: function (val) {
+        var _this=this;
+        if(this.groupId==null){
+          _this.companys.length=0;
+          _this.companyId=null;
+           return;
+        }
+        //cityId的变化导致这个可能为null
+
+        let groupChildren= treeFind(this.departTree,node=>node.key==this.groupId).children ;//找出是哪个集团
+
+        _this.companys.length=0;
+        if(groupChildren==null){
+           _this.companyId=null
+           return;
+        }
+
+        groupChildren.map(((item, index)=> {
+          _this.companys.push({id:item.key,departName:item.value});
+        }))
+
+
+        
+        if(_this.companyId!=null){
+          let v= _this.companys.filter(i=>i.id==_this.companyId);
+          if( v.length==0)//这时候已经不属于城市下面的集团id了
+            _this.companyId=null;
+        }
+
+     
+      },
+      companyId: function (val) {
+        var _this=this;
+        if(this.companyId==null) 
+        {
+          _this.stationId=null;
+          _this.stations.length=0;
+          return;//cityId的变化导致这个可能为null
+        }
+
+        let companyChildren= treeFind(this.departTree,node=>node.key==this.companyId).children ;//找出是哪个集团
+
+        _this.stations.length=0;
+        if(companyChildren==null){
+           _this.stationId=null;
+           return;
+        }
+
+        companyChildren.map(((item, index)=> {
+          _this.stations.push({id:item.key,departName:item.value});
+        }))
+
+        if(_this.stationId!=null){
+          let v= _this.stations.filter(i=>i.id==_this.stationId);
+          if( v.length==0)//这时候已经不属于公司下面的集团id了
+            _this.stationId=null;
+        }
+     
+      },
+      stationId:function (){ //动态监听电站ID的变化，刷新界面
+        if(this.stationId==null){
+            this.models.length=0;
+        }
+        else{
+          this.importChargerData.modelId=null;
+           this.getFeeModel();
+        }
+        
       }
      
-
     },//end watch 
     methods: {
       handleSizeChange(val){
@@ -185,22 +326,43 @@
           });
         return;
         }
+        this.resetTemp();
 
-        request({
-            url: '/ylc/charger/checkStation',
-            method: 'get',
-            params:{
-              departId:_this.stationId
+     
+
+
+        this.citys.length=0;
+        this.cityId=null;
+        this.companys.length=0;
+        this.companyId=null;
+        this.groups.length=0;
+        this.groupId=null;
+        this.stations.length=0;
+        this.stationId=null;
+        
+        let tmpCity = treeFilter(this.departTree,node=>node.orgCategory==1) ;//过滤出所有城市
+        if(tmpCity.length>0){
+            tmpCity.map(((item, index)=> {
+              this.citys.push({id:item.key,departName:item.value});
+            }))
+           
+        }else{
+            let tmpGroup=treeFilter(this.departTree,node=>node.orgCategory==2) ;//过滤出所有集团
+            if(tmpGroup.length>0){
+              tmpGroup.map(((item, index)=> {
+                this.groups.push({id:item.key,departName:item.value});
+              }))
             }
-          }).then(resp=> {
-           _this.importChargerData = {
-              projectName:_this.stationName,
-              num: _this.multipleSelection.length,
-              chargerName:'',
-              modelId:''
-            };
+            else{
+               let tmpCompany=treeFilter(this.departTree,node=>node.orgCategory==3) ;//过滤出所有公司
+              if(tmpCompany.length>0){
+                tmpCompany.map(((item, index)=> {
+                  this.companys.push({id:item.key,departName:item.value});
+                }))
+              }
+            }
+        }
           _this.importChargerVisible=true;
-        }).catch();
 
         
       },
@@ -299,9 +461,25 @@
         })
       },
       refresh(){
-        this.getFeeModel();
        this.searchCharges();
-    }
+      },
+      resetTemp() {
+        this.temp = {
+          index:-1,
+          id:'0',
+          departName: undefined,
+          parentId: undefined,
+          updateTime: new Date(),
+          memo: ''
+        };
+         this.importChargerData = {
+             num: this.multipleSelection.length,
+            chargerName:'',
+            modelId:''
+           };
+
+      }
+  
     },//end methods
     mounted: function () {
       setTimeout(() => {
@@ -313,7 +491,7 @@
       })
     },
     computed: {
-        ...mapGetters(['stationId','stationName'])
+        ...mapGetters(['stationName','departTree'])
     },
     data(){
       return {
@@ -324,13 +502,22 @@
         pageSize:10,
         pageNo:1,
         total:0,
+
+        stations:[],
+        stationId:'',
+        companyId:'',
+        companys:[],
+        groups: [],
+        groupId:'',
+        citys:[],
+        cityId:'',
+        temp: "",
       
-        models:'',
+        models:[],
         multipleSelection:[],
         importChargerVisible:false,
         importChargerData:'',
         chargers: [],
-        bindStatus: [{value:0,lable:'已绑定'},{value:1,lable:'已删除'},{value:2,lable:'未绑定'}],
        
         
 

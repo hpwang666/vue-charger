@@ -6,6 +6,9 @@ import inCome  from '@/components/financial/inCome'
 import inComeSum  from '@/components/excel/export-share-sum'
 import inComeQuery from '@/components/financial/inComeQuery'
 import inComeCfg from '@/components/financial/inComeCfg'
+import accountQuery from '@/components/financial/accountQuery'
+import details from '@/components/financial/details'
+
 import cashOut  from '@/components/financial/cashOut'
 import cashOutTrade  from '@/components/financial/cashOutTrade'
 import Charger from '@/components/charger/charger'
@@ -190,16 +193,16 @@ export const asyncRoutes = [
     iconCls: 'fa fa-bar-chart',
     name: '财务管理',
     meta : {
-      roles: ['superAdmin'] 
+      roles: ['superAdmin','financial'] 
     },
     children: [
       {
         path: 'inComeQuery',
         iconCls: 'fa fa-reorder',
-        name: '分润配置',
+        name: '分润管理',
         component: inComeQuery ,
         meta : {
-          roles: ['superAdmin'] 
+          roles: ['superAdmin','financial'] 
         },
       },
       {
@@ -209,7 +212,7 @@ export const asyncRoutes = [
         hidden: true,
         component: inComeCfg ,
         meta : {
-          roles: ['superAdmin'] 
+          roles: ['superAdmin','financial'] 
         },
       },
       {
@@ -218,7 +221,28 @@ export const asyncRoutes = [
         name: '受理提现',
         component: cashOut ,
         meta : {
-          roles: ['superAdmin'] 
+          roles: ['superAdmin','financial'] 
+        },
+        
+      },
+      {
+        path: 'accountQuery',
+        iconCls: 'fa fa-reorder',
+        name: '账户查询',
+        component: accountQuery ,
+        meta : {
+          roles: ['superAdmin','financial'] 
+        },
+        
+      },
+      {
+        path: 'details',
+        iconCls: 'fa fa-reorder',
+        name: '账户流水',
+        hidden: true,
+        component: details ,
+        meta : {
+          roles: ['superAdmin','financial'] 
         },
         
       }
@@ -256,19 +280,19 @@ export const asyncRoutes = [
   {
     path: '/home',
     component: Home,
-    name: '全局配置',
+    name: '电站配置',
     iconCls: 'fa fa-bar-chart',
     meta : {
-      roles: ['admin'] 
+      roles: ['admin','financial'] 
     },
     children: [
       {
         path: 'station',
         iconCls: 'fa fa-bar-chart',
-        name: '全局配置',
+        name: '参数配置',
         component: () => import('@/components/station/station'),
         meta : {
-          roles: ['admin'] 
+          roles: ['admin','financial'] 
         }
       },
       {
@@ -277,7 +301,7 @@ export const asyncRoutes = [
         name: '费率配置',
         component: () => import('@/components/station/rates'),
         meta : {
-          roles: ['admin'] 
+          roles: ['admin','financial'] 
         }
       },
       {
@@ -287,7 +311,7 @@ export const asyncRoutes = [
         hidden: true,
         component: () => import('@/components/station/ratesEdit'),
         meta : {
-          roles: ['admin'] 
+          roles: ['admin','financial'] 
         }
       }
     ]
@@ -299,7 +323,7 @@ export const asyncRoutes = [
     name: '数据统计',
     iconCls: 'fa fa-bar-chart',
     meta : {
-      roles: ['admin'] 
+      roles: ['admin','financial'] 
     },
     children: [
       {
@@ -308,7 +332,7 @@ export const asyncRoutes = [
         name: '数据分析',
         component: () => import('@/components/show/calcu-data'),
         meta : {
-          roles: ['admin'] 
+          roles: ['admin','financial'] 
         }
       },
       {
@@ -317,7 +341,7 @@ export const asyncRoutes = [
         name: '近期数据',
         component: () => import('@/components/show/mix-chart'),
         meta : {
-          roles: ['admin'] 
+          roles: ['admin','financial'] 
         }
       }
     ]
@@ -333,7 +357,7 @@ export const asyncRoutes = [
         name: '电站电桩',
         component: Charger,
         meta : {
-          roles: ['admin','city','group','com','prj'] 
+          roles: ['admin','city','group','com','prj','financial'] 
         }
       },
       {
@@ -342,7 +366,7 @@ export const asyncRoutes = [
         name: '电桩编辑',
         component: () => import('@/components/charger/chargerEdit'),
         meta : {
-          roles: ['admin','city','group','com','prj'] 
+          roles: ['admin','city','group','com','prj','financial'] 
         }
       },
       {
@@ -351,7 +375,7 @@ export const asyncRoutes = [
         name: '绑定用户',
         component: () => import('@/components/charger/bindUser'),
         meta : {
-          roles: ['admin','city','group','com','prj'] 
+          roles: ['admin','city','group','com','prj','financial'] 
         }
       }
 
@@ -363,7 +387,7 @@ export const asyncRoutes = [
     component: Home,
     name: '订单查询',
     meta : {
-      roles: ['admin'] 
+      roles: ['admin','financial'] 
     },
     children: [
       {
@@ -372,7 +396,7 @@ export const asyncRoutes = [
         name: '订单查询',
         component: order,
         meta : {
-          roles: ['admin'] 
+          roles: ['admin','financial'] 
         }
       }
     ]

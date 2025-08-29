@@ -66,6 +66,19 @@ service.interceptors.response.use(
         duration: 8 * 1000
       })
 
+      if (res.error === '用户未登录') {
+        // to re-login
+        MessageBox.confirm('token已经过期,无权浏览当前页面,请重新登陆', '确认登出', {
+          confirmButtonText: '重新登陆',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('user/resetToken').then(() => {
+            location.reload()
+          })
+        })
+      }
+
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
         // to re-login
